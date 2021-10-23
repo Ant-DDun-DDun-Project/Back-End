@@ -4,4 +4,4 @@ node_modules/
 .eslintcache
 *.DS_Store
 *.idea
-
+.env
