@@ -1,0 +1,49 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "test test2 yunjae test",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ant-DDun-DDun-Project/Back-End.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ant-DDun-DDun-Project/Back-End/issues"
+  },
+  "homepage": "https://github.com/Ant-DDun-DDun-Project/Back-End#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1013.0",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "helmet": "^4.6.0",
+    "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.3",
+    "multer-s3": "^2.10.0",
+    "mysql2": "^2.3.2",
+    "nodemon": "^2.0.14",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0",
+    "sequelize": "^6.7.0"
+  },
+  "devDependencies": {
+    "artillery": "^1.7.9",
+    "eslint": "^8.1.0",
+    "jest": "^27.3.1",
+    "morgan": "^1.10.0",
+    "sequelize-cli": "^6.2.0",
+    "supertest": "^6.1.6",
+    "swagger-autogen": "^2.11.2",
+    "swagger-ui-express": "^4.1.6"
+  }
+}
