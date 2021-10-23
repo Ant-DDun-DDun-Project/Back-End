@@ -9,5 +9,5 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // POST로 메소드 받을 때 req.body로 사용가능하게 함
 
 app.listen(port, () => {
-  console.log(`listening at http://localhost:${ port }`);
+  console.log(`listening at http://localhost:${port}`);
 });
