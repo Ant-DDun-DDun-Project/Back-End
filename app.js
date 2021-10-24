@@ -2,15 +2,15 @@ const express = require('express'); // 익스프레스 참조
 const cookieParser = require('cookie-parser');
 const app = express(); // 익스프레스 쓸때는 app이라고 명시
 app.use(cookieParser()); // 쿠키값을 꺼낼 수 있음
-const port = process.env.PORT;
+const cors = require('cors')
 require('dotenv').config();
+const port = process.env.PORT;
 
 //cors 설정
 const corsOptions = {
   origin: '*', // 전체 허용
   methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
   preflightContinue: false,
-
   credentials: true,
   optionsSuccessStatus: 204,
 };
