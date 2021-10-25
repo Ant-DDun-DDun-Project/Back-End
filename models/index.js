@@ -1,16 +1,16 @@
-const Sequelize = require("sequelize");
+const Sequelize = require('sequelize');
 
-const User = require("../models/users");
-const Either = require("../models/either");
-const Multi = require("../models/multi");
-const Like = require("../models/likes");
-const Vote = require("../models/votes");
+const User = require('../models/users');
+const Either = require('../models/either');
+const Multi = require('../models/multi');
+const Like = require('../models/likes');
+const Vote = require('../models/votes');
 const Comment = require('../models/comments');
-const ChildComment = require('../models/childcomments');
-const CommentLike = require('../models/commentlikes');
+const ChildComment = require('./child-comments');
+const CommentLike = require('./comment-likes');
 
-const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
 const sequelize = new Sequelize(
@@ -35,9 +35,9 @@ Either.init(sequelize);
 Multi.init(sequelize);
 Like.init(sequelize);
 Vote.init(sequelize);
-Comment.init(sequelize)
-ChildComment.init(sequelize)
-CommentLike.init(sequelize)
+Comment.init(sequelize);
+ChildComment.init(sequelize);
+CommentLike.init(sequelize);
 
 User.associate(db);
 Either.associate(db);

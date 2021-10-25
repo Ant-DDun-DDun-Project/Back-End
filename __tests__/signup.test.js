@@ -10,7 +10,7 @@ describe('회원가입', () => {
         userId: 'asdf',
         nickname: '황창환',
         pw: 'zxcv',
-        pwChekc: 'zxcv',
+        pwCheck: 'zxcv',
       },
     };
     await User.findOne.mockReturnValue(null);

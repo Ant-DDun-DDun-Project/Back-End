@@ -8,7 +8,7 @@ module.exports = class Multi extends Sequelize.Model {
           type: Sequelize.INTEGER,
           primaryKey: true,
           autoIncrement: true,
-          allowNull: false
+          allowNull: false,
         },
         title: {
           type: Sequelize.STRING,
@@ -19,21 +19,21 @@ module.exports = class Multi extends Sequelize.Model {
           allowNull: false,
         },
         contentA: {
-          type: Sequelize.BOOLEAN,
+          type: Sequelize.STRING,
           allowNull: false,
         },
         contentB: {
-          type: Sequelize.BOOLEAN,
+          type: Sequelize.STRING,
           allowNull: false,
         },
         contentC: {
-          type: Sequelize.BOOLEAN,
+          type: Sequelize.STRING,
         },
         contentD: {
-          type: Sequelize.BOOLEAN,
+          type: Sequelize.STRING,
         },
         contentE: {
-          type: Sequelize.BOOLEAN,
+          type: Sequelize.STRING,
         },
         date: {
           type: Sequelize.STRING,
@@ -51,7 +51,7 @@ module.exports = class Multi extends Sequelize.Model {
         editedDate: {
           type: Sequelize.STRING,
           allowNull: true,
-        }
+        },
       },
       {
         sequelize,
