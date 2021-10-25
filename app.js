@@ -5,6 +5,7 @@ app.use(cookieParser()); // 쿠키값을 꺼낼 수 있음
 const cors = require('cors');
 require('dotenv').config();
 const port = process.env.PORT;
+const { sequelize } = require('./models');
 
 //cors 설정
 const corsOptions = {
@@ -14,6 +15,15 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204,
 };
+
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("MYSQL 연결 성공");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 app.use(cors(corsOptions));
 
 app.use(express.urlencoded({ extended: true }));
