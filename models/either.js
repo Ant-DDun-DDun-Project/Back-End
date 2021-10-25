@@ -8,18 +8,18 @@ module.exports = class Either extends Sequelize.Model {
           type: Sequelize.INTEGER,
           primaryKey: true,
           autoIncrement: true,
-          allowNull: false
+          allowNull: false,
         },
         title: {
           type: Sequelize.STRING,
           allowNull: false,
         },
         contentA: {
-          type: Sequelize.BOOLEAN,
+          type: Sequelize.STRING,
           allowNull: false,
         },
         contentB: {
-          type: Sequelize.BOOLEAN,
+          type: Sequelize.STRING,
           allowNull: false,
         },
         date: {
@@ -38,7 +38,7 @@ module.exports = class Either extends Sequelize.Model {
         editedDate: {
           type: Sequelize.STRING,
           allowNull: true,
-        }
+        },
       },
       {
         sequelize,
@@ -61,6 +61,10 @@ module.exports = class Either extends Sequelize.Model {
     db.Either.hasMany(db.Vote, {
       foreignKey: 'either',
       sourceKey: 'eitherId',
+    });
+    db.Either.belongsTo(db.User, {
+      foreignKey: 'user',
+      targetKey: 'id',
     });
   }
 };

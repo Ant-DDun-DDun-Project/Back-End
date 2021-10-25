@@ -83,5 +83,9 @@ module.exports = class Multi extends Sequelize.Model {
       foreignKey: 'multi',
       sourceKey: 'multiId',
     });
+    db.Multi.belongsTo(db.User, {
+      foreignKey: 'user',
+      targetKey: 'id',
+    });
   }
 };
