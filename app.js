@@ -8,6 +8,8 @@ require('dotenv').config();
 const port = process.env.PORT;
 const { sequelize } = require('./models');
 const morgan = require('morgan');
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger_output.json');
 
 //cors
 const corsOptions = {
@@ -39,6 +41,9 @@ app.use(compression());
 
 //routes
 app.use('/', router);
+
+//swagger
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 //server
 app.listen(port, () => {

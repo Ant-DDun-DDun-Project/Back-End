@@ -4,6 +4,7 @@
   "description": "test test2 yunjae test",
   "main": "app.js",
   "scripts": {
+    "prestart": "node ./swagger.js",
     "test": "jest",
     "start": "nodemon app.js"
   },
