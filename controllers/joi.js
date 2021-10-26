@@ -17,4 +17,10 @@ module.exports = {
     confirmPw: Joi.ref('pw'),
     ageGroup: Joi.number().required(),
   }),
+  eitherSchema: Joi.object({
+    title: Joi.string().required(),
+    contentA: Joi.string().required(),
+    contentB: Joi.string().required(),
+    date: Joi.string().required(),
+  }),
 };
