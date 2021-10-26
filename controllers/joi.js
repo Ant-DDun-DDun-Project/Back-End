@@ -12,7 +12,7 @@ module.exports = {
       .required()
       .min(8)
       .max(16)
-      .pattern(/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,16}$/),
+      .pattern(/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])[a-z0-9!@#$%^&*?-]{8,16}$/),
     confirmPw: Joi.ref('pw'),
     ageGroup: Joi.number().required(),
   }),

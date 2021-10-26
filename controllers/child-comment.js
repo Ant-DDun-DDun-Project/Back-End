@@ -1,15 +1,16 @@
-const { Comment } = require('../models');
+const { ChildComment } = require('../models');
 const { postCommentSchema } = require('./joi');
 
 module.exports = {
-  postComment: async (req, res, next) => {
+  postChildComment: async (req, res, next) => {
     try {
       const { comment, date } = postCommentSchema.validateAsync(req.body);
-      const { multi_id } = req.params;
+      const { multi_id, comment_id } = req.params;
       const user = res.locals.user;
-      await Comment.create({
+      await ChildComment.create({
         user,
         multi: multi_id,
+        parentComment: comment_id,
         comment,
         date,
       });
