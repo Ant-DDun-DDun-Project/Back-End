@@ -6,10 +6,12 @@ const bcrypt = require('bcrypt');
 const { validatePassword } = require('./utils/password-validation.js');
 
 exports.signup = async (req, res, next) => {
-  const { userId, nickname, pw, confirmPw, ageGroup } = await signUpSchema.validateAsync(req.body);
-  if (validatePassword(pw, confirmPw)) {
-    const encryptedPw = await bcrypt.hash(pw, salt);
-    try {
+  try {
+    const { userId, nickname, pw, confirmPw, ageGroup } = await signUpSchema.validateAsync(
+      req.body
+    );
+    if (validatePassword(pw, confirmPw)) {
+      const encryptedPw = await bcrypt.hash(pw, salt);
       const userExist = await User.findOne({
         where: {
           userId,
@@ -29,14 +31,14 @@ exports.signup = async (req, res, next) => {
           msg: '중복된 아이디입니다.',
         });
       }
-    } catch (err) {
-      console.error(err);
-      next(err);
+    } else {
+      res.status(400).json({
+        success: false,
+        msg: '비밀번호를 확인해주세요.',
+      });
     }
-  } else {
-    res.status(400).json({
-      success: false,
-      msg: '비밀번호를 확인해주세요.',
-    });
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 };

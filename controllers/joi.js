@@ -34,4 +34,8 @@ module.exports = {
     date: Joi.string()
       .required()
   })
+  postCommentSchema: Joi.object({
+    comment: Joi.string().required().min(1),
+    date: Joi.string().required(),
+  }),
 };
