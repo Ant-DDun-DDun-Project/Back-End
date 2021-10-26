@@ -16,6 +16,12 @@ module.exports = {
     confirmPw: Joi.ref('pw'),
     ageGroup: Joi.number().required(),
   }),
+
+  eitherSchema: Joi.object({  // 찬반투표 게시물 Schema
+    title: Joi.string().required(),
+    contentA: Joi.string().required(),
+    contentB: Joi.string().required(),
+
   multiSchema: Joi.object({   // 객관식 게시물 Schema
     title: Joi.string()
       .required().min(1),
@@ -34,8 +40,9 @@ module.exports = {
     date: Joi.string()
       .required()
   })
-  postCommentSchema: Joi.object({
+  postCommentSchema: Joi.object({ // 댓글 작성 Schema
     comment: Joi.string().required().min(1),
+
     date: Joi.string().required(),
   }),
 };

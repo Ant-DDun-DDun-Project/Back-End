@@ -2,6 +2,7 @@ const User = require('../models/users');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const { createToken } = require('./utils/create-token.js');
+const { JsonWebTokenError } = require('jsonwebtoken');
 
 exports.login = async (req, res, next) => {
   try {
