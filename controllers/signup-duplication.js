@@ -5,10 +5,7 @@ exports.CheckDuplicatedId = async (req, res, next) => {
   try {
     const { userId } = req.body;
     if (await User.findOne({ where: { userId } })) {  // 이미 DB에 존재하는 아이디일 경우
-      res.json({
-        success: false,
-        msg: '중복된 아이디입니다.'
-      });
+      res.json({ success: false });
     } else {  // DB에 존재하지 않는 아이디일 경우
       res.status(400).json({ success: true });
     }
@@ -23,10 +20,7 @@ exports.CheckDuplicatedNick = async (req, res, next) => {
   try {
     const { nickname } = req.body;
     if (await User.findOne({ where: { nickname } })) {  // 이미 DB에 존재하는 닉네임일 경우
-      res.status(400).json({
-        success: false,
-        msg: '중복된 닉네임입니다.',
-      });
+      res.status(400).json({ success: false });
     } else {  // DB에 존재하지 않는 닉네임일 경우
       res.json({ success: true });
     }

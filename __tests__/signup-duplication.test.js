@@ -1,6 +1,6 @@
 jest.mock('../models/users');
 const User = require('../models/users');
-const {CheckDuplicatedId, CheckDuplicatedNick} = require('../controllers/signup-duplication')
+const { CheckDuplicatedId, CheckDuplicatedNick } = require('../controllers/signup-duplication');
 
 // 회원가입 시 아이디 중복체크
 describe('회원가입 시 아이디 중복체크 기능에 대한 검사', () => {
@@ -25,7 +25,7 @@ describe('회원가입 시 아이디 중복체크 기능에 대한 검사', () =
     await User.findOne.mockReturnValue(true);
     await CheckDuplicatedId(req, res, next);
     expect(res.status).toBeCalledWith(400);
-    expect(res.json).toBeCalledWith({ success: false, msg: '중복된 아이디입니다.' });
+    expect(res.json).toBeCalledWith({ success: false });
   });
 
   // DB Error가 생겼을 경우
@@ -60,7 +60,7 @@ describe('회원가입 시 닉네임 중복체크 기능에 대한 검사', () =
     await User.findOne.mockReturnValue(true);
     await CheckDuplicatedNick(req, res, next);
     //expect(res.status).toBeCalledWith(400);
-    expect(res.json).toBeCalledWith({ success: false, msg: '중복된 닉네임입니다.' });
+    expect(res.json).toBeCalledWith({ success: false });
   });
   // DB Error가 생겼을 경우
   test('DB에 대한 Error가 발생했을 경우 next', async () => {
