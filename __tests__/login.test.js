@@ -27,8 +27,9 @@ describe('로그인', () => {
     };
     await User.findOne.mockReturnValue(mockdb);
     await login(req, res, next);
-    // expect(res.status).toBeCalledWith(200);
+    expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
+      nickname: '황창환',
       success: true,
     });
   });
