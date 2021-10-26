@@ -5,5 +5,6 @@ const multiRouter = require('./multi');
 
 router.use('/posts/multi', multiRouter);
 router.use('/users', userRouter);
+router.use('/posts/multi', multiRouter);
 
 module.exports = router;
