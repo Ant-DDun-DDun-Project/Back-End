@@ -39,6 +39,10 @@ module.exports = class Either extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: true,
         },
+        likeCnt: {
+          type: Sequelize.INTEGER,
+          defaultValue: 0,
+        },
       },
       {
         sequelize,
