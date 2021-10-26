@@ -1,7 +1,6 @@
 const Joi = require('joi');
 
 module.exports = {
-  Joi,
   signUpSchema: Joi.object({
     userId: Joi.string()
       .required()
@@ -16,5 +15,9 @@ module.exports = {
       .pattern(/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,16}$/),
     confirmPw: Joi.ref('pw'),
     ageGroup: Joi.number().required(),
+  }),
+  postCommentSchema: Joi.object({
+    comment: Joi.string().required().min(1),
+    date: Joi.string().required(),
   }),
 };
