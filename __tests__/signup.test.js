@@ -56,10 +56,10 @@ describe('회원가입', () => {
     });
   });
   test('DB에서 에러가 날 경우 에러핸들러로 넘긴다.', async () => {
-    const error = 'DB에러';
+    const err = 'DB에러';
     await validatePassword.mockReturnValue(true);
-    await User.findOne.mockRejectedValue(error);
+    await User.findOne.mockRejectedValue(err);
     await signup(req, res, next);
-    expect(next).toBeCalledWith(error);
+    expect(next).toBeCalledWith(err);
   });
 });
