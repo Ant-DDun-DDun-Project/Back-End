@@ -65,9 +65,9 @@ describe('회원가입 시 닉네임 중복체크 기능에 대한 검사', () =
   });
   // DB Error가 생겼을 경우
   test('DB에 대한 Error가 발생했을 경우 next', async () => {
-    const error = 'DB Error';
-    User.findOne.mockReturnValue(Promise.reject(error));
+    const err = 'DB 에러';
+    User.findOne.mockReturnValue(Promise.reject(err));
     await CheckDuplicatedNick(req, res, next);
-    expect(next).toBeCalledWith(error);
+    expect(next).toBeCalledWith(err);
   });
 });
