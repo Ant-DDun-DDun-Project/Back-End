@@ -23,6 +23,7 @@ module.exports = {
     title: Joi.string().required(),
     contentA: Joi.string().required(),
     contentB: Joi.string().required(),
+    date: Joi.string().required(),
   }),
 
   multiSchema: Joi.object({
