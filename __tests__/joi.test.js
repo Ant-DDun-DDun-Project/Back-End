@@ -14,7 +14,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -23,7 +23,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -32,7 +32,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -41,7 +41,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -50,7 +50,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -59,7 +59,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -68,7 +68,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -77,7 +77,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -86,7 +86,7 @@ test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: clearData.pw,
       confirmPw: clearData.confirmPw,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
 });
@@ -97,7 +97,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: 'asdf123',
       confirmPw: 'asdf123',
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -106,7 +106,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: 'asdf1234!.',
       confirmPw: 'asdf1234!.',
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -115,7 +115,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: 'asdf1234!황',
       confirmPw: 'asdf1234!황',
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -124,7 +124,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: 'asdf1234![]',
       confirmPw: 'asdf1234![]',
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -133,7 +133,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: 'asdf1234!{}',
       confirmPw: 'asdf1234!{}',
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -142,7 +142,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: true,
       confirmPw: true,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -151,7 +151,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: '안녕하세요한글도되나요',
       confirmPw: '안녕하세요한글도되나요',
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -160,7 +160,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: false,
       confirmPw: false,
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
   await expect(
@@ -169,7 +169,7 @@ test('회원가입시 비밀번호는 8~16자 영문 소문자, 숫자, 특수�
       nickname: clearData.nickname,
       pw: '<script></script>',
       confirmPw: '<script></script>',
-      ageGourp: clearData.ageGourp,
+      ageGroup: clearData.ageGourp,
     })
   ).rejects.toThrowError();
 });
