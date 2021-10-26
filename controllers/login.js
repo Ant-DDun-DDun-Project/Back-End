@@ -18,10 +18,12 @@ exports.login = async (req, res, next) => {
         success: false,
       });
     } else {
+      const nickname = userData.nickname;
       const token = createToken(userData.id);
       res.cookie('user', token, { httpOnly: true, maxAge: 60 * 60 * 24 * 1000 });
       res.status(200).json({
         success: true,
+        nickname,
       });
     }
   } catch (err) {
