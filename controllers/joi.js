@@ -41,7 +41,6 @@ module.exports = {
   postCommentSchema: Joi.object({
     // 댓글 작성 Schema
     comment: Joi.string().required().min(1),
-
     date: Joi.string().required(),
   }),
 };
