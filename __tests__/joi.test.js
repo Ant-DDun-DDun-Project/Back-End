@@ -1,9 +1,10 @@
+const schema = require('../controllers/joi');
 const clearData = {
   userId: 'a_aa-aa_a',
   nickname: '황창환',
   pw: 'zxcv1234!@',
   confirmPw: 'zxcv1234!@',
-  ageGourp: 50,
+  ageGroup: 50,
 };
 
 test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수기호(-),(_)가 아니면 에러를 반환한다', async () => {
