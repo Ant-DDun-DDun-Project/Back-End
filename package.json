@@ -6,7 +6,8 @@
   "scripts": {
     "prestart": "node ./swagger.js",
     "test": "jest",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
