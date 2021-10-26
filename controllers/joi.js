@@ -1,8 +1,7 @@
 const Joi = require('joi');
 
 module.exports = {
-  Joi,
-  signUpSchema: Joi.object({
+  signUpSchema: Joi.object({  // 회원가입 Schema
     userId: Joi.string()
       .required()
       .min(5)
@@ -17,4 +16,22 @@ module.exports = {
     confirmPw: Joi.ref('pw'),
     ageGroup: Joi.number().required(),
   }),
+  multiSchema: Joi.object({   // 객관식 게시물 Schema
+    title: Joi.string()
+      .required().min(1),
+    description: Joi.string()
+      .required().min(1),
+    contentA: Joi.string()
+      .required(),
+    contentB: Joi.string()
+      .required(),
+    contentC: Joi.string()
+      .allow(null),
+    contentD: Joi.string()
+      .allow(null),
+    contentE: Joi.string()
+      .allow(null),
+    date: Joi.string()
+      .required()
+  })
 };
