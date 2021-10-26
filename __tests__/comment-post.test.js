@@ -1,7 +1,15 @@
 jest.mock('../models/comments');
-const { Comment } = require('../models/comments');
+jest.mock('../models/users');
+jest.mock('../models/multi');
+jest.mock('../models/either');
+jest.mock('../models/likes');
+jest.mock('../models/votes');
+jest.mock('../models/child-comments');
+jest.mock('../models/comment-likes');
+const { Comment } = require('../models');
+const { postComment } = require('../controllers/comment');
 
-describe('댓글등록', async () => {
+describe('댓글등록', () => {
   const req = {
     params: {
       multi_id: '1',
@@ -14,6 +22,9 @@ describe('댓글등록', async () => {
   const res = {
     status: jest.fn(() => res),
     json: jest.fn(),
+    locals: {
+      user: '1',
+    },
   };
   next = jest.fn();
   test('댓글을 등록에 성공하면 response로 success:true를 보내준다', async () => {
