@@ -2,12 +2,12 @@ const { signUpSchema } = require('./joi');
 const User = require('../models/users');
 const salt = process.env.SALT;
 const bcrypt = require('bcrypt');
-const { passwordValidation } = require('./utils/passwordValidation.js');
+const { validatePassword } = require('./utils/password-validation.js');
 
 exports.signup = async (req, res, next) => {
   const { userId, nickname, pw, confirmPw, ageGroup } =
     await signUpSchema.validateAsync(req.body);
-  if (passwordValidation(pw, confirmPw)) {
+  if (validatePassword(pw, confirmPw)) {
     const encryptedPw = await bcrypt.hash(pw, salt);
     try {
       const userExist = await User.findOne({
