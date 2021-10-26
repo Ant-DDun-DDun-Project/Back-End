@@ -6,8 +6,7 @@ const bcrypt = require('bcrypt');
 const { validatePassword } = require('./utils/password-validation.js');
 
 exports.signup = async (req, res, next) => {
-  const { userId, nickname, pw, confirmPw, ageGroup } =
-    await signUpSchema.validateAsync(req.body);
+  const { userId, nickname, pw, confirmPw, ageGroup } = await signUpSchema.validateAsync(req.body);
   if (validatePassword(pw, confirmPw)) {
     const encryptedPw = await bcrypt.hash(pw, salt);
     try {
@@ -27,7 +26,7 @@ exports.signup = async (req, res, next) => {
       } else {
         return res.status(400).json({
           success: false,
-          msg: '중복된 닉네임입니다.',
+          msg: '중복된 아이디입니다.',
         });
       }
     } catch (err) {
