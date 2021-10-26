@@ -7,6 +7,7 @@ const cors = require('cors');
 require('dotenv').config();
 const port = process.env.PORT;
 const { sequelize } = require('./models');
+const morgan = require('morgan');
 
 //cors
 const corsOptions = {
@@ -25,10 +26,19 @@ sequelize
     console.error(err);
   });
 
+//morgan
+app.use(morgan('dev'));
+
+//routing
+const router = require('./routes/index');
+
 //parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // POST로 메소드 받을 때 req.body로 사용가능하게 함
 app.use(compression());
+
+//routes
+app.use('/', router);
 
 //server
 app.listen(port, () => {

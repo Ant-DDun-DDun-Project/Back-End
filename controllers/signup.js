@@ -1,13 +1,14 @@
 const { signUpSchema } = require('./joi');
 const User = require('../models/users');
-const salt = process.env.SALT;
+require('dotenv').config();
+const salt = Number(process.env.SALT);
 const bcrypt = require('bcrypt');
-const { passwordValidation } = require('./utils/passwordValidation.js');
+const { validatePassword } = require('./utils/password-validation.js');
 
 exports.signup = async (req, res, next) => {
   const { userId, nickname, pw, confirmPw, ageGroup } =
     await signUpSchema.validateAsync(req.body);
-  if (passwordValidation(pw, confirmPw)) {
+  if (validatePassword(pw, confirmPw)) {
     const encryptedPw = await bcrypt.hash(pw, salt);
     try {
       const userExist = await User.findOne({
@@ -26,12 +27,17 @@ exports.signup = async (req, res, next) => {
       } else {
         return res.status(400).json({
           success: false,
-          msg: '중복된 닉네임입니다',
+          msg: '중복된 닉네임입니다.',
         });
       }
     } catch (err) {
       console.error(err);
       next(err);
     }
+  } else {
+    res.status(400).json({
+      success: false,
+      msg: '비밀번호를 확인해주세요.',
+    });
   }
 };
