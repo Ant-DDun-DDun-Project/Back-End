@@ -53,14 +53,14 @@ describe('회원가입 시 닉네임 중복체크 기능에 대한 검사', () =
     await User.findOne.mockReturnValue(null);
     await CheckDuplicatedNick(req, res, next);
     expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({success: true});
+    expect(res.json).toBeCalledWith({ success: true });
   });
   // 중복되는 닉네임이 존재하는 경우
   test('중복되는 닉네임이 존재할 경우 /success: false/ 을 응답으로 보내준다.', async () => {
     await User.findOne.mockReturnValue(true);
     await CheckDuplicatedNick(req, res, next);
     expect(res.status).toBeCalledWith(400);
-    expect(res.json).toBeCalledWith({success: false});
+    expect(res.json).toBeCalledWith({ success: false });
   });
   test('DB에 대한 Error가 발생했을 경우 next', async () => {
     const error = 'DB Error';
