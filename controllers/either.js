@@ -1,5 +1,5 @@
 const { Either, sequelize } = require('../models/');
-const { eitherSchema } = require('./joi');
+const { eitherSchema, editEitherSchema } = require('./joi');
 
 // 게시글 작성에 대한 기능
 exports.postEither = async (req, res, next) => {
@@ -78,7 +78,7 @@ exports.getCompleteEither = async (req, res, next) => {
 };
 
 exports.editEither = async (req, res, next) => {
-  const { title, contentA, contentB, editDate } = req.body;
+  const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(req.body);
   const { either_id } = req.params;
   const user = res.locals.user;
   try {

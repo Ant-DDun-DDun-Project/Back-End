@@ -18,7 +18,7 @@ describe('양자택일 게시물 수정', () => {
       title: '안녕하세요',
       contentA: '처음뵙겠습니다',
       contentB: '사실 두번째',
-      editDate: '2021-10-27 20:27:23',
+      editedDate: '2021-10-27 20:27:23',
     },
   };
   const res = {
@@ -38,7 +38,7 @@ describe('양자택일 게시물 수정', () => {
         contentB: '애플',
         date: '2021-10-26 20:27:23',
         edited: false,
-        editDate: null,
+        editedDate: null,
       })
     );
     await Either.update.mockReturnValue(
@@ -48,7 +48,7 @@ describe('양자택일 게시물 수정', () => {
         contentA: '처음뵙겠습니다',
         contentB: '사실 두번째',
         date: '2021-10-26 20:27:23',
-        editDate: '2021-10-27 20:27:23',
+        editedDate: '2021-10-27 20:27:23',
       })
     );
     await editEither(req, res, next);

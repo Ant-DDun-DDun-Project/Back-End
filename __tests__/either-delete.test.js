@@ -49,7 +49,7 @@ describe('양자택일 삭제', () => {
   test('DB 에러 시 next(err)를 호출한다', async () => {
     const err = 'DB에러';
     await Either.findOne.mockRejectedValue(err);
-    await Either.update.mockRejectedValue(err);
+    await Either.destroy.mockRejectedValue(err);
     await deleteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
