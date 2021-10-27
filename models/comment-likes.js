@@ -22,14 +22,17 @@ module.exports = class CommentLike extends Sequelize.Model {
     db.CommentLike.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',
+      onDelete: 'CASCADE',
     });
     db.CommentLike.belongsTo(db.ChildComment, {
       foreignKey: 'childComment',
       targetKey: 'id',
+      onDelete: 'CASCADE',
     });
     db.CommentLike.belongsTo(db.Comment, {
       foreignKey: 'comment',
       targetKey: 'id',
+      onDelete: 'CASCADE',
     });
   }
 };

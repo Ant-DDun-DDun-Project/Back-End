@@ -9,7 +9,7 @@ jest.mock('../models/comment-likes');
 jest.mock('../controllers/utils/attend-count');
 jest.mock('../controllers/utils/posting-count');
 const { Either, Multi } = require('../models');
-const { main } = require('../controllers/main');
+const { getMain } = require('../controllers/main');
 const { countPosting } = require('../controllers/utils/posting-count');
 const { countAttend } = require('../controllers/utils/attend-count');
 
@@ -28,11 +28,15 @@ describe('메인페이지 뷰', () => {
             eitherId: 1,
             userNick: 'hwang',
             title: '삼전 9층인데 괜찮을까요',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
           {
             eitherId: 2,
             userNick: 'hwang',
             title: '삼전 9층인데 괜찮을까요',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
         ],
       })
@@ -45,32 +49,41 @@ describe('메인페이지 뷰', () => {
             userNick: 'hwang',
             title: '삼전은',
             description: '최고야',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
           {
             multiId: 2,
             userNick: 'hwang',
             title: '삼전은',
             description: '최고야',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
         ],
       })
     );
     await countPosting.mockReturnValue(200);
     await countAttend.mockReturnValue(12312);
-    await main(req, res, next);
+    await getMain(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
+      success: true,
       either: {
         either: [
           {
             eitherId: 1,
             userNick: 'hwang',
             title: '삼전 9층인데 괜찮을까요',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
           {
             eitherId: 2,
             userNick: 'hwang',
             title: '삼전 9층인데 괜찮을까요',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
         ],
       },
@@ -81,12 +94,16 @@ describe('메인페이지 뷰', () => {
             userNick: 'hwang',
             title: '삼전은',
             description: '최고야',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
           {
             multiId: 2,
             userNick: 'hwang',
             title: '삼전은',
             description: '최고야',
+            likeCnt: 22,
+            date: '2021-10-27 15:36',
           },
         ],
       },
@@ -97,7 +114,7 @@ describe('메인페이지 뷰', () => {
   test('DB 에러시 next(err)', async () => {
     const err = 'DB에러';
     await Either.findAll.mockRejectedValue(err);
-    await main(req, res, next);
+    await getMain(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

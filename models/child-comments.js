@@ -22,6 +22,7 @@ module.exports = class ChildComment extends Sequelize.Model {
         },
         deleted: {
           type: Sequelize.BOOLEAN,
+          allowNull: true,
           defaultValue: false,
         },
       },
@@ -43,19 +44,22 @@ module.exports = class ChildComment extends Sequelize.Model {
     db.ChildComment.hasMany(db.CommentLike, {
       foreignKey: 'childComment',
       sourceKey: 'id',
+      onDelete: 'CASCADE',
     });
     db.ChildComment.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',
+      onDelete: 'CASCADE',
     });
     db.ChildComment.belongsTo(db.Multi, {
       foreignKey: 'multi',
       targetKey: 'multiId',
+      onDelete: 'CASCADE',
     });
     db.ChildComment.belongsTo(db.Comment, {
       foreignKey: 'parentComment',
       targetKey: 'id',
+      onDelete: 'CASCADE',
     });
-
   }
 };
