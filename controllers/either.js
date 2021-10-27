@@ -86,7 +86,7 @@ exports.editEither = async (req, res, next) => {
     if (eitherExist) {
       await Either.update(
         { title, contentA, contentB, editDate, edited: true },
-        { where: { either_id, user } }
+        { where: { eitherId: either_id, user } }
       );
       return res.status(200).json({ success: true });
     } else {
