@@ -1,8 +1,5 @@
 const { Sequelize } = require('sequelize');
-const Vote = require('../models/votes');
-const Like = require('../models/likes');
-const Multi = require('../models/multi');
-const Comment = require('../models/comments');
+const { Vote, Like, Multi, Comment } = require('../models');
 
 exports.getMulti = async (req, res, next) => {
   try {
@@ -43,7 +40,7 @@ exports.getMulti = async (req, res, next) => {
 
 exports.getIngMulti = async (req, res, next) => {
   try {
-    const user = 3;                // Todo --> 사용자 인증 미들웨어 구현 시 삭제
+    const user = 13;                // Todo --> 사용자 인증 미들웨어 구현 시 삭제
     // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화
     const multi = await Multi.findAll({
       where: { completed: false },
@@ -65,7 +62,6 @@ exports.getIngMulti = async (req, res, next) => {
         },
         { // 현재 작성글에 대한 Like 를 로그인한 유저가 했는지 안했는지에 대한 확인
           model: Like,
-          where: { user },
           attributes: [['user', 'liked']],
           separate: true,
         },
