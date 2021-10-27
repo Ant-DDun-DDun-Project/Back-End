@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { postEither } = require('../controllers/either');
+const { getEither, getIngEither, getCompleteEither, postEither } = require('../controllers/either');
 
+router.get('/', getEither);
+router.get('/ing', getIngEither);
+router.get('/complete', getCompleteEither);
 router.post('/', postEither);
 
 module.exports = router;
