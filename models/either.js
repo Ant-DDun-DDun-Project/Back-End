@@ -61,14 +61,17 @@ module.exports = class Either extends Sequelize.Model {
     db.Either.hasMany(db.Like, {
       foreignKey: 'either',
       sourceKey: 'eitherId',
+      onDelete: 'CASCADE',
     });
     db.Either.hasMany(db.Vote, {
       foreignKey: 'either',
       sourceKey: 'eitherId',
+      onDelete: 'CASCADE',
     });
     db.Either.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',
+      onDelete: 'CASCADE',
     });
   }
 };

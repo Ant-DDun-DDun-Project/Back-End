@@ -43,4 +43,12 @@ module.exports = {
     comment: Joi.string().required().min(1),
     date: Joi.string().required(),
   }),
+
+  editEitherSchema: Joi.object({
+    // 찬반투표 게시물 수정 schema
+    title: Joi.string().required().min(1),
+    contentA: Joi.string().required().min(1),
+    contentB: Joi.string().required().min(1),
+    editedDate: Joi.string().required(),
+  }),
 };

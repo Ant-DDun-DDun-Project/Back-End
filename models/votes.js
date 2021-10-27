@@ -6,8 +6,8 @@ module.exports = class Vote extends Sequelize.Model {
       {
         vote: {
           type: Sequelize.STRING,
-          allowNull: false
-        }
+          allowNull: false,
+        },
       },
       {
         sequelize,
@@ -27,14 +27,17 @@ module.exports = class Vote extends Sequelize.Model {
     db.Vote.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',
-    })
+      onDelete: 'CASCADE',
+    });
     db.Vote.belongsTo(db.Either, {
       foreignKey: 'either',
       targetKey: 'eitherId',
+      onDelete: 'CASCADE',
     });
     db.Vote.belongsTo(db.Multi, {
       foreignKey: 'multi',
       targetKey: 'multiId',
-    })
+      onDelete: 'CASCADE',
+    });
   }
 };
