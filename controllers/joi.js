@@ -44,6 +44,12 @@ module.exports = {
     date: Joi.string().required(),
   }),
 
+  editCommentSchema: Joi.object({
+    // 댓글 수정 Schema
+    comment: Joi.string().required(),
+    editedDate: Joi.string().required(),
+  }),
+
   editMultiSchema: Joi.object({
     // 객관식 게시물 수정 Schema
     title: Joi.string().required().min(1),
@@ -53,6 +59,7 @@ module.exports = {
     contentC: Joi.string().allow(null),
     contentD: Joi.string().allow(null),
     contentE: Joi.string().allow(null),
+    editedDate: Joi.string().allow(null),
   }),
 
   editEitherSchema: Joi.object({
