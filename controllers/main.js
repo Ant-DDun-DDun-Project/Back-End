@@ -1,5 +1,6 @@
 const { User, Either, Multi, Vote } = require('../models');
-const sequelize = require('sequelize');
+const { countPosting } = require('./utils/posting-count');
+const { countAttend } = require('./utils/attend-count');
 
 exports.main = async (req, res, next) => {
   try {
@@ -12,6 +13,7 @@ exports.main = async (req, res, next) => {
         },
       ],
       order: [['likeCnt', 'DESC']],
+      limit: 10,
     });
     const multi = await Multi.findAll({
       attributes: ['multiId', 'title', 'description', 'likeCnt'],
@@ -22,12 +24,11 @@ exports.main = async (req, res, next) => {
         },
       ],
       order: [['likeCnt', 'DESC']],
+      limit: 10,
     });
-    const eitherNum = await Either.count({});
-    const multiNum = await Multi.count({});
-    const postingNum = eitherNum + multiNum;
-    //COUNT, DISTINCT
-    // const votes = await Vote.findAll({})
+    const postingNum = await countPosting();
+    const attendNum = await countAttend();
+    res.status(200).json({ either, multi, postingNum, attendNum });
   } catch (err) {
     console.error(err);
     next(err);
