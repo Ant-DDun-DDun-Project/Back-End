@@ -53,6 +53,7 @@ module.exports = {
     contentC: Joi.string().allow(null),
     contentD: Joi.string().allow(null),
     contentE: Joi.string().allow(null),
+    editedDate: Joi.string().allow(null),
   }),
 
   editEitherSchema: Joi.object({
