@@ -24,18 +24,24 @@ module.exports = {
   // 댓글 수정 기능
   editComment: async (req, res, next) => {
     try {
-      console.log(req.body);
+
       const { comment, editedDate } = req.body; // Todo --> 조이 확인
       const { multi_id, comment_id } = req.params;
       //const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
       const user = 1; // Todo --> 사용자 인증 미들웨어 구현 시 삭제
-      console.log(comment, editedDate);
-      await Comment.update({
-        comment, editedDate, edited: true,
-      }, { where: { user, multi: multi_id, id: comment_id } });
-      res.status(200).json({
-        success: true,
-      });
+
+      if (await Comment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
+        await Comment.update({
+          comment, editedDate, edited: true,
+        }, { where: { user, multi: multi_id, id: comment_id } });
+        res.status(200).json({
+          success: true,
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+        });
+      }
     } catch (err) {
       console.error(err);
       next(err);
@@ -49,11 +55,14 @@ module.exports = {
       // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
       const user = 1;
 
-      await Comment.update({
-        deleted: true
-      }, { where: { user, multi: multi_id, id: comment_id } });
-
-      res.status(200).json({ success: true });
+      if (await Comment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
+        await Comment.update({
+          deleted: true
+        }, { where: { user, multi: multi_id, id: comment_id } });
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false });
+      }
     } catch (err) {
       console.error(err);
       next(err);

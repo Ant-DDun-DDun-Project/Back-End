@@ -20,20 +20,32 @@ describe('댓글 삭제에 대한 검사', () => {
   const res = {
     status: jest.fn(() => res),
     json: jest.fn(),
+    locals: {
+      user: 1
+    }
   };
   const next = jest.fn();
 
   test('댓글 삭제에 성공하였으면 / success: true / 를 응답으로 보내준다.', async () => {
+    await Comment.findOne.mockReturnValue(true);
     await Comment.update.mockReturnValue(true);
     await deleteComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
 
+  test('DB 에 정보가 없을 경우 / success: false / 를 응답으로 보내준다.', async () => {
+    await Comment.findOne.mockReturnValue(null);
+    //
+    await deleteComment(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({ success: false });
+  });
   test('DB 요청에 대한 에러가 발생', async () => {
-    const err = 'DB error'
-    Comment.update.mockReturnValue(Promise.reject(err))
+    const err = 'DB error';
+    await Comment.findOne.mockReturnValue(true);
+    Comment.update.mockReturnValue(Promise.reject(err));
     await deleteComment(req, res, next);
     expect(next).toBeCalledWith(err);
-  })
+  });
 });
