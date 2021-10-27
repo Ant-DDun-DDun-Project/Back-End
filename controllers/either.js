@@ -76,3 +76,8 @@ exports.getCompleteEither = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.editEither = async (req, res, next) => {
+  const { title, contentA, contentB, editDate } = req.body;
+  const { either_id } = req.params;
+};
