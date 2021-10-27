@@ -19,6 +19,10 @@ module.exports = class Comment extends Sequelize.Model {
         editedDate: {
           type: Sequelize.STRING,
           allowNull: true,
+        },
+        deleted: {
+          type: Sequelize.STRING,
+          defaultValue: false,
         }
       },
       {
