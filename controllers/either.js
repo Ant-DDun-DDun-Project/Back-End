@@ -107,7 +107,7 @@ exports.deleteEither = async (req, res, next) => {
       await Either.destroy({ where: { eitherId: either_id, user } });
       return res.status(200).json({ success: true });
     } else {
-      res.stauts(400).json({ success: false });
+      res.status(400).json({ success: false });
     }
   } catch (err) {
     console.error(err);
