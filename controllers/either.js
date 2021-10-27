@@ -80,4 +80,18 @@ exports.getCompleteEither = async (req, res, next) => {
 exports.editEither = async (req, res, next) => {
   const { title, contentA, contentB, editDate } = req.body;
   const { either_id } = req.params;
+  const user = res.locals.user;
+  try {
+    const eitherExist = await Either.findOne({ where: { either_id, user } });
+    console.log(eitherExist);
+    if (eitherExist) {
+      await Either.update({ title, contentA, contentB, editDate }, { where: { either_id, user } });
+      return res.status(200).json({ success: true });
+    } else {
+      res.status(400).json({ success: false });
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 };
