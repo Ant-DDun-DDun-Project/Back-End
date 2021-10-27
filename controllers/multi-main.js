@@ -41,7 +41,7 @@ exports.getMulti = async (req, res, next) => {
   }
 };
 
-exports.ingMulti = async (req, res, next) => {
+exports.getIngMulti = async (req, res, next) => {
   try {
     const user = 3;                // Todo --> 사용자 인증 미들웨어 구현 시 삭제
     // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화
@@ -80,7 +80,7 @@ exports.ingMulti = async (req, res, next) => {
   }
 };
 
-exports.completeMulti = async (req, res, next) => {
+exports.getCompleteMulti = async (req, res, next) => {
   try {
     const user = 3;                // Todo --> 사용자 인증 미들웨어 구현 시 삭제
     // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화

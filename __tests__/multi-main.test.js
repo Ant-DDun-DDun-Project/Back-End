@@ -1,6 +1,6 @@
 jest.mock('../models/multi');
 const Multi = require('../models/multi');
-const { getMulti, ingMulti, completeMulti } = require('../controllers/multi-main');
+const { getMulti, getIngMulti, getCompleteMulti } = require('../controllers/multi-main');
 
 describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사', () => {
   const req = {};
@@ -91,7 +91,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         liked: 1
       }],
     }));
-    await ingMulti(req, res, next);
+    await getIngMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: 'true',
@@ -119,7 +119,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
   test('DB 에러 발생한 경우에 대한 검사', async () => {
     const err = 'DB Err';
     Multi.findAll.mockReturnValue(Promise.reject(err));
-    await ingMulti(req, res, next);
+    await getIngMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -150,7 +150,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           liked: 1
         }],
       }));
-      await completeMulti(req, res, next);
+      await getCompleteMulti(req, res, next);
       expect(res.status).toBeCalledWith(200);
       expect(res.json).toBeCalledWith({
         success: 'true',
@@ -179,7 +179,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
     test('DB 에러 발생한 경우에 대한 검사', async () => {
       const err = 'DB Err';
       Multi.findAll.mockReturnValue(Promise.reject(err));
-      await completeMulti(req, res, next);
+      await getCompleteMulti(req, res, next);
       expect(next).toBeCalledWith(err);
     });
   });
