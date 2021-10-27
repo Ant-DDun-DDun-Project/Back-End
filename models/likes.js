@@ -3,8 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = class Like extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
-      {
-      },
+      {},
       {
         sequelize,
         timestamps: false,
@@ -23,14 +22,17 @@ module.exports = class Like extends Sequelize.Model {
     db.Like.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',
-    })
+      onDelete: 'CASCADE',
+    });
     db.Like.belongsTo(db.Either, {
       foreignKey: 'either',
       targetKey: 'eitherId',
+      onDelete: 'CASCADE',
     });
     db.Like.belongsTo(db.Multi, {
       foreignKey: 'multi',
       targetKey: 'multiId',
-    })
+      onDelete: 'CASCADE',
+    });
   }
 };

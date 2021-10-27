@@ -44,6 +44,7 @@ module.exports = {
     date: Joi.string().required(),
   }),
 
+
   editMultiSchema: Joi.object({
     // 객관식 게시물 수정 Schema
     title: Joi.string().required().min(1),
@@ -53,6 +54,12 @@ module.exports = {
     contentC: Joi.string().allow(null),
     contentD: Joi.string().allow(null),
     contentE: Joi.string().allow(null),
+
+  editEitherSchema: Joi.object({
+    // 찬반투표 게시물 수정 schema
+    title: Joi.string().required().min(1),
+    contentA: Joi.string().required().min(1),
+    contentB: Joi.string().required().min(1),
     editedDate: Joi.string().required(),
   }),
 };
