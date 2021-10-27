@@ -34,7 +34,7 @@ exports.mainMulti = async (req, res, next) => {
       ],
       order: [['date', 'DESC']],  // 최신 날짜 순으로 정렬
     });
-    res.json({ success: 'true', multi });
+    res.status(200).json({ success: 'true', multi });
   } catch (err) {
     console.error(err);
     next(err);
