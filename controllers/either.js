@@ -1,6 +1,5 @@
-const { Either, User, Vote } = require('../models/');
+const { Either, sequelize } = require('../models/');
 const { eitherSchema } = require('./joi');
-const { Op, Sequelize } = require('sequelize');
 
 // 게시글 작성에 대한 기능
 exports.postEither = async (req, res, next) => {
@@ -22,29 +21,58 @@ exports.postEither = async (req, res, next) => {
 };
 
 exports.getEither = async (req, res, next) => {
-  // const voteCntA = await Vote.findAll({
-  //   attributes: [[sequelize.fn('COUNT', 'vote'), 'A']],
-  //   where: {
-  //     either: {
-  //       [Op.gte]: 1,
-  //     },
-  //     vote: 'A',
-  //   },
-  // });
-  const either = await Either.findAll({
-    include: [
-      {
-        model: User,
-        attributes: ['nickname'],
-      },
-      {
-        model: Vote,
-        // attributes: [[Sequelize.fn('COUNT', Sequelize.col('vote')), 'A']],
-      },
-    ],
-    order: [['eitherId', 'DESC']],
-  });
-  res.status(200).json({
-    either,
-  });
+  try {
+    const user = 1; // res.locals.user 로 수정하기
+    const query = `SELECT *, (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
+                  (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
+                  (SELECT nickname FROM users WHERE id = either.user) AS nickname,
+                  (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                  FROM either ORDER BY eitherId DESC;`;
+    const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+    res.status(200).json({
+      success: true,
+      either,
+    });
+  } catch (err) {
+    console.log('글 받아올 때 에러발생', err);
+    next(err);
+  }
+};
+
+exports.getIngEither = async (req, res, next) => {
+  try {
+    const user = 1; // res.locals.user 로 수정하기
+    const query = `SELECT *, (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
+                  (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
+                  (SELECT nickname FROM users WHERE id = either.user) AS nickname,
+                  (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                  FROM either WHERE completed = 0 ORDER BY eitherId DESC;`;
+    const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+    res.status(200).json({
+      success: true,
+      either,
+    });
+  } catch (err) {
+    console.log('글 받아올 때 에러발생', err);
+    next(err);
+  }
+};
+
+exports.getCompleteEither = async (req, res, next) => {
+  try {
+    const user = 1; // res.locals.user 로 수정하기
+    const query = `SELECT *, (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
+                  (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
+                  (SELECT nickname FROM users WHERE id = either.user) AS nickname,
+                  (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                  FROM either WHERE completed = 1 ORDER BY eitherId DESC;`;
+    const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+    res.status(200).json({
+      success: true,
+      either,
+    });
+  } catch (err) {
+    console.log('글 받아올 때 에러발생', err);
+    next(err);
+  }
 };
