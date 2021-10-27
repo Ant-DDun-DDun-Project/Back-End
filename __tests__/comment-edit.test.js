@@ -18,7 +18,7 @@ describe('댓글 수정에 대한 검사', () => {
     },
     body: {
       comment: '수정되었습니다.',
-      editDate: '2021-10-28 11:11:10',
+      editedDate: '2021-10-28 11:11:10',
     },
   };
   const res = {
@@ -37,7 +37,7 @@ describe('댓글 수정에 대한 검사', () => {
 
   test('DB 에 정보가 없을 경우 / success: false / 를 응답으로 보내준다.', async () => {
     await Comment.findOne.mockReturnValue(null);
-    await Comment.update.mockReturnValue(null);
+    await Comment.update.mockReturnValue(true);
     await editComment(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });

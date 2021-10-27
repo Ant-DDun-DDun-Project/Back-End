@@ -4,7 +4,7 @@ const { postCommentSchema, editCommentSchema } = require('./joi');
 module.exports = {
   postComment: async (req, res, next) => {
     try {
-      const { comment, date } = postCommentSchema.validateAsync(req.body);
+      const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id } = req.params;
       const user = res.locals.user;
       await Comment.create({
@@ -25,7 +25,7 @@ module.exports = {
   editComment: async (req, res, next) => {
     try {
 
-      const { comment, editedDate } = req.body; // Todo --> 조이 확인
+      const { comment, editedDate } = await editCommentSchema.validateAsync(req.body); // Todo --> 조이 확인
       const { multi_id, comment_id } = req.params;
       //const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
       const user = 1; // Todo --> 사용자 인증 미들웨어 구현 시 삭제
@@ -54,7 +54,7 @@ module.exports = {
       const { multi_id, comment_id } = req.params;
       // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
       const user = 1;
-
+      console.log(req.params);
       if (await Comment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         await Comment.update({
           deleted: true
