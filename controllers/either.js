@@ -82,13 +82,32 @@ exports.editEither = async (req, res, next) => {
   const { either_id } = req.params;
   const user = res.locals.user;
   try {
-    const eitherExist = await Either.findOne({ where: { either_id, user } });
-    console.log(eitherExist);
+    const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
     if (eitherExist) {
-      await Either.update({ title, contentA, contentB, editDate }, { where: { either_id, user } });
+      await Either.update(
+        { title, contentA, contentB, editDate, edited: true },
+        { where: { either_id, user } }
+      );
       return res.status(200).json({ success: true });
     } else {
       res.status(400).json({ success: false });
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+exports.deleteEither = async (req, res, next) => {
+  const { either_id } = req.params;
+  const user = res.locals.user;
+  try {
+    const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
+    if (eitherExist) {
+      await Either.destroy({ where: { eitherId: either_id, user } });
+      return res.status(200).json({ success: true });
+    } else {
+      res.stauts(400).json({ success: false });
     }
   } catch (err) {
     console.error(err);

@@ -37,6 +37,7 @@ describe('양자택일 게시물 수정', () => {
         contentA: '삼전',
         contentB: '애플',
         date: '2021-10-26 20:27:23',
+        edited: false,
         editDate: null,
       })
     );

@@ -19,7 +19,11 @@ module.exports = class ChildComment extends Sequelize.Model {
         editedDate: {
           type: Sequelize.STRING,
           allowNull: true,
-        }
+        },
+        deleted: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
       },
       {
         sequelize,
@@ -52,6 +56,5 @@ module.exports = class ChildComment extends Sequelize.Model {
       foreignKey: 'parentComment',
       targetKey: 'id',
     });
-
   }
 };
