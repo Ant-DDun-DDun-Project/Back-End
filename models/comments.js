@@ -21,7 +21,7 @@ module.exports = class Comment extends Sequelize.Model {
           allowNull: true,
         },
         deleted: {
-          type: Sequelize.STRING,
+          type: Sequelize.BOOLEAN,
           defaultValue: false,
         }
       },
@@ -51,7 +51,7 @@ module.exports = class Comment extends Sequelize.Model {
     db.Comment.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',
-    })
+    });
     db.Comment.belongsTo(db.Multi, {
       foreignKey: 'multi',
       targetKey: 'multiId',

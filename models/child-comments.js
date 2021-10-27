@@ -21,7 +21,7 @@ module.exports = class ChildComment extends Sequelize.Model {
           allowNull: true,
         },
         deleted: {
-          type: Sequelize.STRING,
+          type: Sequelize.BOOLEAN,
           defaultValue: false,
         },
       },
