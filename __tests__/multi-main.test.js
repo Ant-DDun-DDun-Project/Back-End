@@ -1,4 +1,12 @@
 jest.mock('../models/multi');
+jest.mock('../models/users');
+jest.mock('../models/votes');
+jest.mock('../models/likes');
+jest.mock('../models/comments');
+jest.mock('../models/either');
+jest.mock('../models/comment-likes');
+jest.mock('../models/child-comments');
+
 const Multi = require('../models/multi');
 const { getMulti, getIngMulti, getCompleteMulti } = require('../controllers/multi-main');
 
