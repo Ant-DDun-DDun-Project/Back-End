@@ -6,132 +6,154 @@ jest.mock('../models/comments');
 jest.mock('../models/either');
 jest.mock('../models/comment-likes');
 jest.mock('../models/child-comments');
+jest.mock('sequelize');
 
-const Multi = require('../models/multi');
+const { sequelize } = require('../models');
 const { getMulti, getIngMulti, getCompleteMulti } = require('../controllers/multi-main');
 
+// 객관식 페이지 메인
 describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사', () => {
   const req = {};
   const res = {
     status: jest.fn(() => res),
-    json: jest.fn()
+    json: jest.fn(),
+    locals: {
+      user: 1
+    }
   };
   const next = jest.fn();
 
   test('객관식 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
-    Multi.findAll.mockReturnValue(Promise.resolve({
-      multiId: 1,
-      user: 1,
-      title: '제목입니다.',
-      description: '내용입니다.',
-      date: '2021-10-22 10:15:55',
-      editedDate: null,
-      completed: false,
-      likeCnt: 0,
-      Comments: [{
-        commentCnt: 3,
-      }],
-      Votes: [{
+    sequelize.query.mockReturnValue(Promise.resolve({
+      multi: [{
+        multi: 1,
+        title: '무야호',
+        description: '매우 좋다는 의미',
+        contentA: '예제 A',
+        contentB: '예제 B',
+        contentC: '예제 C',
+        contentD: '예제 D',
+        contentE: '예제 E',
+        date: '2021-10-28 10:09:30',
+        completed: 0,
+        edited: 0,
+        editedDated: null,
+        likeCnt: 0,
+        user: 1,
         voted: 'A',
-      }],
-      Likes: [{
-        liked: 1
-      }],
+        liked: null,
+        commentCnt: 5,
+        nickname: 'test',
+      }]
     }));
     await getMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: 'true',
       multi: {
-        multiId: 1,
-        user: 1,
-        title: '제목입니다.',
-        description: '내용입니다.',
-        date: '2021-10-22 10:15:55',
-        editedDate: null,
-        completed: false,
-        likeCnt: 0,
-        Comments: [{
-          commentCnt: 3,
-        }],
-        Votes: [{
+        multi: [{
+          multi: 1,
+          title: '무야호',
+          description: '매우 좋다는 의미',
+          contentA: '예제 A',
+          contentB: '예제 B',
+          contentC: '예제 C',
+          contentD: '예제 D',
+          contentE: '예제 E',
+          date: '2021-10-28 10:09:30',
+          completed: 0,
+          edited: 0,
+          editedDated: null,
+          likeCnt: 0,
+          user: 1,
           voted: 'A',
-        }],
-        Likes: [{
-          liked: 1,
-        }],
+          liked: null,
+          commentCnt: 5,
+          nickname: 'test',
+        }]
       }
     });
   });
   test('DB 에러 발생한 경우에 대한 검사', async () => {
     const err = 'DB Err';
-    Multi.findAll.mockReturnValue(Promise.reject(err));
+    sequelize.query.mockReturnValue(Promise.reject(err));
     await getMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
 
+// 객관식 진행중
 describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대한 검사', () => {
   const req = {};
   const res = {
     status: jest.fn(() => res),
     json: jest.fn(),
+    locals: {
+      user: 1,
+    }
   };
   const next = jest.fn();
 
   test('객관식 진행중 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
-    Multi.findAll.mockReturnValue(Promise.resolve({
-      multiId: 1,
-      user: 1,
-      title: '제목입니다.',
-      description: '내용입니다.',
-      date: '2021-10-22 10:15:55',
-      editedDate: null,
-      completed: false,
-      likeCnt: 0,
-      Comments: [{
-        commentCnt: 3,
-      }],
-      Votes: [{
+    sequelize.query.mockReturnValue(Promise.resolve({
+      multi: [{
+        multi: 1,
+        title: '무야호',
+        description: '매우 좋다는 의미',
+        contentA: '예제 A',
+        contentB: '예제 B',
+        contentC: '예제 C',
+        contentD: '예제 D',
+        contentE: '예제 E',
+        date: '2021-10-28 10:09:30',
+        completed: 0,
+        edited: 0,
+        editedDated: null,
+        likeCnt: 0,
+        user: 1,
         voted: 'A',
-      }],
-      Likes: [{
-        liked: 1
-      }],
+        liked: null,
+        commentCnt: 5,
+        nickname: 'test',
+      }]
     }));
     await getIngMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: 'true',
       multi: {
-        multiId: 1,
-        user: 1,
-        title: '제목입니다.',
-        description: '내용입니다.',
-        date: '2021-10-22 10:15:55',
-        editedDate: null,
-        completed: false,
-        likeCnt: 0,
-        Comments: [{
-          commentCnt: 3,
-        }],
-        Votes: [{
+        multi: [{
+          multi: 1,
+          title: '무야호',
+          description: '매우 좋다는 의미',
+          contentA: '예제 A',
+          contentB: '예제 B',
+          contentC: '예제 C',
+          contentD: '예제 D',
+          contentE: '예제 E',
+          date: '2021-10-28 10:09:30',
+          completed: 0,
+          edited: 0,
+          editedDated: null,
+          likeCnt: 0,
+          user: 1,
           voted: 'A',
-        }],
-        Likes: [{
-          liked: 1
-        }],
+          liked: null,
+          commentCnt: 5,
+          nickname: 'test',
+        }]
       }
     });
   });
   test('DB 에러 발생한 경우에 대한 검사', async () => {
     const err = 'DB Err';
-    Multi.findAll.mockReturnValue(Promise.reject(err));
+    sequelize.query.mockReturnValue(Promise.reject(err));
     await getIngMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
-  describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대한 검사', () => {
+  // 객관식 완료 페이지
+  describe('객관식 완료된 페이지에서 게시물 리스트 전송에 대한 검사', () => {
     const req = {};
     const res = {
       status: jest.fn(() => res),
@@ -139,54 +161,60 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
     };
     const next = jest.fn();
     test('객관식 완료된 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
-      Multi.findAll.mockReturnValue(Promise.resolve({
-        multiId: 1,
-        user: 1,
-        title: '제목입니다.',
-        description: '내용입니다.',
-        date: '2021-10-22 10:15:55',
-        editedDate: null,
-        completed: true,
-        likeCnt: 0,
-        Comments: [{
-          commentCnt: 3,
-        }],
-        Votes: [{
+      sequelize.query.mockReturnValue(Promise.resolve({
+        multi: [{
+          multi: 1,
+          title: '무야호',
+          description: '매우 좋다는 의미',
+          contentA: '예제 A',
+          contentB: '예제 B',
+          contentC: '예제 C',
+          contentD: '예제 D',
+          contentE: '예제 E',
+          date: '2021-10-28 10:09:30',
+          completed: 0,
+          edited: 0,
+          editedDated: null,
+          likeCnt: 0,
+          user: 1,
           voted: 'A',
-        }],
-        Likes: [{
-          liked: 1
-        }],
+          liked: null,
+          commentCnt: 5,
+          nickname: 'test',
+        }]
       }));
       await getCompleteMulti(req, res, next);
       expect(res.status).toBeCalledWith(200);
       expect(res.json).toBeCalledWith({
         success: 'true',
         multi: {
-          multiId: 1,
-          user: 1,
-          title: '제목입니다.',
-          description: '내용입니다.',
-          date: '2021-10-22 10:15:55',
-          editedDate: null,
-          completed: true,
-          likeCnt: 0,
-          Comments: [{
-            commentCnt: 3,
-          }],
-          Votes: [{
+          multi: [{
+            multi: 1,
+            title: '무야호',
+            description: '매우 좋다는 의미',
+            contentA: '예제 A',
+            contentB: '예제 B',
+            contentC: '예제 C',
+            contentD: '예제 D',
+            contentE: '예제 E',
+            date: '2021-10-28 10:09:30',
+            completed: 0,
+            edited: 0,
+            editedDated: null,
+            likeCnt: 0,
+            user: 1,
             voted: 'A',
-          }],
-          Likes: [{
-            liked: 1
-          }],
+            liked: null,
+            commentCnt: 5,
+            nickname: 'test',
+          }]
         }
-      })
+      });
     });
 
     test('DB 에러 발생한 경우에 대한 검사', async () => {
       const err = 'DB Err';
-      Multi.findAll.mockReturnValue(Promise.reject(err));
+      sequelize.query.mockReturnValue(Promise.reject(err));
       await getCompleteMulti(req, res, next);
       expect(next).toBeCalledWith(err);
     });
