@@ -174,5 +174,27 @@ module.exports = {
       console.error(err);
       next(err);
     }
+  },
+
+  // 찬반 투표 종료하기
+  completeEither: async (req, res, next) => {
+    const { either_id } = req.params;
+    // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+    const user = 1;
+
+    try {
+      if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {  // DB에 해당 게시물이 존재하는 경우
+        await Either.update(
+          { completed: true },
+          { where: { user, eitherId: either_id } },
+        );
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
   }
 };
