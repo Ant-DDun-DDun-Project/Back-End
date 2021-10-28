@@ -16,7 +16,8 @@ const {
   getCompleteEither,
   deleteEither,
   likeEither,
-  voteEither
+  voteEither,
+  completeEither
 } = require('../../controllers/either');
 const { Either, sequelize, Like, Vote } = require('../../models');
 describe('양자택일 게시글 작성 테스트', () => {
@@ -574,6 +575,51 @@ describe('찬반 투표에 대한 검사', () => {
     await Vote.create.mockReturnValue(true);
     Vote.count.mockReturnValue(Promise.reject(err));
     await voteEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+describe('찬반 게시물 종료하기 검사', () => {
+  const req = {
+    params: {
+      either_id: '1',
+    },
+  };
+  const res = {
+    status: jest.fn(() => res),
+    json: jest.fn(),
+    locals: {
+      user: 1,
+    },
+  };
+  const next = jest.fn();
+  const err = 'DB error';
+
+  test('작성자가 성공적으로 찬반투표 게시물을 투표를 종료하였을 경우 / success: true / 를 응답으로 보내준다.', async () => {
+    await Either.findOne.mockReturnValue(true);
+    await Either.update.mockReturnValue(true);
+    await completeEither(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({ success: true });
+  });
+
+  test('작성자가 이미 투표 종료를 했을 경우 / success: false/ 를 응답으로 보내준다.', async () => {
+    await Either.findOne.mockReturnValue(null);
+    await completeEither(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({ success: false });
+  });
+
+  test('DB Error 발생 --> Either.findOne', async () => {
+    Either.findOne.mockReturnValue(Promise.reject(err));
+    await completeEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 발생 --> Either.update', async () => {
+    await Either.findOne.mockReturnValue(true);
+    Either.update.mockReturnValue(Promise.reject(err))
+    await completeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
