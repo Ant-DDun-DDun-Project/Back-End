@@ -25,7 +25,7 @@ module.exports = {
   },
   //대댓글 수정
   editChildComment: async (req, res, next) => {
-    const { comment, editedDate } = editCommentSchema.validateAsync(req.body);
+    const { comment, editedDate } = await editCommentSchema.validateAsync(req.body);
     const { multi_id, comment_id } = req.params;
     const user = res.locals.user;
     try {
