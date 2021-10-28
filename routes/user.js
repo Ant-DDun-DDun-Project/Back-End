@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { signup } = require('../controllers/signup');
-const { login } = require('../controllers/login');
+const { signup, login } = require('../controllers/user');
 const { CheckDuplicatedId, CheckDuplicatedNick } = require('../controllers/signup-duplication');
 
 router.post('/signup', signup);
