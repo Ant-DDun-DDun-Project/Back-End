@@ -48,7 +48,7 @@ module.exports = {
   //로그인
   login: async (req, res, next) => {
     try {
-      const { userId, pw } = loginSchema.validateAsync(req.body);
+      const { userId, pw } = await loginSchema.validateAsync(req.body);
       const userData = await User.findOne({
         where: {
           userId,
