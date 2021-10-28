@@ -1,4 +1,4 @@
-const { Either, sequelize } = require('../models/');
+const { Either, sequelize, Like } = require('../models/');
 const { eitherSchema, editEitherSchema } = require('./joi');
 
 module.exports = {
@@ -24,11 +24,13 @@ module.exports = {
   getEither: async (req, res, next) => {
     try {
       const user = 1; // res.locals.user 로 수정하기
-      const query = `SELECT *, (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
-                  (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
-                  (SELECT nickname FROM users WHERE id = either.user) AS nickname,
-                  (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
-                  FROM either ORDER BY eitherId DESC;`;
+      const query = `SELECT *,
+                            (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
+                            (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
+                            (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
+                            (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                     FROM either
+                     ORDER BY eitherId DESC;`;
       const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
       res.status(200).json({
         success: true,
@@ -43,11 +45,14 @@ module.exports = {
   getIngEither: async (req, res, next) => {
     try {
       const user = 1; // res.locals.user 로 수정하기
-      const query = `SELECT *, (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
-                  (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
-                  (SELECT nickname FROM users WHERE id = either.user) AS nickname,
-                  (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
-                  FROM either WHERE completed = 0 ORDER BY eitherId DESC;`;
+      const query = `SELECT *,
+                            (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
+                            (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
+                            (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
+                            (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                     FROM either
+                     WHERE completed = 0
+                     ORDER BY eitherId DESC;`;
       const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
       res.status(200).json({
         success: true,
@@ -62,11 +67,14 @@ module.exports = {
   getCompleteEither: async (req, res, next) => {
     try {
       const user = 1; // res.locals.user 로 수정하기
-      const query = `SELECT *, (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
-                  (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
-                  (SELECT nickname FROM users WHERE id = either.user) AS nickname,
-                  (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
-                  FROM either WHERE completed = 1 ORDER BY eitherId DESC;`;
+      const query = `SELECT *,
+                            (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
+                            (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
+                            (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
+                            (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                     FROM either
+                     WHERE completed = 1
+                     ORDER BY eitherId DESC;`;
       const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
       res.status(200).json({
         success: true,
@@ -115,4 +123,32 @@ module.exports = {
       next(err);
     }
   },
+
+  // 찬반투표 게시글 좋아요
+  likeEither: async (req, res, next) => {
+    const { either_id } = req.params;
+    // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현시 삭제
+    const user = 1;
+    try {
+      if (!await Like.findOne({ where: { either: either_id, user } })) {
+        await Like.create({
+          user, either: either_id,
+        });
+        const totalLike = await Like.count({ where: { either: either_id } });
+        await Either.update(
+          { likeCnt: totalLike },
+          { where: { eitherId: either_id } },
+        );
+        res.status(200).json({
+          success: true,
+          likeCnt: totalLike,
+        });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
 };

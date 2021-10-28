@@ -7,6 +7,7 @@ jest.mock('../../models/comments');
 jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
 jest.mock('sequelize');
+
 const {
   postEither,
   editEither,
@@ -14,8 +15,9 @@ const {
   getIngEither,
   getCompleteEither,
   deleteEither,
+  likeEither,
 } = require('../../controllers/either');
-const { Either, sequelize } = require('../../models');
+const { Either, sequelize, Like } = require('../../models');
 describe('양자택일 게시글 작성 테스트', () => {
   const res = {
     status: jest.fn(() => res),
@@ -444,6 +446,74 @@ describe('양자택일 삭제', () => {
     await Either.findOne.mockRejectedValue(err);
     await Either.destroy.mockRejectedValue(err);
     await deleteEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+describe('찬반 투표 좋아요에 대한 검사', () => {
+  const req = {
+    params: {
+      either_id: '1',
+    },
+  };
+  const res = {
+    status: jest.fn(() => res),
+    json: jest.fn(),
+    locals: {
+      user: 1,
+    },
+  };
+  const next = jest.fn();
+  const err = 'DB error';
+
+  test('찬반 투표 좋아요 이벤트를 성공적으로 수행하면 / success: true , likeCnt / 를 응답으로 보낸다.', async () => {
+    await Like.findOne.mockReturnValue(false);  // 해당 게시물에 투표한 이력이 없는 경우
+    await Like.create.mockReturnValue(true);  // 해당 게시물에 투표 이력을 추가 한다.
+    await Like.count.mockReturnValue(1);   // 해당 게시물의 좋아요 갯수를 구한다.
+    await Either.update.mockReturnValue(true);  // 찬반 투표 해당 게시물의 likeCnt 수정 작업
+    await likeEither(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      likeCnt: 1,
+    });
+  });
+  test('찬반 투표 좋아요를 수행한 이력이 존해마녀 / success: false / 를 응답으로 보낸다', async () => {
+    await Like.findOne.mockReturnValue(true);
+    await likeEither(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({
+      success: false,
+    });
+  });
+
+  test('DB Error 동작 -> Like.findOne', async () => {
+    Like.findOne.mockReturnValue(Promise.reject(err));
+    await likeEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 동작 -> Like.create', async () => {
+    await Like.findOne.mockReturnValue(false);
+    Like.create.mockReturnValue(Promise.reject(err));
+    await likeEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 동작 -> Like.count', async () => {
+    await Like.findOne.mockReturnValue(false);
+    await Like.create.mockReturnValue(true);
+    Like.count.mockReturnValue(Promise.reject(err));
+    await likeEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 동작 -> Either.update', async () => {
+    await Like.findOne.mockReturnValue(false);
+    await Like.create.mockReturnValue(true);
+    await Like.count.mockReturnValue(1);
+    Either.update.mockReturnValue(Promise.resolve(err));
+    await likeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
