@@ -1,5 +1,5 @@
 const { ChildComment } = require('../models');
-const { postCommentSchema } = require('./joi');
+const { postCommentSchema, editCommentSchema } = require('./joi');
 
 module.exports = {
   //대댓글 작성
@@ -25,7 +25,7 @@ module.exports = {
   },
   //대댓글 수정
   editChildComment: async (req, res, next) => {
-    const { comment, editedDate } = req.body;
+    const { comment, editedDate } = editCommentSchema.validateAsync(req.body);
     const { multi_id, comment_id } = req.params;
     const user = res.locals.user;
     try {

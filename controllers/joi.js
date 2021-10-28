@@ -56,7 +56,7 @@ module.exports = {
     contentE: Joi.string().allow(null),
     editedDate: Joi.string().allow(null),
   }),
-  // 찬반투표 게시물 수정 schema
+  // 찬반투표 게시물 수정 Schema
   editEitherSchema: Joi.object({
     title: Joi.string().required().min(1),
     contentA: Joi.string().required().min(1),
