@@ -1,5 +1,5 @@
 const { Either, sequelize, Like, Vote } = require('../models/');
-const { eitherSchema, editEitherSchema } = require('./joi');
+const { eitherSchema, editEitherSchema, voteEitherSchema } = require('./joi');
 
 module.exports = {
   // 찬반투표 게시글 작성
@@ -153,12 +153,12 @@ module.exports = {
   },
   // 찬반 투표
   voteEither: async (req, res, next) => {
-    const { vote } = req.body;
-    const { either_id } = req.params;
-    // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
-    const user = 3;
-
     try {
+      const { vote } = await voteEitherSchema.validateAsync(req.body);
+      const { either_id } = req.params;
+      // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+      const user = 3;
+
       if (await Vote.findOne({ where: { user, either: either_id } })) { // 이미 투표한 이력이 존재하는 경우
         res.status(400).json({ success: false });
       } else {

@@ -76,4 +76,8 @@ module.exports = {
   duplicatedNickSchema: Joi.object({
     nickname: Joi.string().required().min(1),
   }),
+  // 찬반 투표하기 schema
+  voteEitherSchema: Joi.object({
+    vote: Joi.string().required(),
+  })
 };
