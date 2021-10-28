@@ -1,4 +1,4 @@
-const { sequelize, Multi } = require('../models');
+const { sequelize, Multi, like, Like } = require('../models');
 const { multiSchema, editMultiSchema } = require('./joi');
 
 module.exports = {
@@ -133,6 +133,37 @@ module.exports = {
       } else {
         res.status(400).json({
           success: false,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+  //객관식 게시글 좋아요
+  likeMulti: async (req, res, next) => {
+    try {
+      const { multi_id } = req.params;
+      const user = res.locals.user;
+      const alreadyLike = await Like.findOne({ where: { multi: multi_id, user } });
+      if (alreadyLike) {
+        res.status(400).json({
+          success: false,
+        });
+      } else {
+        await Like.create({
+          user,
+          multi: multi_id,
+        });
+        const likeCnt = await Like.count({
+          where: {
+            multi: multi_id,
+          },
+        });
+        await Multi.update({ likeCnt }, { where: { multiId: multi_id } });
+        res.status(200).json({
+          success: true,
+          likeCnt,
         });
       }
     } catch (err) {
