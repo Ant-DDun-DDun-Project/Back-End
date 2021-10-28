@@ -478,7 +478,7 @@ describe('찬반 투표 좋아요에 대한 검사', () => {
       likeCnt: 1,
     });
   });
-  test('찬반 투표 좋아요를 수행한 이력이 존해마녀 / success: false / 를 응답으로 보낸다', async () => {
+  test('찬반 투표 좋아요를 수행한 이력이 존재하면 / success: false / 를 응답으로 보낸다', async () => {
     await Like.findOne.mockReturnValue(true);
     await likeEither(req, res, next);
     expect(res.status).toBeCalledWith(400);
