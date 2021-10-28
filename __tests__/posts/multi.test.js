@@ -66,9 +66,11 @@ describe('객관식 게시물 수정', () => {
     body: {
       title: '제목',
       description: '내용',
-      contentA: '하나하나',
-      contentB: '둘둘',
-      contentC: '삼삼',
+      contentA: '예제 A',
+      contentB: '예제 B',
+      contentC: '예제 C',
+      contentD: '예제 D',
+      contentE: '예제 E',
       editedDate: '2021-10-27 22:52:00',
     },
   };
@@ -85,9 +87,11 @@ describe('객관식 게시물 수정', () => {
       Promise.resolve({
         title: '제목',
         description: '내용',
-        contentA: '하나하나',
-        contentB: '둘둘',
-        contentC: '삼삼',
+        contentA: '예제 A',
+        contentB: '예제 B',
+        contentC: '예제 C',
+        contentD: '예제 D',
+        contentE: '예제 E',
         edited: false,
         editedDate: null,
       })
@@ -96,9 +100,11 @@ describe('객관식 게시물 수정', () => {
       Promise.resolve({
         title: '제목',
         description: '내용',
-        contentA: '하나하나',
-        contentB: '둘둘',
-        contentC: '삼삼',
+        contentA: '예제 A',
+        contentB: '예제 B',
+        contentC: '예제 C',
+        contentD: '예제 D',
+        contentE: '예제 E',
         edited: false,
         editedDate: null,
       })
@@ -363,9 +369,11 @@ describe('객관식 삭제', () => {
       Promise.resolve({
         title: '제목',
         description: '내용',
-        contentA: '하나하나',
-        contentB: '둘둘',
-        contentC: '삼삼',
+        contentA: '예제 A',
+        contentB: '예제 B',
+        contentC: '예제 C',
+        contentD: '예제 D',
+        contentE: '예제 E',
         edited: false,
         editedDate: null,
       })

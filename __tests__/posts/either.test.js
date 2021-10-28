@@ -544,11 +544,7 @@ describe('찬반 투표에 대한 검사', () => {
     await Vote.count.mockReturnValue(4);
     await voteEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({
-      success: true,
-      voteCntA: 4,
-      voteCntB: 4,
-    });
+    expect(res.json).toBeCalledTimes(1);
   });
 
   test('찬반 투표 경력이 이미 존재한다면 / success: false / 와 status 400 응답을 보낸다.', async () => {
