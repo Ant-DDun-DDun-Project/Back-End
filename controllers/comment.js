@@ -1,4 +1,4 @@
-const { Comment } = require('../models');
+const { Comment, CommentLike } = require('../models');
 const { postCommentSchema, editCommentSchema } = require('./joi');
 
 module.exports = {
@@ -69,6 +69,27 @@ module.exports = {
         res.status(200).json({ success: true });
       } else {
         res.status(400).json({ success: false });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+  // 댓글 좋아요
+  likeComment: async (req, res, next) => {
+    const { multi_id, comment_id } = req.params;
+    const user = res.locals.user;
+    try {
+      const likeExist = await CommentLike.findOne({
+        where: { multi: multi_id, comment: comment_id, user },
+      });
+      if (likeExist) {
+        return res.status(400).json({ success: false });
+      } else {
+        await CommentLike.create({ user, comment: comment_id });
+        const likeCnt = await CommentLike.count({ where: { comment: comment_id } });
+        await Comment.update({ likeCnt }, { wehre: { id: comment_id } });
+        res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {
       console.error(err);

@@ -25,6 +25,10 @@ module.exports = class Comment extends Sequelize.Model {
           allowNull: true,
           defaultValue: false,
         },
+        likeCnt: {
+          type: Sequelize.INTEGER,
+          defaultValue: 0,
+        },
       },
       {
         sequelize,
