@@ -1,17 +1,17 @@
-jest.mock('../models/comments');
-jest.mock('../models/users');
-jest.mock('../models/multi');
-jest.mock('../models/either');
-jest.mock('../models/likes');
-jest.mock('../models/votes');
-jest.mock('../models/child-comments');
-jest.mock('../models/comment-likes');
-jest.mock('../controllers/utils/attend-count');
-jest.mock('../controllers/utils/posting-count');
-const { Either, Multi } = require('../models');
-const { getMain } = require('../controllers/main');
-const { countPosting } = require('../controllers/utils/posting-count');
-const { countAttend } = require('../controllers/utils/attend-count');
+jest.mock('../../models/either');
+jest.mock('../../models/votes');
+jest.mock('../../models/users');
+jest.mock('../../models/Multi');
+jest.mock('../../models/likes');
+jest.mock('../../models/comments');
+jest.mock('../../models/child-comments');
+jest.mock('../../models/comment-likes');
+jest.mock('../../controllers/utils/attend-count');
+jest.mock('../../controllers/utils/posting-count');
+const { Either, Multi } = require('../../models');
+const { getMain } = require('../../controllers/main');
+const { countPosting } = require('../../controllers/utils/posting-count');
+const { countAttend } = require('../../controllers/utils/attend-count');
 
 describe('메인페이지 뷰', () => {
   const req = {};

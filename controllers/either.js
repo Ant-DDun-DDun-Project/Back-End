@@ -80,7 +80,7 @@ exports.getCompleteEither = async (req, res, next) => {
 exports.editEither = async (req, res, next) => {
   const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(req.body);
   const { either_id } = req.params;
-  const user = res.locals.user;
+  const user = 4;
   try {
     const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
     if (eitherExist) {
