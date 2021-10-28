@@ -8,7 +8,8 @@ exports.getMulti = async (req, res, next) => {
                           (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
                           (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
                           (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                                  (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt
+                                  (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
+                          (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
                    FROM multi
                    ORDER BY date DESC`;
     const multi = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });  // QueryType 로 1번만 뽑는다.
@@ -28,7 +29,8 @@ exports.getIngMulti = async (req, res, next) => {
                           (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
                           (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
                           (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                                  (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt
+                                  (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
+                          (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
                    FROM multi
                    WHERE completed = 0
                    ORDER BY date DESC`;
@@ -48,7 +50,8 @@ exports.getCompleteMulti = async (req, res, next) => {
                           (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
                           (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
                           (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                                  (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt
+                                  (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
+                          (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
                    FROM multi
                    WHERE completed = 1
                    ORDER BY date DESC`;

@@ -43,6 +43,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         voted: 'A',
         liked: null,
         commentCnt: 5,
+        nickname: 'test',
       }]
     }));
     await getMulti(req, res, next);
@@ -68,6 +69,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
           voted: 'A',
           liked: null,
           commentCnt: 5,
+          nickname: 'test',
         }]
       }
     });
@@ -112,6 +114,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         voted: 'A',
         liked: null,
         commentCnt: 5,
+        nickname: 'test',
       }]
     }));
     await getIngMulti(req, res, next);
@@ -137,6 +140,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: 'A',
           liked: null,
           commentCnt: 5,
+          nickname: 'test',
         }]
       }
     });
@@ -176,6 +180,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: 'A',
           liked: null,
           commentCnt: 5,
+          nickname: 'test',
         }]
       }));
       await getCompleteMulti(req, res, next);
@@ -201,6 +206,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
             voted: 'A',
             liked: null,
             commentCnt: 5,
+            nickname: 'test',
           }]
         }
       });
