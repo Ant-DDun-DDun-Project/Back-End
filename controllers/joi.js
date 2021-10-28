@@ -65,7 +65,7 @@ module.exports = {
   }),
   // 아이디 중복 체크 schema
   duplicatedIdSchema: Joi.object({
-    userID: Joi.string().required().min(1),
+    userId: Joi.string().required().min(1),
   }),
   // 닉네임 중복 체크 schema
   duplicatedNickSchema: Joi.object({
