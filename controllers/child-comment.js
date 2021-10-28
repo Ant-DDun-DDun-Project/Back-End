@@ -1,4 +1,4 @@
-const { ChildComment } = require('../models');
+const { ChildComment, CommentLike } = require('../models');
 const { postCommentSchema, editCommentSchema } = require('./joi');
 
 module.exports = {
@@ -61,6 +61,27 @@ module.exports = {
         res.status(200).json({ success: true });
       } else {
         res.status(400).json({ success: false });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+  //대댓글 좋아요
+  likeChildComment: async (req, res, next) => {
+    const { multi_id, comment_id } = req.params;
+    const user = res.locals.user;
+    try {
+      const likeExist = await CommentLike.findOne({
+        where: { multi: multi_id, childComment: comment_id, user },
+      });
+      if (likeExist) {
+        return res.status(400).json({ success: false });
+      } else {
+        await CommentLike.create({ user, childComment: comment_id });
+        const likeCnt = await CommentLike.count({ where: { childComment: comment_id } });
+        await ChildComment.update({ likeCnt }, { wehre: { id: comment_id } });
+        res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {
       console.error(err);
