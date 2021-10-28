@@ -8,7 +8,7 @@ jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
 jest.mock('sequelize');
 
-const { Multi, sequelize } = require('../../models');
+const { Multi, sequelize, Like } = require('../../models');
 const {
   postMulti,
   editMulti,
@@ -16,6 +16,7 @@ const {
   getIngMulti,
   getCompleteMulti,
   deleteMulti,
+  likeMulti,
 } = require('../../controllers/multi');
 
 describe('객관식 게시글을 작성에 대한 검사', () => {
@@ -35,7 +36,7 @@ describe('객관식 게시글을 작성에 대한 검사', () => {
     status: jest.fn(() => res),
     json: jest.fn(),
     locals: {
-      user: 'testId',
+      user: '1',
     },
   };
   const next = jest.fn();
@@ -44,7 +45,7 @@ describe('객관식 게시글을 작성에 대한 검사', () => {
   test('객관식 게시글을 성공적으로 작성하면 /success: true/ 를 응답으로 보낸다.', async () => {
     await Multi.create.mockReturnValue(true);
     await postMulti(req, res, next);
-    //expect(res.status).toBeCalledWith(200);
+    expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
 
@@ -122,7 +123,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
     status: jest.fn(() => res),
     json: jest.fn(),
     locals: {
-      user: 1,
+      user: '1',
     },
   };
   const next = jest.fn();
@@ -385,6 +386,74 @@ describe('객관식 삭제', () => {
     await Multi.findOne.mockRejectedValue(err);
     await Multi.update.mockRejectedValue(err);
     await deleteMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+// 객관식 좋아요
+describe('객관식 게시글을 좋아요에 대한 검사', () => {
+  const req = {
+    params: {
+      multi_id: '1',
+    },
+  };
+  const res = {
+    status: jest.fn(() => res),
+    json: jest.fn(),
+    locals: {
+      user: '1',
+    },
+  };
+  const next = jest.fn();
+
+  test('객관식 게시글 좋아요에 성공하면 success:true와 likeCnt를 내려준다.', async () => {
+    await Like.findOne.mockReturnValue(null);
+    await Like.create.mockReturnValue(true);
+    await Like.count.mockReturnValue(3);
+    await Multi.update.mockReturnValue(true);
+    await likeMulti(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({ success: true, likeCnt: 3 });
+  });
+
+  test('이미 likes 테이블에 있는 경우 success:false를 내려준다.', async () => {
+    await Like.findOne.mockReturnValue(true);
+    await likeMulti(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({ success: false });
+  });
+
+  test('like테이블 조회 시 에러가 난 경우 success: false를 내려준다.', async () => {
+    const err = 'db에러';
+    await Like.findOne.mockRejectedValue(err);
+    await likeMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('like테이블에 로우 생성 시 에러가 난 경우 success: false를 내려준다.', async () => {
+    const err = 'db에러';
+    await Like.findOne.mockReturnValue(null);
+    await Like.create.mockRejectedValue(err);
+    await likeMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('객관식 게시글 좋아요에 성공하면 success:true와 likeCnt를 내려준다.', async () => {
+    const err = 'db에러';
+    await Like.findOne.mockReturnValue(null);
+    await Like.create.mockReturnValue(true);
+    await Like.count.mockRejectedValue(err);
+    await likeMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('객관식 게시글 좋아요에 성공하면 success:true와 likeCnt를 내려준다.', async () => {
+    const err = 'db에러';
+    await Like.findOne.mockReturnValue(null);
+    await Like.create.mockReturnValue(true);
+    await Like.count.mockReturnValue(3);
+    await Multi.update.mockRejectedValue(err);
+    await likeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
