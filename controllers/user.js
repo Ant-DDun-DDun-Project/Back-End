@@ -1,4 +1,4 @@
-const { signUpSchema, duplicatedNickSchema, duplicatedIdSchema } = require('./joi');
+const { signUpSchema, loginSchema, duplicatedNickSchema, duplicatedIdSchema } = require('./joi');
 const { User } = require('../models');
 require('dotenv').config();
 const salt = Number(process.env.SALT);
@@ -48,7 +48,7 @@ module.exports = {
   //로그인
   login: async (req, res, next) => {
     try {
-      const { userId, pw } = req.body;
+      const { userId, pw } = loginSchema.validateAsync(req.body);
       const userData = await User.findOne({
         where: {
           userId,

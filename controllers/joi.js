@@ -17,6 +17,11 @@ module.exports = {
     confirmPw: Joi.ref('pw'),
     ageGroup: Joi.number().required(),
   }),
+  // 로그인 Schema
+  loginSchema: Joi.object({
+    userId: Joi.string().required(),
+    pw: Joi.string().required(),
+  }),
   // 찬반투표 게시물 Schema
   eitherSchema: Joi.object({
     title: Joi.string().required(),
@@ -70,5 +75,5 @@ module.exports = {
   // 닉네임 중복 체크 schema
   duplicatedNickSchema: Joi.object({
     nickname: Joi.string().required().min(1),
-  })
+  }),
 };
