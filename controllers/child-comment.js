@@ -2,6 +2,7 @@ const { ChildComment } = require('../models');
 const { postCommentSchema } = require('./joi');
 
 module.exports = {
+  //대댓글 작성
   postChildComment: async (req, res, next) => {
     try {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
@@ -22,6 +23,7 @@ module.exports = {
       next(err);
     }
   },
+  //대댓글 수정
   editChildComment: async (req, res, next) => {
     const { comment, editedDate } = req.body;
     const { multi_id, comment_id } = req.params;
@@ -44,7 +46,7 @@ module.exports = {
       next(err);
     }
   },
-  // 대댓글 삭제 기능
+  // 대댓글 삭제
   deleteChildComment: async (req, res, next) => {
     try {
       const { multi_id, comment_id } = req.params;
@@ -64,5 +66,5 @@ module.exports = {
       console.error(err);
       next(err);
     }
-  }
+  },
 };
