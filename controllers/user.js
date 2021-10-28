@@ -1,4 +1,4 @@
-const { signUpSchema } = require('./joi');
+const { signUpSchema, duplicatedNickSchema, duplicatedIdSchema } = require('./joi');
 const { User } = require('../models');
 require('dotenv').config();
 const salt = Number(process.env.SALT);
@@ -76,7 +76,7 @@ module.exports = {
   //아이디 중복체크
   CheckDuplicatedId: async (req, res, next) => {
     try {
-      const { userId } = req.body;
+      const { userId } = await duplicatedIdSchema.validateAsync(req.body);
       if (await User.findOne({ where: { userId } })) {
         // 이미 DB에 존재하는 아이디일 경우
         res.status(400).json({ success: false });
@@ -92,7 +92,7 @@ module.exports = {
   // 닉네임 중복 체크에 대한 함수
   CheckDuplicatedNick: async (req, res, next) => {
     try {
-      const { nickname } = req.body;
+      const { nickname } = await duplicatedNickSchema.validateAsync(req.body);
       if (await User.findOne({ where: { nickname } })) {
         // 이미 DB에 존재하는 닉네임일 경우
         res.status(400).json({ success: false });
