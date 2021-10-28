@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { signup, login } = require('../controllers/user');
-const { CheckDuplicatedId, CheckDuplicatedNick } = require('../controllers/signup-duplication');
+const { signup, login ,CheckDuplicatedId, CheckDuplicatedNick } = require('../controllers/user');
 
 router.post('/signup', signup); // 회원가입
 router.post('/signup/id', CheckDuplicatedId); //아이디 중복체크
