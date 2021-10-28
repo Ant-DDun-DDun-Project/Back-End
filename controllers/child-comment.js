@@ -44,4 +44,25 @@ module.exports = {
       next(err);
     }
   },
+  // 대댓글 삭제 기능
+  deleteChildComment: async (req, res, next) => {
+    try {
+      const { multi_id, comment_id } = req.params;
+      // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+      const user = 1; // Todo --> 사용자 인증 미들웨어 구현 시 삭제
+
+      if (await ChildComment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
+        await ChildComment.update(
+          { deleted: true },
+          { where: { user, multi: multi_id, id: comment_id } }
+        );
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
 };

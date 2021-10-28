@@ -24,6 +24,9 @@ describe('댓글 수정에 대한 검사', () => {
   const res = {
     status: jest.fn(() => res),
     json: jest.fn(),
+    locals: {
+      user: 1,
+    }
   };
   const next = jest.fn();
 
@@ -41,12 +44,12 @@ describe('댓글 수정에 대한 검사', () => {
     await editComment(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
-  })
+  });
   test('DB 요청에 대한 에러가 발생', async () => {
-    const err = 'DB error'
+    const err = 'DB error';
     await Comment.findOne.mockReturnValue(true);
-    Comment.update.mockReturnValue(Promise.reject(err))
+    Comment.update.mockReturnValue(Promise.reject(err));
     await editComment(req, res, next);
     expect(next).toBeCalledWith(err);
-  })
+  });
 });
