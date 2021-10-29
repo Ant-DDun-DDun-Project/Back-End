@@ -6,7 +6,7 @@ module.exports = {
   postEither: async (req, res, next) => {
     try {
       const { title, contentA, contentB, date } = await eitherSchema.validateAsync(req.body);
-      const user = res.locals.user;
+      const user = 1;
       await Either.create({
         user,
         title,
