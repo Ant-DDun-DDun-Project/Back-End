@@ -9,6 +9,8 @@ const {
   getIngMulti,
   getCompleteMulti,
   likeMulti,
+  voteMulti,
+  completeMulti,
 } = require('../controllers/multi');
 const {
   editChildComment,
@@ -24,6 +26,9 @@ router.post('/', postMulti); // 객관식 게시글 작성
 router.patch('/:multi_id', editMulti); // 객관식 게시글 수정
 router.delete('/:multi_id', deleteMulti); // 객관식 게시글 삭제
 router.post('/:multi_id/likes', likeMulti); // 객관식 게시글 좋아요
+
+router.post('/:multi_id/votes', voteMulti); // 객관식 투표하기
+router.patch('/:multi_id/complete', completeMulti); // 투표 종료하기
 
 router.post('/:multi_id/comment', postComment); // 댓글 작성
 router.patch('/:multi_id/comment/:comment_id/edit', editComment); // 댓글 수정

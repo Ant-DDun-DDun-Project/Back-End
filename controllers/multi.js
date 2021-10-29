@@ -1,5 +1,5 @@
-const { sequelize, Multi, like, Like } = require('../models');
-const { multiSchema, editMultiSchema } = require('./joi');
+const { sequelize, Multi, Like, Vote } = require('../models');
+const { multiSchema, editMultiSchema, voteMultiSchema } = require('./joi');
 
 module.exports = {
   //객관식 페이지 메인뷰
@@ -165,6 +165,54 @@ module.exports = {
           success: true,
           likeCnt,
         });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+  //객관식 투표하기
+  voteMulti: async (req, res, next) => {
+    try {
+      const { select } = await voteMultiSchema.validateAsync(req.body);
+      const { multi_id } = req.params;
+      // const user = res.locals.user;
+      const user = 20;
+      const alreadyVote = await Vote.findOne({ where: { user, multi: multi_id } });
+      if (alreadyVote) {
+        res.status(400).json({ success: false });
+      } else {
+        await Vote.create({ user, vote: select, multi: multi_id });
+        const voteCntA = await Vote.count({ where: { vote: 'A', multi: multi_id } });
+        const voteCntB = await Vote.count({ where: { vote: 'B', multi: multi_id } });
+        const voteCntC = await Vote.count({ where: { vote: 'C', multi: multi_id } });
+        const voteCntD = await Vote.count({ where: { vote: 'D', multi: multi_id } });
+        const voteCntE = await Vote.count({ where: { vote: 'E', multi: multi_id } });
+        res.status(200).json({
+          success: true,
+          voteCntA,
+          voteCntB,
+          voteCntC,
+          voteCntD,
+          voteCntE,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+  completeMulti: async (req, res, next) => {
+    try {
+      const { multi_id } = req.params;
+      // const user = res.locals.user;
+      const user = 20;
+      const myMulti = await Multi.findOne({ where: { user, multiId: multi_id, completed: false } });
+      if (myMulti) {
+        await Multi.update({ completed: true }, { where: { user, multiId: multi_id } });
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false });
       }
     } catch (err) {
       console.error(err);

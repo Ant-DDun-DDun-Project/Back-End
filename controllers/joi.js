@@ -79,5 +79,9 @@ module.exports = {
   // 찬반 투표하기 schema
   voteEitherSchema: Joi.object({
     vote: Joi.string().required(),
-  })
+  }),
+  // 객관식 투표 schema
+  voteMultiSchema: Joi.object({
+    select: Joi.string().required(),
+  }),
 };

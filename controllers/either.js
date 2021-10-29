@@ -89,7 +89,7 @@ module.exports = {
   editEither: async (req, res, next) => {
     const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(req.body);
     const { either_id } = req.params;
-    const user = 1;
+    const user = 20;
     try {
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
@@ -109,7 +109,7 @@ module.exports = {
   //찬반투표 게시글 삭제
   deleteEither: async (req, res, next) => {
     const { either_id } = req.params;
-    const user = res.locals.user;
+    const user = 20;
     try {
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
@@ -149,6 +149,7 @@ module.exports = {
       next(err);
     }
   },
+
   // 찬반 투표
   voteEither: async (req, res, next) => {
     try {

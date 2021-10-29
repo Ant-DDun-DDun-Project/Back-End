@@ -151,6 +151,50 @@
         }
       }
     },
+    "/posts/multi/{multi_id}/votes": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/complete": {
+      "patch": {
+        "tags": [],
+        "description": "",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/posts/multi/{multi_id}/comment": {
       "post": {
         "tags": [],
