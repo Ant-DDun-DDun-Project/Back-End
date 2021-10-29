@@ -1,5 +1,5 @@
-const { Either, sequelize, Like } = require('../models/');
-const { eitherSchema, editEitherSchema } = require('./joi');
+const { Either, sequelize, Like, Vote } = require('../models/');
+const { eitherSchema, editEitherSchema, voteEitherSchema } = require('./joi');
 
 module.exports = {
   // 찬반투표 게시글 작성
@@ -143,6 +143,52 @@ module.exports = {
           success: true,
           likeCnt: totalLike,
         });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+  // 찬반 투표
+  voteEither: async (req, res, next) => {
+    try {
+      const { vote } = await voteEitherSchema.validateAsync(req.body);
+      const { either_id } = req.params;
+      // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+      const user = 3;
+
+      if (await Vote.findOne({ where: { user, either: either_id } })) { // 이미 투표한 이력이 존재하는 경우
+        res.status(400).json({ success: false });
+      } else {
+        await Vote.create({ user, vote, either: either_id }); // 투표한 이력없을 경우 투표 실시
+        const voteCntA = await Vote.count({ where: { vote: 'A', either: either_id } }); // 현재 게시물에 대한 A 수
+        const voteCntB = await Vote.count({ where: { vote: 'B', either: either_id } }); // 현재 게시물에 대한 B 수
+        res.status(200).json({
+          success: true,
+          voteCntA, voteCntB
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+
+  // 찬반 투표 종료하기
+  completeEither: async (req, res, next) => {
+    const { either_id } = req.params;
+    // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+    const user = 1;
+
+    try {
+      if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {  // DB에 해당 게시물이 존재하는 경우
+        await Either.update(
+          { completed: true },
+          { where: { user, eitherId: either_id } },
+        );
+        res.status(200).json({ success: true });
       } else {
         res.status(400).json({ success: false });
       }
