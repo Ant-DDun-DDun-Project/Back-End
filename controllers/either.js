@@ -184,7 +184,7 @@ module.exports = {
   completeEither: async (req, res, next) => {
     const { either_id } = req.params;
     // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
-    const user = 1;
+    const user = 9;
 
     try {
       if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {
@@ -194,6 +194,28 @@ module.exports = {
       } else {
         res.status(400).json({ success: false });
       }
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+
+  // 찬반 투표 특정페이지 뷰
+  getTargetEither: async (req, res, next) => {
+    const { either_id } = req.params;
+    const user = 1;
+    try {
+      let query = `
+        SELECT eitherId, either.user, title, contentA, contentB, date, edited, editedDate, likeCnt, 
+          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'A'))  AS voteCntA,
+          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'B'))  AS voteCntB,
+          (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
+          (SELECT user FROM votes WHERE votes.user = ${user} AND either = either.eitherId) AS voted
+        FROM either
+        WHERE eitherId = ${either_id};
+      `;
+      const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+      res.status(200).json({ success: true, either });
     } catch (err) {
       console.error(err);
       next(err);

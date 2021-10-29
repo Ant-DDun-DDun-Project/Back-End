@@ -17,7 +17,8 @@ const {
   deleteEither,
   likeEither,
   voteEither,
-  completeEither
+  completeEither,
+  getTargetEither,
 } = require('../../controllers/either');
 const { Either, sequelize, Like, Vote } = require('../../models');
 describe('양자택일 게시글 작성 테스트', () => {
@@ -469,10 +470,10 @@ describe('찬반 투표 좋아요에 대한 검사', () => {
   const err = 'DB error';
 
   test('찬반 투표 좋아요 이벤트를 성공적으로 수행하면 / success: true , likeCnt / 를 응답으로 보낸다.', async () => {
-    await Like.findOne.mockReturnValue(false);  // 해당 게시물에 투표한 이력이 없는 경우
-    await Like.create.mockReturnValue(true);  // 해당 게시물에 투표 이력을 추가 한다.
-    await Like.count.mockReturnValue(1);   // 해당 게시물의 좋아요 갯수를 구한다.
-    await Either.update.mockReturnValue(true);  // 찬반 투표 해당 게시물의 likeCnt 수정 작업
+    await Like.findOne.mockReturnValue(false); // 해당 게시물에 투표한 이력이 없는 경우
+    await Like.create.mockReturnValue(true); // 해당 게시물에 투표 이력을 추가 한다.
+    await Like.count.mockReturnValue(1); // 해당 게시물의 좋아요 갯수를 구한다.
+    await Either.update.mockReturnValue(true); // 찬반 투표 해당 게시물의 likeCnt 수정 작업
     await likeEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
@@ -527,7 +528,7 @@ describe('찬반 투표에 대한 검사', () => {
     },
     params: {
       either_id: '1',
-    }
+    },
   };
   const res = {
     status: jest.fn(() => res),
@@ -548,7 +549,7 @@ describe('찬반 투표에 대한 검사', () => {
     expect(res.json).toBeCalledWith({
       success: true,
       voteCntA: 4,
-      voteCntB: 10
+      voteCntB: 10,
     });
   });
 
@@ -630,8 +631,68 @@ describe('찬반 게시물 종료하기 검사', () => {
 
   test('DB Error 발생 --> Either.update', async () => {
     await Either.findOne.mockReturnValue(true);
-    Either.update.mockReturnValue(Promise.reject(err))
+    Either.update.mockReturnValue(Promise.reject(err));
     await completeEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+describe('찬반투표 게시글 특정페이지', () => {
+  const req = {
+    params: {
+      either_id: '1',
+    },
+  };
+  const res = {
+    locals: { user: '1' },
+    status: jest.fn(() => res),
+    json: jest.fn(),
+  };
+  const next = jest.fn();
+  const err = 'DB 에러';
+
+  test('찬반투표 게시글을 누르면 특정페이지를 보여주며 response로 success:true 와 데이터를 보내준다', async () => {
+    await sequelize.query.mockReturnValue(
+      Promise.resolve({
+        eitherId: 1,
+        user: 1,
+        title: 'hi',
+        contentA: 'hi',
+        contentB: 'bye',
+        date: '2021-10-29 14:38:54',
+        edited: false,
+        editedDate: null,
+        likeCnt: 1,
+        voteCntA: 2,
+        voteCntB: 3,
+        voted: true,
+        liked: true,
+      })
+    );
+    await getTargetEither(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      either: {
+        eitherId: 1,
+        user: 1,
+        title: 'hi',
+        contentA: 'hi',
+        contentB: 'bye',
+        date: '2021-10-29 14:38:54',
+        edited: false,
+        editedDate: null,
+        likeCnt: 1,
+        voteCntA: 2,
+        voteCntB: 3,
+        voted: true,
+        liked: true,
+      },
+      success: true,
+    });
+  });
+  test('DB 에러 발생시 next(err)를 호출한다', async () => {
+    await sequelize.query.mockRejectedValue(err);
+    await getTargetEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

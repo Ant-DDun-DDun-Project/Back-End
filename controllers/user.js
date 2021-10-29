@@ -61,11 +61,13 @@ module.exports = {
         });
       } else {
         const nickname = userData.nickname;
+        const userId = userData.id;
         const token = createToken(userData.id);
         res.cookie('user', token, { httpOnly: true, maxAge: 60 * 60 * 24 * 1000 });
         res.status(200).json({
           success: true,
           nickname,
+          userId,
         });
       }
     } catch (err) {

@@ -1,4 +1,4 @@
-const { sequelize, Either } = require('../models');
+const { sequelize, Either, User } = require('../models');
 
 module.exports = {
   getMyPosts: async (req, res, next) => {
@@ -58,6 +58,25 @@ module.exports = {
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; //최신순 정렬
       });
       res.status(200).json({ success: true, posts });
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
+  editNickname: async (req, res, next) => {
+    try {
+      const { nickname } = req.body;
+      const user = req.params;
+      const NickExist = await User.findOne({ where: { id: user } });
+      if (NickExist) {
+        await User.update({ nickname }, { where: { id: user } });
+        res.status(200).json({
+          success: true,
+          nickname,
+        });
+      } else {
+        res.status(400).json({ success: false });
+      }
     } catch (err) {
       console.error(err);
       next(err);
