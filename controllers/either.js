@@ -206,7 +206,8 @@ module.exports = {
     const user = 1;
     try {
       let query = `
-        SELECT eitherId, either.user, title, contentA, contentB, date, edited, editedDate, likeCnt, 
+          SELECT eitherId, either.user, title, contentA, contentB, date, edited, editedDate, likeCnt,
+          (SELECT nickname FROM users WHERE id = either.user) AS nickname,
           (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'A'))  AS voteCntA,
           (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'B'))  AS voteCntB,
           (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
