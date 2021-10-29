@@ -27,6 +27,7 @@ module.exports = {
       const query = `SELECT *,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
+                            (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
                             (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
                             (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
                      FROM either
@@ -49,6 +50,7 @@ module.exports = {
                             (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
                             (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
+                            (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
                             (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
                      FROM either
                      WHERE completed = 0
@@ -71,6 +73,7 @@ module.exports = {
                             (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
                             (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
+                            (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
                             (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
                      FROM either
                      WHERE completed = 1
