@@ -574,10 +574,18 @@ describe('찬반 투표에 대한 검사', () => {
     expect(next).toBeCalledWith(err);
   });
 
-  test('DB Error 동작 --> Vote.count', async () => {
+  test('DB Error 동작 --> Vote.count (cntA)', async () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockReturnValue(true);
-    Vote.count.mockReturnValue(Promise.reject(err));
+    Vote.count.mockReturnValue(err);
+    await voteEither(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 동작 --> Vote.count (cntB)', async () => {
+    await Vote.findOne.mockReturnValue(null);
+    await Vote.create.mockReturnValue(true);
+    Vote.count.mockReturnValueOnce(Promise.resolve(true)).mockReturnValueOnce(Promise.reject(err));
     await voteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
