@@ -7,8 +7,8 @@ jest.mock('../../models/comments');
 jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
 jest.mock('sequelize');
-const { Either, sequelize, Like, Vote } = require('../../models');
-const { getMyPosts, getMyPolls } = require('../../controllers/porfile');
+const { Either, sequelize, User } = require('../../models');
+const { getMyPosts, getMyPolls, editNickname } = require('../../controllers/porfile');
 
 describe('내가 쓴 글', () => {
   const req = {
@@ -216,6 +216,75 @@ describe('내가 참여한 글', () => {
       )
       .mockRejectedValueOnce(err);
     await getMyPolls(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+describe('닉네임 변경', () => {
+  const req = {
+    params: {
+      user_id: 1,
+    },
+    body: {
+      nickname: '황창',
+    },
+  };
+  const res = {
+    locals: {
+      user: 1,
+    },
+    status: jest.fn(() => res),
+    json: jest.fn(),
+  };
+  const next = jest.fn();
+  const err = 'DB 에러';
+  test('닉네임 변경에 성공하면 response로 success:true 와 바뀐 닉네임을 보내준다', async () => {
+    await User.findOne.mockReturnValue(
+      Promise.resolve({
+        id: 1,
+        userId: 1,
+        nickname: '황창환',
+        ageGroup: 40,
+      })
+    );
+    await User.update.mockReturnValue(
+      Promise.resolve({
+        id: 1,
+        userId: 1,
+        nickname: '황창',
+        ageGroup: 40,
+      })
+    );
+    await editNickname(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      nickname: '황창',
+    });
+  });
+  test('닉네임을 찾지 못하면 response로 success:false로 보내준다', async () => {
+    await User.findOne.mockReturnValue(null);
+    await editNickname(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({
+      success: false,
+    });
+  });
+  test('DB 에러시(findOne 에러) next(err)를 호출한다', async () => {
+    await User.findOne.mockRejectedValue(err);
+    await editNickname(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+  test('DB 에러시(findOne 에러) next(err)를 호출한다', async () => {
+    await User.findOne.mockReturnValue(
+      Promise.resolve({
+        id: 1,
+        userId: 1,
+        nickname: '황창환',
+        ageGroup: 40,
+      })
+    );
+    await User.update.mockRejectedValue(err);
+    await editNickname(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

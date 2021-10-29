@@ -84,4 +84,8 @@ module.exports = {
   voteMultiSchema: Joi.object({
     select: Joi.string().required(),
   }),
+  // 닉네임 변경 shcema
+  editNickSchema: Joi.object({
+    nickname: Joi.string().required(),
+  }),
 };

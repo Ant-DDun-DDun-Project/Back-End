@@ -100,6 +100,7 @@ describe('로그인', () => {
     expect(res.json).toBeCalledWith({
       nickname: '황창환',
       success: true,
+      userId: 1,
     });
   });
   test('로그인에 실패하면 response로 success:false를 보낸다.', async () => {
