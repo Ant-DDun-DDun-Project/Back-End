@@ -19,6 +19,7 @@ const {
   likeMulti,
   voteMulti,
   completeMulti,
+  getTargetMulti,
 } = require('../../controllers/multi');
 
 describe('객관식 게시글을 작성에 대한 검사', () => {
@@ -588,6 +589,169 @@ describe('객관식 투표 종료하기 검사', () => {
     await Multi.findOne.mockReturnValue(true);
     await Multi.update.mockReturnValue(Promise.reject(err));
     await completeMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+describe('객관식 게시글 상세 페이지 검사', () => {
+  const req = {
+    params: {
+      multi_id: '1,'
+    },
+  };
+  const res = {
+    status: jest.fn(() => res),
+    json: jest.fn(),
+    locals: {
+      user: 1
+    },
+  };
+  const next = jest.fn();
+  const err = 'DB Error';
+
+  test('객관식 상세 페이지를 성공적으로 보내줄 때 / success: true/ 와 특정 게시물의 상세 내용을 응답으로 보내준다.', async () => {
+    await sequelize.query
+      .mockReturnValueOnce([{
+        multiId: 1,
+        title: '제목',
+        description: '내용입니다.',
+        contentA: '예시 A',
+        contentB: '예시 q',
+        contentC: '안녕',
+        contentD: '예시 D',
+        contentE: '예시 E',
+        date: '2021-10-20',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 1,
+        commentCnt: 7,
+        voted: 'A',
+        liked: 1,
+        voteCntA: 1,
+        voteCntB: 0,
+        voteCntC: 0,
+        voteCntD: 0,
+        voteCntE: 0
+      }])
+      .mockReturnValueOnce([
+        {
+          id: 3,
+          comment: '리퀘스트받아줘',
+          date: '2021-10-10 15:13:13',
+          edited: 1,
+          editedDate: '2000-01-01 13: 13: 13',
+          deleted: '1',
+          user: 1,
+          multi: 1,
+          CommentLikeCnt: 0,
+          liked: null,
+          nickname: 'testid'
+        }])
+      .mockReturnValueOnce([{
+        id: 2,
+        comment: '샘플임',
+        date: '2021-10-10',
+        edited: 0,
+        editedDate: null,
+        deleted: 1,
+        user: 1,
+        multi: 1,
+        parentComment: 1,
+        commentLikeCnt: 0,
+        nickname: 'testid',
+        liked: null
+      }]);
+    await getTargetMulti(req, res, next);
+    expect(res.json).toBeCalledWith(
+      {
+        success: true,
+        multi: {
+          multiId: 1,
+          title: '제목',
+          description: '내용입니다.',
+          contentA: '예시 A',
+          contentB: '예시 q',
+          contentC: '안녕',
+          contentD: '예시 D',
+          contentE: '예시 E',
+          date: '2021-10-20',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 1,
+          user: 1,
+          commentCnt: 7,
+          voted: 'A',
+          liked: 1,
+          voteCntA: 1,
+          voteCntB: 0,
+          voteCntC: 0,
+          voteCntD: 0,
+          voteCntE: 0
+        },
+        comment: [
+          {
+            id: 3,
+            comment: '리퀘스트받아줘',
+            date: '2021-10-10 15:13:13',
+            edited: 1,
+            editedDate: '2000-01-01 13: 13: 13',
+            deleted: '1',
+            user: 1,
+            multi: 1,
+            CommentLikeCnt: 0,
+            liked: null,
+            nickname: 'testid'
+          }],
+        childComment: [
+          {
+            id: 2,
+            comment: '샘플임',
+            date: '2021-10-10',
+            edited: 0,
+            editedDate: null,
+            deleted: 1,
+            user: 1,
+            multi: 1,
+            parentComment: 1,
+            commentLikeCnt: 0,
+            nickname: 'testid',
+            liked: null
+          }],
+      }
+    );
+  });
+
+  test('객관식 게시물이 DB에 존재하지 않는 경우 / success: false / 를 응답으로 보내준다.', async () => {
+    await sequelize.query.mockReturnValueOnce([]);
+    await getTargetMulti(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({ success: false });
+  });
+
+  test('DB Error --> multi DB 에러', async () => {
+    await sequelize.query
+      .mockReturnValueOnce(Promise.reject(err));
+    await getTargetMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error --> comment DB 에러', async () => {
+    await sequelize.query
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(Promise.reject(err));
+    await getTargetMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error --> childComment DB 에러', async () => {
+    await sequelize.query
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(Promise.reject(err));
+    await getTargetMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

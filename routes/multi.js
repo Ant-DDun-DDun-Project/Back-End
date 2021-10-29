@@ -11,6 +11,7 @@ const {
   likeMulti,
   voteMulti,
   completeMulti,
+  getTargetMulti
 } = require('../controllers/multi');
 const {
   editChildComment,
@@ -22,6 +23,7 @@ const {
 router.get('/', getMulti); // 객관식 게시글 메인화면
 router.get('/ing', getIngMulti); // 객관식 진행중 게시글
 router.get('/complete', getCompleteMulti); // 객관식 종료된 게시글
+router.get('/:multi_id/target', getTargetMulti) // 객관식 상세 페이지 뷰
 router.post('/', postMulti); // 객관식 게시글 작성
 router.patch('/:multi_id', editMulti); // 객관식 게시글 수정
 router.delete('/:multi_id', deleteMulti); // 객관식 게시글 삭제
