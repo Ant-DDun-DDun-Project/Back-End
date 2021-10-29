@@ -7,7 +7,9 @@ const {
   postEither,
   editEither,
   deleteEither,
-  likeEither
+  likeEither,
+  voteEither,
+  completeEither
 } = require('../controllers/either');
 
 router.get('/', getEither); //찬반투표 뷰
@@ -18,5 +20,7 @@ router.post('/', postEither); //찬반투표 게시글 작성
 router.patch('/:either_id/edit', editEither); //찬반투표 게시글 수정
 router.delete('/:either_id', deleteEither); //찬반투표 게시글 삭제
 
+router.post('/:either_id/votes', voteEither); // 찬반 투표
+router.patch('/:either_id/complete', completeEither) // 찬반 투표 종료
 router.post('/:either_id/likes', likeEither); // 찬반투표 좋아요
 module.exports = router;
