@@ -22,7 +22,7 @@
       "type": "apiKey",
       "in": "header",
       "name": "Authorization",
-      "description": "token"
+      "description": "t정상적인 응답en"
     }
   },
   "consumes": [
@@ -34,34 +34,41 @@
   "paths": {
     "/": {
       "get": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "메인 페이지"
+        ],
+        "summary": "개미의 곡소리 메인 페이지 뷰",
+        "description": "개미의 곡소리 인기글 리스트를 불러오는 API 입니다.",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/search/": {
       "get": {
-        "tags": [],
+        "tags": [
+          "검색"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청"
           }
         }
       }
     },
     "/profiles/{user_id}/posts": {
       "get": {
-        "tags": [],
+        "tags": [
+          "마이 페이지"
+        ],
         "description": "",
         "parameters": [
           {
@@ -73,14 +80,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/profiles/{user_id}/polls": {
       "get": {
-        "tags": [],
+        "tags": [
+          "마이 페이지"
+        ],
         "description": "",
         "parameters": [
           {
@@ -92,24 +101,29 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/profiles/nick": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "마이 페이지"
+        ],
+        "summary": "닉네임 변경",
+        "description": "사용자가 닉네임을 변경하는 API",
         "parameters": [
           {
-            "name": "obj",
+            "name": "body",
             "in": "body",
             "schema": {
               "type": "object",
               "properties": {
                 "nickname": {
-                  "example": "any"
+                  "type": "string",
+                  "description": "닉네임",
+                  "example": "hiworld"
                 }
               }
             }
@@ -117,63 +131,197 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "nickname": {
+                  "type": "string",
+                  "example": "hiworld"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "상황에 따른 실패 메세지"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/": {
       "get": {
-        "tags": [],
+        "tags": [
+          "객관식 게시글"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       },
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 작성",
+        "description": "객관식 게시글을 작성하는 API",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "제목"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "설명",
+                  "example": "설명"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 B"
+                },
+                "contentC": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 C"
+                },
+                "contentD": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 D"
+                },
+                "contentE": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 E"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "날짜",
+                  "example": "2021-9-15 10:45:36"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/ing": {
       "get": {
-        "tags": [],
+        "tags": [
+          "객관식 게시글"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/posts/multi/complete": {
       "get": {
-        "tags": [],
+        "tags": [
+          "객관식 게시글"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/posts/multi/{multi_id}/target": {
       "get": {
-        "tags": [],
+        "tags": [
+          "객관식 게시글"
+        ],
         "description": "",
         "parameters": [
           {
@@ -185,35 +333,125 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청"
           }
         }
       }
     },
     "/posts/multi/{multi_id}": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 수정",
+        "description": "작성자가 객관식 게시글을 수정하는 API",
         "parameters": [
           {
             "name": "multi_id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "수정된 제목"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "설명",
+                  "example": "수정된 설명"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 B"
+                },
+                "contentC": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 C"
+                },
+                "contentD": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 D"
+                },
+                "contentE": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 E"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "날짜",
+                  "example": "2021-9-15 10:45:36"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 삭제",
+        "description": "작성자가 객관식 게시글을 삭제하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -224,18 +462,51 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/likes": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 좋아요",
+        "description": "사용자가 객관식 게시글을 좋아요하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -246,40 +517,125 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 6
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/votes": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 투표",
+        "description": "객관식 게시글 선택지에 투표를 하는 API",
         "parameters": [
           {
             "name": "multi_id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "select": {
+                  "type": "string",
+                  "description": "항목",
+                  "example": "A"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/complete": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 투표 종료",
+        "description": "작성자가 객관식 게시글 투표 상황을 종료하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -290,37 +646,125 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/comment": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "객관식 게시글 댓글 작성",
+        "description": "객관식 게시글에 댓글을 작성하는 API",
         "parameters": [
           {
             "name": "multi_id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "댓글 내용",
+                  "example": "댓글 예시입니다."
+                },
+                "date": {
+                  "type": "string",
+                  "description": "작성 날짜",
+                  "example": "2021-10-20 10:00:00"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/comment/{comment_id}/edit": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "객관식 게시글 댓글 수정",
+        "description": "객관식 게시글의 댓글을 수정하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -333,22 +777,74 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "수정할 내용",
+                  "example": "수정할 내용"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "수정한 날짜",
+                  "example": "2021-10-30 10:00:00"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/comment/{comment_id}/delete": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "객관식 댓글 삭제",
+        "description": "객관식 댓글 삭제 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -365,18 +861,51 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/comment/{comment_id}/likes": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "댓글좋아요 기능",
+        "description": "객관식 게시글 댓글에 좋아요를 하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -393,18 +922,55 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 10
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/comment/{comment_id}": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "객관식 게시글 대댓글 작성",
+        "description": "객관식 게시글 댓글에 대댓글을 작성하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -417,19 +983,74 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "대댓글 내용",
+                  "example": "대댓글 예시입니다."
+                },
+                "date": {
+                  "type": "string",
+                  "description": "작성 날짜",
+                  "example": "2021-10-20 10:00:00"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/childComment/{comment_id}/edit": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "객관식 게시글 대댓글 수정",
+        "description": "객관식 게시글 대댓글을 수정하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -442,22 +1063,74 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "수정할 내용",
+                  "example": "수정할 내용"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "수정한 날짜",
+                  "example": "2021-10-30 10:00:00"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/childComment/{comment_id}/delete": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "객관식 대댓글 삭제",
+        "description": "객관식 대댓글 삭제 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -474,18 +1147,51 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/multi/{multi_id}/childComment/{comment_id}/likes": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "대댓글좋아요 기능",
+        "description": "객관식 게시글 대댓글에 좋아요를 하는 API",
         "parameters": [
           {
             "name": "multi_id",
@@ -502,123 +1208,407 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 10
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/users/signup": {
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
+        "tags": [
+          "회원 가입"
+        ],
+        "summary": "회원 가입",
+        "description": "회원 가입을 위한 API",
+        "parameters": [
+          {
+            "name": "회원 가입",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "testid"
+                },
+                "nickname": {
+                  "type": "string",
+                  "example": "helloworld"
+                },
+                "pw": {
+                  "type": "string",
+                  "example": "disco123@"
+                },
+                "confirmPw": {
+                  "type": "string",
+                  "example": "disco123@"
+                },
+                "ageGroup": {
+                  "type": "integer",
+                  "example": 10
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청 / 상황에 따라 메세지도 전송됩니다.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "false"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "상황에 따른 실패 메세지"
+                }
+              }
+            }
           }
         }
       }
     },
     "/users/signup/id": {
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
+        "tags": [
+          "회원 가입"
+        ],
+        "summary": "아이디 중복 체크",
+        "description": "회원 가입 시 중복된 아이디인지를 판별하는 API",
+        "parameters": [
+          {
+            "name": "아이디",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "description": "아이디",
+                  "example": "testid"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/users/signup/nick": {
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
+        "tags": [
+          "회원 가입"
+        ],
+        "summary": "닉네임 중복 체크",
+        "description": "회원 가입 시 닉네임 중복을 확인하는 API",
+        "parameters": [
+          {
+            "name": "아이디",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nickname": {
+                  "type": "string",
+                  "description": "닉네임 중복",
+                  "example": "helloworld"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/users/login": {
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
+        "tags": [
+          "로그인"
+        ],
+        "summary": "로그인",
+        "description": "로그인 API",
+        "parameters": [
+          {
+            "name": "로그인",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "description": "유저 아이디",
+                  "example": "testid"
+                },
+                "pw": {
+                  "type": "string",
+                  "description": "유저 비밀번호",
+                  "example": "testid123@"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nickname": {
+                  "type": "string",
+                  "example": "hello world"
+                },
+                "userId": {
+                  "type": "string",
+                  "example": "testid"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/either/": {
       "get": {
-        "tags": [],
+        "tags": [
+          "양자택일 게시글"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       },
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 작성",
+        "description": "양자택일 게시글을 작성하는 API",
+        "parameters": [
+          {
+            "name": "작성",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "제목"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "선택지 A",
+                  "example": "예제 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "선택지 B",
+                  "example": "예제 B"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "작성 날짜",
+                  "example": "2021-10-29 21:34:10"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/either/ing": {
       "get": {
-        "tags": [],
+        "tags": [
+          "양자택일 게시글"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/posts/either/complete": {
       "get": {
-        "tags": [],
+        "tags": [
+          "양자택일 게시글"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/posts/either/{either_id}/target": {
       "get": {
-        "tags": [],
+        "tags": [
+          "양자택일 게시글"
+        ],
         "description": "",
         "parameters": [
           {
@@ -630,37 +1620,102 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답"
           }
         }
       }
     },
     "/posts/either/{either_id}/edit": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 수정",
+        "description": "작성자가 양자택일 게시글을 수정하는 API",
         "parameters": [
           {
             "name": "either_id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "작성",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "수정 제목"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "선택지 A",
+                  "example": "수정된 예제 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "선택지 B",
+                  "example": "수정된 예제 B"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "수정된 날짜",
+                  "example": "2021-10-29 21:34:10"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/either/{either_id}": {
       "delete": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 삭제",
+        "description": "작성자가 양자택일 게시글을 삭제하는 API",
         "parameters": [
           {
             "name": "either_id",
@@ -671,40 +1726,129 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/either/{either_id}/votes": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글에 대한 투표",
+        "description": "양자택일 게시글에 대한 투표를 하는 API",
         "parameters": [
           {
             "name": "either_id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vote": {
+                  "type": "string",
+                  "description": "투표",
+                  "example": "A"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "voteCntA": {
+                  "type": "integer",
+                  "example": 8
+                },
+                "voteCntB": {
+                  "type": "integer",
+                  "example": 12
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/either/{either_id}/complete": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 종료",
+        "description": "작성자가 양자택일 게시글을 종료하는 API",
         "parameters": [
           {
             "name": "either_id",
@@ -715,18 +1859,51 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
     },
     "/posts/either/{either_id}/likes": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 좋아요",
+        "description": "사용자가 양자택일 게시글을 좋아요하는 API",
         "parameters": [
           {
             "name": "either_id",
@@ -737,10 +1914,44 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 12
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           }
         }
       }
