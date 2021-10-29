@@ -6,7 +6,7 @@ module.exports = {
   postEither: async (req, res, next) => {
     try {
       const { title, contentA, contentB, date } = await eitherSchema.validateAsync(req.body);
-      const user = res.locals.user;
+      const user = 1;
       await Either.create({
         user,
         title,
@@ -89,7 +89,7 @@ module.exports = {
   editEither: async (req, res, next) => {
     const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(req.body);
     const { either_id } = req.params;
-    const user = 4;
+    const user = 1;
     try {
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
@@ -130,15 +130,13 @@ module.exports = {
     // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현시 삭제
     const user = 1;
     try {
-      if (!await Like.findOne({ where: { either: either_id, user } })) {
+      if (!(await Like.findOne({ where: { either: either_id, user } }))) {
         await Like.create({
-          user, either: either_id,
+          user,
+          either: either_id,
         });
         const totalLike = await Like.count({ where: { either: either_id } });
-        await Either.update(
-          { likeCnt: totalLike },
-          { where: { eitherId: either_id } },
-        );
+        await Either.update({ likeCnt: totalLike }, { where: { eitherId: either_id } });
         res.status(200).json({
           success: true,
           likeCnt: totalLike,
@@ -150,5 +148,5 @@ module.exports = {
       console.error(err);
       next(err);
     }
-  }
+  },
 };
