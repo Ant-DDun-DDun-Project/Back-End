@@ -44,6 +44,21 @@
         }
       }
     },
+    "/search/": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/profiles/{user_id}/posts": {
       "get": {
         "tags": [],
