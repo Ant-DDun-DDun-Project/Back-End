@@ -89,7 +89,7 @@ module.exports = {
   editEither: async (req, res, next) => {
     const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(req.body);
     const { either_id } = req.params;
-    const user = 4;
+    const user = 20;
     try {
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
@@ -109,7 +109,7 @@ module.exports = {
   //찬반투표 게시글 삭제
   deleteEither: async (req, res, next) => {
     const { either_id } = req.params;
-    const user = res.locals.user;
+    const user = 20;
     try {
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
@@ -130,15 +130,13 @@ module.exports = {
     // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현시 삭제
     const user = 1;
     try {
-      if (!await Like.findOne({ where: { either: either_id, user } })) {
+      if (!(await Like.findOne({ where: { either: either_id, user } }))) {
         await Like.create({
-          user, either: either_id,
+          user,
+          either: either_id,
         });
         const totalLike = await Like.count({ where: { either: either_id } });
-        await Either.update(
-          { likeCnt: totalLike },
-          { where: { eitherId: either_id } },
-        );
+        await Either.update({ likeCnt: totalLike }, { where: { eitherId: either_id } });
         res.status(200).json({
           success: true,
           likeCnt: totalLike,
@@ -151,6 +149,7 @@ module.exports = {
       next(err);
     }
   },
+
   // 찬반 투표
   voteEither: async (req, res, next) => {
     try {
@@ -159,7 +158,8 @@ module.exports = {
       // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
       const user = 3;
 
-      if (await Vote.findOne({ where: { user, either: either_id } })) { // 이미 투표한 이력이 존재하는 경우
+      if (await Vote.findOne({ where: { user, either: either_id } })) {
+        // 이미 투표한 이력이 존재하는 경우
         res.status(400).json({ success: false });
       } else {
         await Vote.create({ user, vote, either: either_id }); // 투표한 이력없을 경우 투표 실시
@@ -167,7 +167,8 @@ module.exports = {
         const voteCntB = await Vote.count({ where: { vote: 'B', either: either_id } }); // 현재 게시물에 대한 B 수
         res.status(200).json({
           success: true,
-          voteCntA, voteCntB
+          voteCntA,
+          voteCntB,
         });
       }
     } catch (err) {
@@ -183,11 +184,9 @@ module.exports = {
     const user = 1;
 
     try {
-      if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {  // DB에 해당 게시물이 존재하는 경우
-        await Either.update(
-          { completed: true },
-          { where: { user, eitherId: either_id } },
-        );
+      if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {
+        // DB에 해당 게시물이 존재하는 경우
+        await Either.update({ completed: true }, { where: { user, eitherId: either_id } });
         res.status(200).json({ success: true });
       } else {
         res.status(400).json({ success: false });
@@ -196,5 +195,5 @@ module.exports = {
       console.error(err);
       next(err);
     }
-  }
+  },
 };

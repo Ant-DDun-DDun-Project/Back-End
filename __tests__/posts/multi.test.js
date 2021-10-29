@@ -8,7 +8,7 @@ jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
 jest.mock('sequelize');
 
-const { Multi, sequelize, Like } = require('../../models');
+const { Multi, sequelize, Like, Vote } = require('../../models');
 const {
   postMulti,
   editMulti,
@@ -17,6 +17,8 @@ const {
   getCompleteMulti,
   deleteMulti,
   likeMulti,
+  voteMulti,
+  completeMulti,
 } = require('../../controllers/multi');
 
 describe('객관식 게시글을 작성에 대한 검사', () => {
@@ -462,6 +464,130 @@ describe('객관식 게시글을 좋아요에 대한 검사', () => {
     await Like.count.mockReturnValue(3);
     await Multi.update.mockRejectedValue(err);
     await likeMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+describe('찬반 투표에 대한 검사', () => {
+  const req = {
+    body: {
+      select: 'A',
+    },
+    params: {
+      multi_id: '1',
+    },
+  };
+  const res = {
+    status: jest.fn(() => res),
+    json: jest.fn(),
+    locals: {
+      user: 1,
+    },
+  };
+  const next = jest.fn();
+  const err = 'DB Error';
+
+  test('객관식 투표가 성공했으면 success: true 를 내려준다.', async () => {
+    await Vote.findOne.mockReturnValue(null);
+    await Vote.create.mockReturnValue(true);
+    await Vote.count
+      .mockReturnValueOnce(4)
+      .mockReturnValueOnce(10)
+      .mockReturnValueOnce(1)
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(15);
+    await voteMulti(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      voteCntA: 4,
+      voteCntB: 10,
+      voteCntC: 1,
+      voteCntD: 0,
+      voteCntE: 15,
+    });
+  });
+
+  test('이미 투표한 게시글이라면 success:false 를 내려준다.', async () => {
+    await Vote.findOne.mockReturnValue(true);
+    await voteMulti(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({
+      success: false,
+    });
+  });
+
+  test('DB Error 동작 --> Vote.findOne', async () => {
+    Vote.findOne.mockReturnValue(Promise.reject(err));
+    await voteMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 동작 --> Vote.create', async () => {
+    await Vote.findOne.mockReturnValue(null);
+    Vote.create.mockReturnValue(Promise.reject(err));
+    await voteMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 동작 --> Vote.count (cntA)', async () => {
+    await Vote.findOne.mockReturnValue(null);
+    await Vote.create.mockReturnValue(true);
+    Vote.count.mockReturnValue(err);
+    await voteMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 동작 --> Vote.count (cntB)', async () => {
+    await Vote.findOne.mockReturnValue(null);
+    await Vote.create.mockReturnValue(true);
+    Vote.count.mockReturnValueOnce(Promise.resolve(true)).mockReturnValueOnce(Promise.reject(err));
+    await voteMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+describe('객관식 투표 종료하기 검사', () => {
+  const req = {
+    params: {
+      multi_id: '1',
+    },
+  };
+  const res = {
+    status: jest.fn(() => res),
+    json: jest.fn(),
+    locals: {
+      user: 1,
+    },
+  };
+  const next = jest.fn();
+  const err = 'DB error';
+
+  test('객관식 투표를 종료에 성공하면 success: true 를 내려준다.', async () => {
+    await Multi.findOne.mockReturnValue(true);
+    await Multi.update.mockReturnValue(true);
+    await completeMulti(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({ success: true });
+  });
+
+  test('이미 종료된 투표인 경우 success: false 를 내려준다.', async () => {
+    await Multi.findOne.mockReturnValue(null);
+    await completeMulti(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({ success: false });
+  });
+
+  test('DB Error 발생 --> Multi.findOne', async () => {
+    await Multi.findOne.mockRejectedValue(err);
+    await completeMulti(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB Error 발생 --> Multi.update', async () => {
+    await Multi.findOne.mockReturnValue(true);
+    await Multi.update.mockReturnValue(Promise.reject(err));
+    await completeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
