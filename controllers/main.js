@@ -15,7 +15,12 @@ module.exports = {
       const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
       query = `
         SELECT multiId, title, description, likeCnt, date,
-          (SELECT nickname FROM users WHERE users.id = multi.user)  AS nickname
+          (SELECT nickname FROM users WHERE users.id = multi.user)  AS nickname,
+          (SELECT 
+            (SELECT COUNT(*) FROM comments 
+            WHERE multi = multi.multiId) +
+            (SELECT COUNT(*) FROM childcomments 
+            WHERE multi = multi.multiId))  AS commentCnt
         FROM multi
         ORDER BY likeCnt DESC
         LIMIT 10;
