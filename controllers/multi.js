@@ -111,9 +111,13 @@ module.exports = {
                                  WHERE multi = ${multi_id}
                                  ORDER BY date`;
       const multi = await sequelize.query(multiQuery, { type: sequelize.QueryTypes.SELECT });
-      const comment = await sequelize.query(commentQuery, { type: sequelize.QueryTypes.SELECT });
-      const childComment = await sequelize.query(childCommentQuery, { type: sequelize.QueryTypes.SELECT });
-      res.status(200).json({ success: true, multi: multi[0], comment, childComment });
+      if (multi.length > 0) { // 객관식 게시글이 존재하지 하는 경우
+        const comment = await sequelize.query(commentQuery, { type: sequelize.QueryTypes.SELECT });
+        const childComment = await sequelize.query(childCommentQuery, { type: sequelize.QueryTypes.SELECT });
+        res.status(200).json({ success: true, multi: multi[0], comment, childComment });
+      } else {  // 객관식 상세 페이지가 존재하지 않는 경우
+        res.status(400).json({ success: false });
+      }
     } catch (err) {
       console.error(err);
       next(err);
