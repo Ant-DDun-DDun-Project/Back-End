@@ -54,7 +54,7 @@ module.exports = {
           userId,
         },
       });
-      const pwCheck = bcrypt.compareSync(pw, userData.pw);
+      const pwCheck = await bcrypt.compare(pw, userData.pw);
       if (!userData || !pwCheck) {
         res.status(400).json({
           success: false,
@@ -62,7 +62,7 @@ module.exports = {
       } else {
         const nickname = userData.nickname;
         const userId = userData.id;
-        const token = createToken(userData.id);
+        const token = createToken(userId);
         res.cookie('user', token, { httpOnly: true, maxAge: 60 * 60 * 24 * 1000 });
         res.status(200).json({
           success: true,
