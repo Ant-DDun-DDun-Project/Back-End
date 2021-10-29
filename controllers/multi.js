@@ -65,6 +65,60 @@ module.exports = {
       next(err);
     }
   },
+  // 객관식 상세페이지 뷰
+  getTargetMulti: async (req, res, next) => {
+    try {
+      const { multi_id } = req.params;
+      // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+      const user = 1;
+      const multiQuery = `SELECT *,
+                                 (SELECT (SELECT COUNT(*) FROM comments WHERE multi = ${multi_id}) +
+                                         (SELECT COUNT(*) FROM childcomments WHERE multi = ${multi_id})) AS commentCnt,
+                                 (SELECT COUNT(*) FROM likes WHERE multi = ${multi_id})                  AS likeCnt,
+                                 (SELECT vote FROM votes WHERE multi = ${multi_id})                      AS voted,
+                                 (SELECT user FROM likes WHERE user = ${user} AND multi = ${multi_id})   AS liked,
+                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'A')   AS voteCntA,
+                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'B')   AS voteCntB,
+                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'C')   AS voteCntC,
+                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'D')   AS voteCntD,
+                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'E')   AS voteCntE
+                          FROM multi
+                          WHERE multiId = ${multi_id}`;
+
+      const commentQuery = `SELECT *,
+                                   (SELECT COUNT(*)
+                                    FROM commentlikes
+                                    WHERE commentlikes.comment = comments.id)            AS CommentLikeCnt,
+                                   (SELECT user
+                                    FROM commentlikes
+                                    WHERE user = ${user}
+                                      AND commentlikes.comment = comments.id)            AS liked,
+                                   (SELECT nickname FROM users WHERE id = comments.user) AS nickname
+                            FROM comments
+                            WHERE multi = ${multi_id}
+                            ORDER BY date`;
+
+      const childCommentQuery = `SELECT *,
+                                        (SELECT COUNT(*)
+                                         FROM commentlikes
+                                         WHERE commentlikes.childComment = childcomments.id)       AS commentLikeCnt,
+                                        (SELECT nickname FROM users WHERE id = childcomments.user) AS nickname,
+                                        (SELECT user
+                                         FROM commentlikes
+                                         WHERE user = ${user}
+                                           AND commentlikes.childComment = childcomments.id)       AS liked
+                                 FROM childcomments
+                                 WHERE multi = ${multi_id}
+                                 ORDER BY date`;
+      const multi = await sequelize.query(multiQuery, { type: sequelize.QueryTypes.SELECT });
+      const comment = await sequelize.query(commentQuery, { type: sequelize.QueryTypes.SELECT });
+      const childComment = await sequelize.query(childCommentQuery, { type: sequelize.QueryTypes.SELECT });
+      res.status(200).json({ success: true, multi: multi[0], comment, childComment });
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  },
   // 객관식 게시글 작성
   postMulti: async (req, res, next) => {
     try {
@@ -202,6 +256,7 @@ module.exports = {
       next(err);
     }
   },
+  // 객관식 게시글 종료하기
   completeMulti: async (req, res, next) => {
     try {
       const { multi_id } = req.params;
