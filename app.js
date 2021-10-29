@@ -10,6 +10,7 @@ const { sequelize } = require('./models');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger_output.json');
+const helmet = require('helmet');
 
 //cors
 const corsOptions = {
@@ -30,6 +31,9 @@ sequelize
 
 //morgan
 app.use(morgan('dev'));
+
+//helmet
+app.use(helmet());
 
 //routing
 const router = require('./routes/index');
