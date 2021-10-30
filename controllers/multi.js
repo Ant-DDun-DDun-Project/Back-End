@@ -111,11 +111,15 @@ module.exports = {
                                  WHERE multi = ${multi_id}
                                  ORDER BY date`;
       const multi = await sequelize.query(multiQuery, { type: sequelize.QueryTypes.SELECT });
-      if (multi.length > 0) { // 객관식 게시글이 존재하지 하는 경우
+      if (multi.length > 0) {
+        // 객관식 게시글이 존재하지 하는 경우
         const comment = await sequelize.query(commentQuery, { type: sequelize.QueryTypes.SELECT });
-        const childComment = await sequelize.query(childCommentQuery, { type: sequelize.QueryTypes.SELECT });
+        const childComment = await sequelize.query(childCommentQuery, {
+          type: sequelize.QueryTypes.SELECT,
+        });
         res.status(200).json({ success: true, multi: multi[0], comment, childComment });
-      } else {  // 객관식 상세 페이지가 존재하지 않는 경우
+      } else {
+        // 객관식 상세 페이지가 존재하지 않는 경우
         res.status(400).json({ success: false });
       }
     } catch (err) {
@@ -235,17 +239,31 @@ module.exports = {
       const { select } = await voteMultiSchema.validateAsync(req.body);
       const { multi_id } = req.params;
       // const user = res.locals.user;
-      const user = 20;
+      const user = 28;
       const alreadyVote = await Vote.findOne({ where: { user, multi: multi_id } });
       if (alreadyVote) {
         res.status(400).json({ success: false });
       } else {
         await Vote.create({ user, vote: select, multi: multi_id });
-        const voteCntA = await Vote.count({ where: { vote: 'A', multi: multi_id } });
-        const voteCntB = await Vote.count({ where: { vote: 'B', multi: multi_id } });
-        const voteCntC = await Vote.count({ where: { vote: 'C', multi: multi_id } });
-        const voteCntD = await Vote.count({ where: { vote: 'D', multi: multi_id } });
-        const voteCntE = await Vote.count({ where: { vote: 'E', multi: multi_id } });
+        const totalVote = await Vote.findAll({ where: { multi: multi_id } });
+        let voteCntA = 0,
+          voteCntB = 0,
+          voteCntC = 0,
+          voteCntD = 0,
+          voteCntE = 0;
+        for (let i = 0; i < totalVote.length; i++) {
+          if (totalVote[i].dataValues.vote == 'A') {
+            voteCntA++;
+          } else if (totalVote[i].dataValues.vote == 'B') {
+            voteCntB++;
+          } else if (totalVote[i].dataValues.vote == 'C') {
+            voteCntC++;
+          } else if (totalVote[i].dataValues.vote == 'D') {
+            voteCntD++;
+          } else if (totalVote[i].dataValues.vote == 'E') {
+            voteCntE++;
+          }
+        }
         res.status(200).json({
           success: true,
           voteCntA,
