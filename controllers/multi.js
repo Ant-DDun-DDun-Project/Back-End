@@ -74,8 +74,7 @@ module.exports = {
       const multiQuery = `SELECT *,
                                  (SELECT (SELECT COUNT(*) FROM comments WHERE multi = ${multi_id}) +
                                          (SELECT COUNT(*) FROM childcomments WHERE multi = ${multi_id})) AS commentCnt,
-                                 (SELECT COUNT(*) FROM likes WHERE multi = ${multi_id})                  AS likeCnt,
-                                 (SELECT vote FROM votes WHERE multi = ${multi_id})                      AS voted,
+                                 (SELECT vote FROM votes WHERE user = ${user} AND multi = ${multi_id})   AS voted,
                                  (SELECT user FROM likes WHERE user = ${user} AND multi = ${multi_id})   AS liked,
                                  (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'A')   AS voteCntA,
                                  (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'B')   AS voteCntB,
