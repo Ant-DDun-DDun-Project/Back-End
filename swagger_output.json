@@ -16,7 +16,7 @@
       "type": "apiKey",
       "in": "header",
       "name": "Authorization",
-      "description": "t정상적인 응답en"
+      "description": "token"
     }
   },
   "consumes": [
