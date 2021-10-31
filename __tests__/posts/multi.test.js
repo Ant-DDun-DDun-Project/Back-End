@@ -1,7 +1,7 @@
 jest.mock('../../models/either');
 jest.mock('../../models/votes');
 jest.mock('../../models/users');
-jest.mock('../../models/Multi');
+jest.mock('../../models/multi');
 jest.mock('../../models/likes');
 jest.mock('../../models/comments');
 jest.mock('../../models/child-comments');
@@ -21,6 +21,8 @@ const {
   completeMulti,
   getTargetMulti,
 } = require('../../controllers/multi');
+
+const { countVote } = require('../../controllers/utils/vote-count');
 
 describe('객관식 게시글을 작성에 대한 검사', () => {
   const req = {
@@ -469,13 +471,13 @@ describe('객관식 게시글을 좋아요에 대한 검사', () => {
   });
 });
 
-describe('찬반 투표에 대한 검사', () => {
+describe('객관식 투표에 대한 검사', () => {
   const req = {
     body: {
       select: 'A',
     },
     params: {
-      multi_id: '1',
+      multi_id: '9',
     },
   };
   const res = {
@@ -485,31 +487,41 @@ describe('찬반 투표에 대한 검사', () => {
       user: 1,
     },
   };
+  const countVote = jest.fn();
   const next = jest.fn();
   const err = 'DB Error';
 
-  test('객관식 투표가 성공했으면 success: true 를 내려준다.', async () => {
+  const mockdb = [
+    { id: 3, vote: 'A', user: 20, either: null, multi: 9 },
+    { id: 4, vote: 'A', user: 2, either: null, multi: 9 },
+    { id: 10, vote: 'B', user: 8, either: null, multi: 9 },
+    { id: 11, vote: 'B', user: 9, either: null, multi: 9 },
+    { id: 12, vote: 'C', user: 10, either: null, multi: 9 },
+    { id: 17, vote: 'D', user: 15, either: null, multi: 9 },
+    { id: 18, vote: 'E', user: 16, either: null, multi: 9 },
+    { id: 19, vote: 'E', user: 17, either: null, multi: 9 },
+    { id: 20, vote: 'E', user: 18, either: null, multi: 9 },
+    { id: 29, vote: 'D', user: 28, either: null, multi: 9 },
+  ];
+
+  test('객관식 투표가 성공했으면 success: true 와 voteCnt 들을 내려준다.', async () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockReturnValue(true);
-    await Vote.count
-      .mockReturnValueOnce(4)
-      .mockReturnValueOnce(10)
-      .mockReturnValueOnce(1)
-      .mockReturnValueOnce(0)
-      .mockReturnValueOnce(15);
+    await Vote.findAll.mockReturnValue(mockdb);
+    await countVote.mockReturnValue([2, 2, 1, 2, 3]);
     await voteMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
-      voteCntA: 4,
-      voteCntB: 10,
+      voteCntA: 2,
+      voteCntB: 2,
       voteCntC: 1,
-      voteCntD: 0,
-      voteCntE: 15,
+      voteCntD: 2,
+      voteCntE: 3,
     });
   });
 
-  test('이미 투표한 게시글이라면 success:false 를 내려준다.', async () => {
+  test('이미 투표한 게시글이라면 success: false 를 내려준다', async () => {
     await Vote.findOne.mockReturnValue(true);
     await voteMulti(req, res, next);
     expect(res.status).toBeCalledWith(400);
@@ -518,31 +530,23 @@ describe('찬반 투표에 대한 검사', () => {
     });
   });
 
-  test('DB Error 동작 --> Vote.findOne', async () => {
-    Vote.findOne.mockReturnValue(Promise.reject(err));
+  test('DB Error 발생 --> Vote.findOne', async () => {
+    await Vote.findOne.mockRejectedValue(err);
     await voteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
-  test('DB Error 동작 --> Vote.create', async () => {
+  test('DB Error 발생 --> Vote.create', async () => {
     await Vote.findOne.mockReturnValue(null);
-    Vote.create.mockReturnValue(Promise.reject(err));
+    await Vote.create.mockRejectedValue(err);
     await voteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
-  test('DB Error 동작 --> Vote.count (cntA)', async () => {
-    await Vote.findOne.mockReturnValue(null);
-    await Vote.create.mockReturnValue(true);
-    Vote.count.mockReturnValue(err);
-    await voteMulti(req, res, next);
-    expect(next).toBeCalledWith(err);
-  });
-
-  test('DB Error 동작 --> Vote.count (cntB)', async () => {
+  test('DB Error 발생 --> Vote.findAll', async () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockReturnValue(true);
-    Vote.count.mockReturnValueOnce(Promise.resolve(true)).mockReturnValueOnce(Promise.reject(err));
+    await Vote.findAll.mockRejectedValue(err);
     await voteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
@@ -596,14 +600,14 @@ describe('객관식 투표 종료하기 검사', () => {
 describe('객관식 게시글 상세 페이지 검사', () => {
   const req = {
     params: {
-      multi_id: '1,'
+      multi_id: '1,',
     },
   };
   const res = {
     status: jest.fn(() => res),
     json: jest.fn(),
     locals: {
-      user: 1
+      user: 1,
     },
   };
   const next = jest.fn();
@@ -611,63 +615,8 @@ describe('객관식 게시글 상세 페이지 검사', () => {
 
   test('객관식 상세 페이지를 성공적으로 보내줄 때 / success: true/ 와 특정 게시물의 상세 내용을 응답으로 보내준다.', async () => {
     await sequelize.query
-      .mockReturnValueOnce([{
-        multiId: 1,
-        title: '제목',
-        description: '내용입니다.',
-        contentA: '예시 A',
-        contentB: '예시 q',
-        contentC: '안녕',
-        contentD: '예시 D',
-        contentE: '예시 E',
-        date: '2021-10-20',
-        completed: 0,
-        edited: 0,
-        editedDate: null,
-        likeCnt: 1,
-        user: 1,
-        commentCnt: 7,
-        voted: 'A',
-        liked: 1,
-        voteCntA: 1,
-        voteCntB: 0,
-        voteCntC: 0,
-        voteCntD: 0,
-        voteCntE: 0
-      }])
       .mockReturnValueOnce([
         {
-          id: 3,
-          comment: '리퀘스트받아줘',
-          date: '2021-10-10 15:13:13',
-          edited: 1,
-          editedDate: '2000-01-01 13: 13: 13',
-          deleted: '1',
-          user: 1,
-          multi: 1,
-          CommentLikeCnt: 0,
-          liked: null,
-          nickname: 'testid'
-        }])
-      .mockReturnValueOnce([{
-        id: 2,
-        comment: '샘플임',
-        date: '2021-10-10',
-        edited: 0,
-        editedDate: null,
-        deleted: 1,
-        user: 1,
-        multi: 1,
-        parentComment: 1,
-        commentLikeCnt: 0,
-        nickname: 'testid',
-        liked: null
-      }]);
-    await getTargetMulti(req, res, next);
-    expect(res.json).toBeCalledWith(
-      {
-        success: true,
-        multi: {
           multiId: 1,
           title: '제목',
           description: '내용입니다.',
@@ -689,39 +638,99 @@ describe('객관식 게시글 상세 페이지 검사', () => {
           voteCntB: 0,
           voteCntC: 0,
           voteCntD: 0,
-          voteCntE: 0
+          voteCntE: 0,
         },
-        comment: [
-          {
-            id: 3,
-            comment: '리퀘스트받아줘',
-            date: '2021-10-10 15:13:13',
-            edited: 1,
-            editedDate: '2000-01-01 13: 13: 13',
-            deleted: '1',
-            user: 1,
-            multi: 1,
-            CommentLikeCnt: 0,
-            liked: null,
-            nickname: 'testid'
-          }],
-        childComment: [
-          {
-            id: 2,
-            comment: '샘플임',
-            date: '2021-10-10',
-            edited: 0,
-            editedDate: null,
-            deleted: 1,
-            user: 1,
-            multi: 1,
-            parentComment: 1,
-            commentLikeCnt: 0,
-            nickname: 'testid',
-            liked: null
-          }],
-      }
-    );
+      ])
+      .mockReturnValueOnce([
+        {
+          id: 3,
+          comment: '리퀘스트받아줘',
+          date: '2021-10-10 15:13:13',
+          edited: 1,
+          editedDate: '2000-01-01 13: 13: 13',
+          deleted: '1',
+          user: 1,
+          multi: 1,
+          CommentLikeCnt: 0,
+          liked: null,
+          nickname: 'testid',
+        },
+      ])
+      .mockReturnValueOnce([
+        {
+          id: 2,
+          comment: '샘플임',
+          date: '2021-10-10',
+          edited: 0,
+          editedDate: null,
+          deleted: 1,
+          user: 1,
+          multi: 1,
+          parentComment: 1,
+          commentLikeCnt: 0,
+          nickname: 'testid',
+          liked: null,
+        },
+      ]);
+    await getTargetMulti(req, res, next);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      multi: {
+        multiId: 1,
+        title: '제목',
+        description: '내용입니다.',
+        contentA: '예시 A',
+        contentB: '예시 q',
+        contentC: '안녕',
+        contentD: '예시 D',
+        contentE: '예시 E',
+        date: '2021-10-20',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 1,
+        commentCnt: 7,
+        voted: 'A',
+        liked: 1,
+        voteCntA: 1,
+        voteCntB: 0,
+        voteCntC: 0,
+        voteCntD: 0,
+        voteCntE: 0,
+      },
+      comment: [
+        {
+          id: 3,
+          comment: '리퀘스트받아줘',
+          date: '2021-10-10 15:13:13',
+          edited: 1,
+          editedDate: '2000-01-01 13: 13: 13',
+          deleted: '1',
+          user: 1,
+          multi: 1,
+          CommentLikeCnt: 0,
+          liked: null,
+          nickname: 'testid',
+        },
+      ],
+      childComment: [
+        {
+          id: 2,
+          comment: '샘플임',
+          date: '2021-10-10',
+          edited: 0,
+          editedDate: null,
+          deleted: 1,
+          user: 1,
+          multi: 1,
+          parentComment: 1,
+          commentLikeCnt: 0,
+          nickname: 'testid',
+          liked: null,
+        },
+      ],
+    });
   });
 
   test('객관식 게시물이 DB에 존재하지 않는 경우 / success: false / 를 응답으로 보내준다.', async () => {
@@ -732,16 +741,13 @@ describe('객관식 게시글 상세 페이지 검사', () => {
   });
 
   test('DB Error --> multi DB 에러', async () => {
-    await sequelize.query
-      .mockReturnValueOnce(Promise.reject(err));
+    await sequelize.query.mockReturnValueOnce(Promise.reject(err));
     await getTargetMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
   test('DB Error --> comment DB 에러', async () => {
-    await sequelize.query
-      .mockReturnValueOnce(true)
-      .mockReturnValueOnce(Promise.reject(err));
+    await sequelize.query.mockReturnValueOnce(true).mockReturnValueOnce(Promise.reject(err));
     await getTargetMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
