@@ -1,5 +1,6 @@
 const { sequelize, Multi, Like, Vote } = require('../models');
 const { multiSchema, editMultiSchema, voteMultiSchema } = require('./joi');
+const { countVote } = require('./utils/vote-count');
 
 module.exports = {
   //객관식 페이지 메인뷰
@@ -238,31 +239,15 @@ module.exports = {
       const { select } = await voteMultiSchema.validateAsync(req.body);
       const { multi_id } = req.params;
       // const user = res.locals.user;
-      const user = 28;
+      const user = 35;
       const alreadyVote = await Vote.findOne({ where: { user, multi: multi_id } });
       if (alreadyVote) {
         res.status(400).json({ success: false });
       } else {
         await Vote.create({ user, vote: select, multi: multi_id });
-        const totalVote = await Vote.findAll({ where: { multi: multi_id } });
-        let voteCntA = 0,
-          voteCntB = 0,
-          voteCntC = 0,
-          voteCntD = 0,
-          voteCntE = 0;
-        for (let i = 0; i < totalVote.length; i++) {
-          if (totalVote[i].dataValues.vote == 'A') {
-            voteCntA++;
-          } else if (totalVote[i].dataValues.vote == 'B') {
-            voteCntB++;
-          } else if (totalVote[i].dataValues.vote == 'C') {
-            voteCntC++;
-          } else if (totalVote[i].dataValues.vote == 'D') {
-            voteCntD++;
-          } else if (totalVote[i].dataValues.vote == 'E') {
-            voteCntE++;
-          }
-        }
+        const totalVote = await Vote.findAll({ where: { multi: multi_id }, raw: true });
+        console.log(totalVote);
+        [voteCntA, voteCntB, voteCntC, voteCntD, voteCntE] = await countVote(totalVote);
         res.status(200).json({
           success: true,
           voteCntA,
