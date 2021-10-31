@@ -530,7 +530,7 @@ describe('객관식 투표에 대한 검사', () => {
     });
   });
 
-  test('DB Error 발생 --> Vote.findAll', async () => {
+  test('DB Error 발생 --> Vote.findOne', async () => {
     await Vote.findOne.mockRejectedValue(err);
     await voteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
