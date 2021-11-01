@@ -5,10 +5,9 @@
     "title": "개미들의 곡소리",
     "description": "주식 커뮤니티 개미들의 곡소리 웹 서비스의 API 명세서"
   },
-  "host": "localhost:3000",
+  "host": "starandnight.shop",
   "basePath": "/",
   "schemes": [
-    "http",
     "https"
   ],
   "securityDefinitions": {
