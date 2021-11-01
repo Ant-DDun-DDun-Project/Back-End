@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const { validatePassword } = require('./utils/password-validation.js');
 const { createToken } = require('./utils/create-token.js');
 
+
 module.exports = {
   //회원가입
   signup: async (req, res, next) => {
@@ -63,7 +64,7 @@ module.exports = {
         const nickname = userData.nickname;
         const userId = userData.id;
         const token = createToken(userId);
-        res.cookie('user', token, { httpOnly: true, maxAge: 60 * 60 * 24 * 1000 });
+        res.cookie('user', token, { maxAge: 60 * 60 * 24 * 1000 });
         res.status(200).json({
           success: true,
           nickname,
