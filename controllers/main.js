@@ -8,7 +8,7 @@ module.exports = {
       let query = `
         SELECT eitherId, title, likeCnt, date,
           (SELECT nickname FROM users WHERE users.id = either.user)  AS nickname
-        FROM either
+        FROM either WHERE completed = 0
         ORDER BY likeCnt DESC
         LIMIT 10;
       `;
@@ -21,7 +21,7 @@ module.exports = {
             WHERE multi = multi.multiId) +
             (SELECT COUNT(*) FROM childcomments 
             WHERE multi = multi.multiId))  AS commentCnt
-        FROM multi
+        FROM multi WHERE completed = 0
         ORDER BY likeCnt DESC
         LIMIT 10;
       `;
