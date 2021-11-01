@@ -6,7 +6,7 @@ module.exports = {
     try {
       const token = req.cookies.user;
       if (!token) {
-        res.locals.user = 0;
+        res.locals.user = 13;
         next();
       } else {
         const { id } = jwt.verify(token, process.env.SECRET_KEY);
