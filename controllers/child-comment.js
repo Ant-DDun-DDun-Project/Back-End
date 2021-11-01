@@ -7,7 +7,7 @@ module.exports = {
     try {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id, comment_id } = req.params;
-      const user = 1;
+      const user = res.locals.user;
       await ChildComment.create({
         user,
         multi: multi_id,
@@ -50,8 +50,7 @@ module.exports = {
   deleteChildComment: async (req, res, next) => {
     try {
       const { multi_id, comment_id } = req.params;
-      // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화
-      const user = 1; // Todo --> 사용자 인증 미들웨어 구현 시 삭제
+      const user = res.locals.user;
 
       if (await ChildComment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         await ChildComment.update(

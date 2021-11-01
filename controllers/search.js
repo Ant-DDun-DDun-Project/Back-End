@@ -1,6 +1,5 @@
 const { Sequelize } = require('sequelize');
-const { Either, Multi, User, sequelize } = require('../models');
-const { and, or, like, not } = Sequelize.Op;
+const { sequelize } = require('../models');
 
 module.exports = {
   // 검색기능

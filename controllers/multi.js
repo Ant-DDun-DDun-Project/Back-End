@@ -6,10 +6,9 @@ module.exports = {
   //객관식 페이지 메인뷰
   getMulti: async (req, res, next) => {
     try {
-      const user = 1; // Todo --> 사용자 인증 미들웨어 구현 시 삭제
-      // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+      const user = res.locals.user;
       const query = `SELECT *,
-                            (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
+                            (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted, 
                             (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
                             (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
                                     (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
@@ -27,8 +26,7 @@ module.exports = {
   //객관식 페이지 진행중 뷰
   getIngMulti: async (req, res, next) => {
     try {
-      const user = 1; // Todo --> 사용자 인증 미들웨어 구현 시 삭제
-      // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+      const user = res.locals.user;
       const query = `SELECT *,
                             (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
                             (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
@@ -48,8 +46,7 @@ module.exports = {
   //객관식 페이지 투표종료 뷰
   getCompleteMulti: async (req, res, next) => {
     try {
-      const user = 1; // Todo --> 사용자 인증 미들웨어 구현 시 삭제
-      // const user = res.locals.user // Todo --> 사용자 인증 미들웨어 구현 시 활성화
+      const user = res.locals.user;
       const query = `SELECT *,
                             (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
                             (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
@@ -70,8 +67,7 @@ module.exports = {
   getTargetMulti: async (req, res, next) => {
     try {
       const { multi_id } = req.params;
-      // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
-      const user = 1;
+      const user = res.locals.user;
       const multiQuery = `SELECT *,
                                  (SELECT (SELECT COUNT(*) FROM comments WHERE multi = ${multi_id}) +
                                          (SELECT COUNT(*) FROM childcomments WHERE multi = ${multi_id})) AS commentCnt,
@@ -238,8 +234,7 @@ module.exports = {
     try {
       const { select } = await voteMultiSchema.validateAsync(req.body);
       const { multi_id } = req.params;
-      // const user = res.locals.user;
-      const user = 35;
+      const user = res.locals.user;
       const alreadyVote = await Vote.findOne({ where: { user, multi: multi_id } });
       if (alreadyVote) {
         res.status(400).json({ success: false });
@@ -266,8 +261,7 @@ module.exports = {
   completeMulti: async (req, res, next) => {
     try {
       const { multi_id } = req.params;
-      // const user = res.locals.user;
-      const user = 20;
+      const user = res.locals.user;
       const myMulti = await Multi.findOne({ where: { user, multiId: multi_id, completed: false } });
       if (myMulti) {
         await Multi.update({ completed: true }, { where: { user, multiId: multi_id } });

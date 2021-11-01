@@ -6,7 +6,7 @@ module.exports = {
   postEither: async (req, res, next) => {
     try {
       const { title, contentA, contentB, date } = await eitherSchema.validateAsync(req.body);
-      const user = 1;
+      const user = res.locals.user;
       await Either.create({
         user,
         title,
@@ -23,7 +23,7 @@ module.exports = {
   // 찬반투표 게시글 뷰
   getEither: async (req, res, next) => {
     try {
-      const user = 1; // res.locals.user 로 수정하기
+      const user = res.locals.user;
       const query = `SELECT *,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
@@ -92,7 +92,7 @@ module.exports = {
   editEither: async (req, res, next) => {
     const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(req.body);
     const { either_id } = req.params;
-    const user = 20;
+    const user = res.locals.user;
     try {
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
@@ -112,7 +112,7 @@ module.exports = {
   //찬반투표 게시글 삭제
   deleteEither: async (req, res, next) => {
     const { either_id } = req.params;
-    const user = 20;
+    const user = res.locals.user;
     try {
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
@@ -130,8 +130,7 @@ module.exports = {
   // 찬반투표 게시글 좋아요
   likeEither: async (req, res, next) => {
     const { either_id } = req.params;
-    // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현시 삭제
-    const user = 1;
+    const user = res.locals.user;
     try {
       if (!(await Like.findOne({ where: { either: either_id, user } }))) {
         await Like.create({
@@ -158,8 +157,7 @@ module.exports = {
     try {
       const { vote } = await voteEitherSchema.validateAsync(req.body);
       const { either_id } = req.params;
-      // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
-      const user = 3;
+      const user = res.locals.user;
 
       if (await Vote.findOne({ where: { user, either: either_id } })) {
         // 이미 투표한 이력이 존재하는 경우
