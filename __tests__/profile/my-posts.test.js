@@ -8,7 +8,7 @@ jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
 jest.mock('sequelize');
 const { Either, sequelize, User } = require('../../models');
-const { getMyPosts, getMyPolls, editNickname } = require('../../controllers/porfile');
+const { getMyPosts, getMyPolls, editNickname, getProfile } = require('../../controllers/porfile');
 
 describe('내가 쓴 글', () => {
   const req = {
@@ -285,6 +285,44 @@ describe('닉네임 변경', () => {
     );
     await User.update.mockRejectedValue(err);
     await editNickname(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+});
+
+describe('프로필 페이지 뷰', () => {
+  const req = {
+    params: {
+      user_id: '1',
+    },
+  };
+  const res = {
+    status: jest.fn(() => res),
+    json: jest.fn(),
+  };
+  const next = jest.fn();
+  const err = 'DB에러';
+  test('프로필 페이지 접근 성공 시 response로 success:true 와 닉네임을 보내준다', async () => {
+    await User.findOne.mockReturnValue({
+      nickname: '황창환',
+    });
+    await getProfile(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      nickname: '황창환',
+    });
+  });
+  test('프로필 페이지 접근 실패 시 response로 success:false를 보내준다', async () => {
+    await User.findOne.mockReturnValue(null);
+    await getProfile(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({
+      success: false,
+    });
+  });
+  test('DB 에러', async () => {
+    await User.findOne.mockRejectedValue(err);
+    await getProfile(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

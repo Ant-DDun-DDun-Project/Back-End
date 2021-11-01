@@ -2,20 +2,21 @@ const express = require('express'); // 익스프레스 참조
 const cookieParser = require('cookie-parser');
 const app = express(); // 익스프레스 쓸때는 app이라고 명시
 const compression = require('compression');
-app.use(cookieParser()); // 쿠키값을 꺼낼 수 있음
 const cors = require('cors');
 require('dotenv').config();
+app.use(cookieParser(process.env.COOKIE_SECRET)); // 쿠키값을 꺼낼 수 있음
 const port = process.env.PORT;
 const { sequelize } = require('./models');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger_output.json');
 const helmet = require('helmet');
+const { routerError, errorHandler } = require('./middlewares/error-handler');
 
 //cors
 const corsOptions = {
-  origin: '*', // 전체 허용
-  credentials: true,
+  origin: true, // 전체 허용
+  // credentials: true,
 };
 app.use(cors(corsOptions));
 
@@ -48,6 +49,10 @@ app.use('/', router);
 
 //swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+//errorHandler
+app.use(routerError);
+app.use(errorHandler);
 
 //server
 app.listen(port, () => {

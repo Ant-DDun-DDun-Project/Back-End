@@ -8,7 +8,13 @@ jest.mock('../models/child-comments');
 jest.mock('../models/comment-likes');
 jest.mock('../controllers/utils/password-validation');
 const User = require('../models/users');
-const { signup, login, CheckDuplicatedId, CheckDuplicatedNick } = require('../controllers/user');
+const {
+  signup,
+  login,
+  CheckDuplicatedId,
+  CheckDuplicatedNick,
+  logout,
+} = require('../controllers/user');
 const { validatePassword } = require('../controllers/utils/password-validation');
 
 const mockdb = {
@@ -198,5 +204,22 @@ describe('회원가입 시 닉네임 중복체크 기능에 대한 검사', () =
     User.findOne.mockReturnValue(Promise.reject(err));
     await CheckDuplicatedNick(req, res, next);
     expect(next).toBeCalledWith(err);
+  });
+});
+describe('로그아웃', () => {
+  const req = {};
+  const res = {
+    clearCookie: jest.fn(),
+    status: jest.fn(() => res),
+    json: jest.fn(),
+  };
+  const next = jest.fn();
+  const err = 'DB에러';
+  test('로그아웃에 성공하면 response로 success:true를 보낸다', async () => {
+    await logout(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+    });
   });
 });

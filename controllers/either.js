@@ -45,7 +45,7 @@ module.exports = {
   //찬반투표 진행중 게시글 뷰
   getIngEither: async (req, res, next) => {
     try {
-      const user = 1; // res.locals.user 로 수정하기
+      const user = res.locals.user;
       const query = `SELECT *,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
@@ -68,7 +68,7 @@ module.exports = {
   //찬반투표 투표종료 게시글 뷰
   getCompleteEither: async (req, res, next) => {
     try {
-      const user = 1; // res.locals.user 로 수정하기
+      const user = res.locals.user;
       const query = `SELECT *,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
@@ -158,10 +158,16 @@ module.exports = {
       const { vote } = await voteEitherSchema.validateAsync(req.body);
       const { either_id } = req.params;
       const user = res.locals.user;
-
       if (await Vote.findOne({ where: { user, either: either_id } })) {
         // 이미 투표한 이력이 존재하는 경우
-        res.status(400).json({ success: false });
+        await Vote.update({ vote }, { where: { either: either_id, user } });
+        const voteCntA = await Vote.count({ where: { vote: 'A', either: either_id } }); // 현재 게시물에 대한 A 수
+        const voteCntB = await Vote.count({ where: { vote: 'B', either: either_id } }); // 현재 게시물에 대한 B 수
+        res.status(200).json({
+          success: true,
+          voteCntA,
+          voteCntB,
+        });
       } else {
         await Vote.create({ user, vote, either: either_id }); // 투표한 이력없을 경우 투표 실시
         const voteCntA = await Vote.count({ where: { vote: 'A', either: either_id } }); // 현재 게시물에 대한 A 수
@@ -182,7 +188,7 @@ module.exports = {
   completeEither: async (req, res, next) => {
     const { either_id } = req.params;
     // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
-    const user = 9;
+    const user = res.locals.user;
 
     try {
       if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {
@@ -201,13 +207,13 @@ module.exports = {
   // 찬반 투표 특정페이지 뷰
   getTargetEither: async (req, res, next) => {
     const { either_id } = req.params;
-    const user = 1;
+    const user = res.locals.user;
     try {
       let query = `
           SELECT eitherId, either.user, title, contentA, contentB, date, edited, editedDate, likeCnt,completed,
           (SELECT nickname FROM users WHERE id = either.user) AS nickname,
-          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'A'))  AS voteCntA,
-          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'B'))  AS voteCntB,
+          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId))  AS voteCntA,
+          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId))  AS voteCntB,
           (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
           (SELECT user FROM votes WHERE votes.user = ${user} AND either = either.eitherId) AS voted
         FROM either

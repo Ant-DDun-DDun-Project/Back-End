@@ -63,7 +63,13 @@ module.exports = {
         const nickname = userData.nickname;
         const userId = userData.id;
         const token = createToken(userId);
-        res.cookie('user', token, { maxAge: 60 * 60 * 24 * 1000 });
+        res.cookie('user', token, {
+          maxAge: 3 * 24 * 60 * 60 * 1000,
+          // httpOnly: true,
+          // secure: true,
+          // sameSite: 'None',
+          // signed: true,
+        });
         res.status(200).json({
           success: true,
           nickname,
@@ -109,7 +115,13 @@ module.exports = {
   },
   logout: async (req, res, next) => {
     try {
-      res.clearCookie('user');
+      res.clearCookie('user', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        signed: true,
+      });
+      res.status(200).json({ success: true });
     } catch (err) {
       console.error(err);
       next(err);

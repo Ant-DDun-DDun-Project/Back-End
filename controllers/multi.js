@@ -77,7 +77,8 @@ module.exports = {
                                  (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'B')   AS voteCntB,
                                  (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'C')   AS voteCntC,
                                  (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'D')   AS voteCntD,
-                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'E')   AS voteCntE
+                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'E')   AS voteCntE,
+                                 (SELECT nickname FROM users WHERE id = multi.user) AS nickname
                           FROM multi
                           WHERE multiId = ${multi_id}`;
 
@@ -241,7 +242,6 @@ module.exports = {
       } else {
         await Vote.create({ user, vote: select, multi: multi_id });
         const totalVote = await Vote.findAll({ where: { multi: multi_id }, raw: true });
-        console.log(totalVote);
         [voteCntA, voteCntB, voteCntC, voteCntD, voteCntE] = await countVote(totalVote);
         res.status(200).json({
           success: true,
