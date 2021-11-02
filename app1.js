@@ -8,10 +8,19 @@ app.use(cookieParser(process.env.COOKIE_SECRET)); // 쿠키값을 꺼낼 수 있
 const port = process.env.PORT;
 const { sequelize } = require('./models');
 const morgan = require('morgan');
+const logger = require('./logger');
+const combined =
+  ':remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"';
+// 기존 combined 포멧에서 timestamp만 제거
+const morganFormat = process.env.NODE_ENV !== 'production' ? 'dev' : combined;
+// NOTE: morgan 출력 형태 server.env에서 NODE_ENV 설정 production : 배포 dev : 개발
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger_output.json');
 const helmet = require('helmet');
 const { routerError, errorHandler } = require('./middlewares/error-handler');
+
+//morgan
+app.use(morgan(morganFormat, { stream: logger.stream }));
 
 //cors
 const corsOptions = {
@@ -30,8 +39,9 @@ sequelize
     console.error(err);
   });
 
-//morgan
-app.use(morgan('dev'));
+app.get('/qq', (req, res, next) => {
+  res.status(503).send('hi');
+});
 
 //helmet
 app.use(helmet());
