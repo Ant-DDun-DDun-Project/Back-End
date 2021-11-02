@@ -29,7 +29,7 @@ module.exports = {
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
                             (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
                             (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
-                            (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                            (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
                      FROM either
                      ORDER BY eitherId DESC;`;
       const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
@@ -51,7 +51,7 @@ module.exports = {
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
                             (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
                             (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
-                            (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                            (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
                      FROM either
                      WHERE completed = 0
                      ORDER BY eitherId DESC;`;
@@ -74,7 +74,7 @@ module.exports = {
                             (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
                             (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
                             (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
-                            (SELECT user FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
+                            (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
                      FROM either
                      WHERE completed = 1
                      ORDER BY eitherId DESC;`;
@@ -167,6 +167,7 @@ module.exports = {
           success: true,
           voteCntA,
           voteCntB,
+          vote
         });
       } else {
         await Vote.create({ user, vote, either: either_id }); // 투표한 이력없을 경우 투표 실시
@@ -176,6 +177,7 @@ module.exports = {
           success: true,
           voteCntA,
           voteCntB,
+          vote
         });
       }
     } catch (err) {
@@ -187,7 +189,6 @@ module.exports = {
   // 찬반 투표 종료하기
   completeEither: async (req, res, next) => {
     const { either_id } = req.params;
-    // const user = res.locals.user; // Todo --> 사용자 인증 미들웨어 구현 시 활성화
     const user = res.locals.user;
 
     try {
