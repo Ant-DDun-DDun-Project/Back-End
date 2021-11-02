@@ -1,31 +1,18 @@
 const { sequelize } = require('../models');
+const { MainQuery } = require('../models/query');
 const { countPosting } = require('./utils/posting-count');
 const { countAttend } = require('./utils/attend-count');
+const mainQuery = new MainQuery();
 
 module.exports = {
   getMain: async (req, res, next) => {
     try {
-      let query = `
-        SELECT eitherId, title, likeCnt, date,
-          (SELECT nickname FROM users WHERE users.id = either.user)  AS nickname
-        FROM either WHERE completed = 0
-        ORDER BY likeCnt DESC
-        LIMIT 10;
-      `;
-      const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
-      query = `
-        SELECT multiId, title, description, likeCnt, date,
-          (SELECT nickname FROM users WHERE users.id = multi.user)  AS nickname,
-          (SELECT 
-            (SELECT COUNT(*) FROM comments 
-            WHERE multi = multi.multiId) +
-            (SELECT COUNT(*) FROM childcomments 
-            WHERE multi = multi.multiId))  AS commentCnt
-        FROM multi WHERE completed = 0
-        ORDER BY likeCnt DESC
-        LIMIT 10;
-      `;
-      const multi = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+      const either = await sequelize.query(mainQuery.getMainForEither(), {
+        type: sequelize.QueryTypes.SELECT,
+      });
+      const multi = await sequelize.query(mainQuery.getMainForMulti(), {
+        type: sequelize.QueryTypes.SELECT,
+      });
       const postingNum = await countPosting();
       const attendNum = await countAttend();
       res.status(200).json({ success: true, either, multi, postingNum, attendNum });
