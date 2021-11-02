@@ -1,5 +1,7 @@
 const { Either, sequelize, Like, Vote } = require('../models/');
 const { eitherSchema, editEitherSchema, voteEitherSchema } = require('./joi');
+const { EitherQuery } = require('../models/query');
+const eitherQuery = new EitherQuery();
 
 module.exports = {
   // 찬반투표 게시글 작성
@@ -24,15 +26,9 @@ module.exports = {
   getEither: async (req, res, next) => {
     try {
       const user = res.locals.user;
-      const query = `SELECT *,
-                            (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
-                            (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
-                            (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
-                            (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
-                            (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
-                     FROM either
-                     ORDER BY eitherId DESC;`;
-      const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+      const either = await sequelize.query(eitherQuery.getEither(user), {
+        type: sequelize.QueryTypes.SELECT,
+      });
       res.status(200).json({
         success: true,
         either,
@@ -55,7 +51,9 @@ module.exports = {
                      FROM either
                      WHERE completed = 0
                      ORDER BY eitherId DESC;`;
-      const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+      const either = await sequelize.query(eitherQuery.getIngEither(user), {
+        type: sequelize.QueryTypes.SELECT,
+      });
       res.status(200).json({
         success: true,
         either,
@@ -69,16 +67,9 @@ module.exports = {
   getCompleteEither: async (req, res, next) => {
     try {
       const user = res.locals.user;
-      const query = `SELECT *,
-                            (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
-                            (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
-                            (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
-                            (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
-                            (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
-                     FROM either
-                     WHERE completed = 1
-                     ORDER BY eitherId DESC;`;
-      const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+      const either = await sequelize.query(eitherQuery.getCompleteEither(user), {
+        type: sequelize.QueryTypes.SELECT,
+      });
       res.status(200).json({
         success: true,
         either,
@@ -212,17 +203,9 @@ module.exports = {
     const { either_id } = req.params;
     const user = res.locals.user;
     try {
-      let query = `
-          SELECT eitherId, either.user, title, contentA, contentB, date, edited, editedDate, likeCnt,completed,
-          (SELECT nickname FROM users WHERE id = either.user) AS nickname,
-          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId))  AS voteCntA,
-          (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId))  AS voteCntB,
-          (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
-          (SELECT user FROM votes WHERE votes.user = ${user} AND either = either.eitherId) AS voted
-        FROM either
-        WHERE eitherId = ${either_id};
-      `;
-      const either = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+      const either = await sequelize.query(eitherQuery.getTargetEither(user, either_id), {
+        type: sequelize.QueryTypes.SELECT,
+      });
       res.status(200).json({ success: true, either });
     } catch (err) {
       console.error(err);

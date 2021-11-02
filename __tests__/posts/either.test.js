@@ -557,6 +557,8 @@ describe('찬반 투표에 대한 검사', () => {
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
+      either: 1,
+      vote: 'A',
       voteCntA: 4,
       voteCntB: 10,
     });
@@ -570,6 +572,8 @@ describe('찬반 투표에 대한 검사', () => {
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
+      either: 1,
+      vote: 'A',
       voteCntA: 4,
       voteCntB: 10,
     });
