@@ -168,7 +168,7 @@ module.exports = {
           either: Number(either_id),
           voteCntA,
           voteCntB,
-          vote
+          vote,
         });
       } else {
         await Vote.create({ user, vote, either: either_id }); // 투표한 이력없을 경우 투표 실시
@@ -179,7 +179,7 @@ module.exports = {
           either: Number(either_id),
           voteCntA,
           voteCntB,
-          vote
+          vote,
         });
       }
     } catch (err) {
