@@ -1,7 +1,7 @@
 const winston = require('winston');
 const winstonDaily = require('winston-daily-rotate-file');
 
-const { combine, timestamp, printf, colorize } = winston.format;
+const { combine, timestamp, printf, colorize, json, simple } = winston.format;
 
 const logDir = 'logs'; // logs 디렉토리 하위에 로그 파일 저장
 
@@ -20,22 +20,13 @@ const logger = winston.createLogger({
     logFormat
   ),
   transports: [
-    // info 레벨 로그를 저장할 파일 설정
-    new winstonDaily({
-      level: 'info',
-      datePattern: 'YYYY-MM-DD',
-      dirname: logDir,
-      filename: `%DATE%.log`, // file 이름 날짜로 저장
-      maxFiles: 10, // 30일치 로그 파일 저장
-      zippedArchive: true,
-    }),
     // warn 레벨 로그를 저장할 파일 설정
     new winstonDaily({
       level: 'warn',
       datePattern: 'YYYY-MM-DD',
       dirname: logDir + '/warn',
       filename: `%DATE%.warn.log`, // file 이름 날짜로 저장
-      maxFiles: 30, // 30일치 로그 파일 저장
+      maxFiles: 20, // 30일치 로그 파일 저장
       zippedArchive: true,
     }),
     // error 레벨 로그를 저장할 파일 설정
@@ -60,14 +51,14 @@ logger.stream = {
       logger.info(message);
     } else if (400 <= state && state < 500) {
       logger.warn(message);
-    } else if (state > 500) {
+    } else if (state >= 500) {
       logger.error(message);
     }
   },
 };
 
 // Production 환경이 아닌 경우(dev 등) 배포 환경에서는 최대한 자원을 안잡아 먹는 로그를 출력해야함
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV == 'production') {
   logger.add(
     new winston.transports.Console({
       format: combine(
