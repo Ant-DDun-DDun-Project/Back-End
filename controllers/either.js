@@ -42,15 +42,6 @@ module.exports = {
   getIngEither: async (req, res, next) => {
     try {
       const user = res.locals.user;
-      const query = `SELECT *,
-                            (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId) AS voteCntA,
-                            (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId) AS voteCntB,
-                            (SELECT nickname FROM users WHERE id = either.user)                        AS nickname,
-                            (SELECT user FROM likes WHERE likes.user = ${user} AND either = either.eitherId) AS liked,
-                            (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId) AS voted
-                     FROM either
-                     WHERE completed = 0
-                     ORDER BY eitherId DESC;`;
       const either = await sequelize.query(eitherQuery.getIngEither(user), {
         type: sequelize.QueryTypes.SELECT,
       });

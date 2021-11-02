@@ -1,5 +1,7 @@
 const { Sequelize } = require('sequelize');
 const { sequelize } = require('../models');
+const { SearchQuery } = require('../models/query');
+const searchQuery = new SearchQuery();
 
 module.exports = {
   // 검색기능
@@ -12,18 +14,11 @@ module.exports = {
       }
       keyword = keyword.replace(/\s\s+/gi, ' ');
 
-      const queryForEither = `SELECT eitherId, user, title, date, editedDate, completed, likeCnt FROM either 
-                              WHERE title LIKE '%${keyword}%' ORDER BY eitherId DESC`;
-      const either = await sequelize.query(queryForEither, {
+      const either = await sequelize.query(searchQuery.searchEither(keyword), {
         type: sequelize.QueryTypes.SELECT,
       });
 
-      const queryForMulti = `SELECT multiId, user, title, date, editedDate, completed, likeCnt, 
-                            (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                            (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId)) AS commentCnt 
-                            FROM multi WHERE title LIKE '%${keyword}%'
-                            OR description LIKE '%${keyword}%' ORDER BY multiId DESC`;
-      const multi = await sequelize.query(queryForMulti, {
+      const multi = await sequelize.query(searchQuery.searchMulti(keyword), {
         type: sequelize.QueryTypes.SELECT,
       });
       const post = [...either, ...multi];

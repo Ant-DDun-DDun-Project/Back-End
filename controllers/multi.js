@@ -1,21 +1,17 @@
 const { sequelize, Multi, Like, Vote } = require('../models');
 const { multiSchema, editMultiSchema, voteMultiSchema } = require('./joi');
 const { countVote } = require('./utils/vote-count');
+const { MultiQuery } = require('../models/query');
+const multiQuery = new MultiQuery();
 
 module.exports = {
   //객관식 페이지 메인뷰
   getMulti: async (req, res, next) => {
     try {
       const user = res.locals.user;
-      const query = `SELECT *,
-                            (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted, 
-                            (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
-                            (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                                    (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
-                            (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
-                     FROM multi
-                     ORDER BY date DESC`;
-      const multi = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT }); // QueryType 로 1번만 뽑는다.
+      const multi = await sequelize.query(multiQuery.getMulti(user), {
+        type: sequelize.QueryTypes.SELECT,
+      }); // QueryType 로 1번만 뽑는다.
 
       res.status(200).json({ success: 'true', multi });
     } catch (err) {
@@ -27,16 +23,9 @@ module.exports = {
   getIngMulti: async (req, res, next) => {
     try {
       const user = res.locals.user;
-      const query = `SELECT *,
-                            (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
-                            (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
-                            (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                                    (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
-                            (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
-                     FROM multi
-                     WHERE completed = 0
-                     ORDER BY date DESC`;
-      const multi = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT }); // QueryType 로 1번만 뽑는다.
+      const multi = await sequelize.query(multiQuery.getIngMulti(user), {
+        type: sequelize.QueryTypes.SELECT,
+      }); // QueryType 로 1번만 뽑는다.
       res.status(200).json({ success: 'true', multi });
     } catch (err) {
       console.error(err);
@@ -47,16 +36,9 @@ module.exports = {
   getCompleteMulti: async (req, res, next) => {
     try {
       const user = res.locals.user;
-      const query = `SELECT *,
-                            (SELECT vote FROM votes WHERE votes.user = ${user} AND multi = multi.multiId) AS voted,
-                            (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
-                            (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                                    (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
-                            (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
-                     FROM multi
-                     WHERE completed = 1
-                     ORDER BY date DESC`;
-      const multi = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT }); // QueryType 로 1번만 뽑는다.
+      const multi = await sequelize.query(multiQuery.getCompleteMulti(user), {
+        type: sequelize.QueryTypes.SELECT,
+      }); // QueryType 로 1번만 뽑는다.
       res.status(200).json({ success: 'true', multi });
     } catch (err) {
       console.error(err);
@@ -68,50 +50,15 @@ module.exports = {
     try {
       const { multi_id } = req.params;
       const user = res.locals.user;
-      const multiQuery = `SELECT *,
-                                 (SELECT (SELECT COUNT(*) FROM comments WHERE multi = ${multi_id}) +
-                                         (SELECT COUNT(*) FROM childcomments WHERE multi = ${multi_id})) AS commentCnt,
-                                 (SELECT vote FROM votes WHERE user = ${user} AND multi = ${multi_id})   AS voted,
-                                 (SELECT user FROM likes WHERE user = ${user} AND multi = ${multi_id})   AS liked,
-                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'A')   AS voteCntA,
-                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'B')   AS voteCntB,
-                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'C')   AS voteCntC,
-                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'D')   AS voteCntD,
-                                 (SELECT COUNT(*) FROM votes WHERE multi = ${multi_id} AND vote = 'E')   AS voteCntE,
-                                 (SELECT nickname FROM users WHERE id = multi.user) AS nickname
-                          FROM multi
-                          WHERE multiId = ${multi_id}`;
-
-      const commentQuery = `SELECT *,
-                                   (SELECT COUNT(*)
-                                    FROM commentlikes
-                                    WHERE commentlikes.comment = comments.id)            AS CommentLikeCnt,
-                                   (SELECT user
-                                    FROM commentlikes
-                                    WHERE user = ${user}
-                                      AND commentlikes.comment = comments.id)            AS liked,
-                                   (SELECT nickname FROM users WHERE id = comments.user) AS nickname
-                            FROM comments
-                            WHERE multi = ${multi_id}
-                            ORDER BY date`;
-
-      const childCommentQuery = `SELECT *,
-                                        (SELECT COUNT(*)
-                                         FROM commentlikes
-                                         WHERE commentlikes.childComment = childcomments.id)       AS commentLikeCnt,
-                                        (SELECT nickname FROM users WHERE id = childcomments.user) AS nickname,
-                                        (SELECT user
-                                         FROM commentlikes
-                                         WHERE user = ${user}
-                                           AND commentlikes.childComment = childcomments.id)       AS liked
-                                 FROM childcomments
-                                 WHERE multi = ${multi_id}
-                                 ORDER BY date`;
-      const multi = await sequelize.query(multiQuery, { type: sequelize.QueryTypes.SELECT });
+      const multi = await sequelize.query(multiQuery.getTargetMulti(user, multi_id), {
+        type: sequelize.QueryTypes.SELECT,
+      });
       if (multi.length > 0) {
         // 객관식 게시글이 존재하지 하는 경우
-        const comment = await sequelize.query(commentQuery, { type: sequelize.QueryTypes.SELECT });
-        const childComment = await sequelize.query(childCommentQuery, {
+        const comment = await sequelize.query(multiQuery.getComment(user, multi_id), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        const childComment = await sequelize.query(multiQuery.getChildComment(user, multi_id), {
           type: sequelize.QueryTypes.SELECT,
         });
         res.status(200).json({ success: true, multi: multi[0], comment, childComment });
