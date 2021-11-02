@@ -45,12 +45,7 @@ const logger = winston.createLogger({
 logger.stream = {
   // morgan wiston 설정
   write: (message) => {
-    console.log('message : ', message);
-    console.log('분할한거 : ', message.split(' '));
-    const state = message.split(' ')[2].slice(5, 7);
-    // console.log(states);
-    // const state = states[5] + states[6] + states[7];
-    console.log(state);
+    const state = message.split(' ')[2].replace(/\x1b\[[0-9;]*m/g, '');
     if (state < 400) {
       logger.info(message);
     } else if (400 <= state && state < 500) {
