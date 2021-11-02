@@ -31,7 +31,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.2",
     "nodemon": "^2.0.14",
-    "sequelize": "^6.7.0"
+    "sequelize": "^6.7.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "artillery": "^1.7.9",
