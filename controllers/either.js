@@ -165,6 +165,7 @@ module.exports = {
         const voteCntB = await Vote.count({ where: { vote: 'B', either: either_id } }); // 현재 게시물에 대한 B 수
         res.status(200).json({
           success: true,
+          either: Number(either_id),
           voteCntA,
           voteCntB,
           vote
@@ -175,6 +176,7 @@ module.exports = {
         const voteCntB = await Vote.count({ where: { vote: 'B', either: either_id } }); // 현재 게시물에 대한 B 수
         res.status(200).json({
           success: true,
+          either: Number(either_id),
           voteCntA,
           voteCntB,
           vote
