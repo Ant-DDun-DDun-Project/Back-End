@@ -8,7 +8,7 @@ module.exports = {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id, comment_id } = req.params;
       const user = res.locals.user;
-      await ChildComment.create({
+      const childComment = await ChildComment.create({
         user,
         multi: multi_id,
         parentComment: comment_id,
@@ -17,6 +17,7 @@ module.exports = {
       });
       res.status(200).json({
         success: true,
+        childComment,
       });
     } catch (err) {
       console.error(err);
@@ -37,7 +38,17 @@ module.exports = {
           { comment, editedDate },
           { where: { multi: multi_id, id: comment_id, user } }
         );
-        res.status(200).json({ success: true });
+        const childComment = await ChildComment.findOne({
+          where: {
+            multi: multi_id,
+            id: comment_id,
+            user,
+          },
+        });
+        res.status(200).json({
+          success: true,
+          childComment,
+        });
       } else {
         res.status(400).json({ success: false });
       }
@@ -57,7 +68,17 @@ module.exports = {
           { deleted: true },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        res.status(200).json({ success: true });
+        const childComment = await ChildComment.findOne({
+          where: {
+            multi: multi_id,
+            id: comment_id,
+            user,
+          },
+        });
+        res.status(200).json({
+          success: true,
+          childComment,
+        });
       } else {
         res.status(400).json({ success: false });
       }
