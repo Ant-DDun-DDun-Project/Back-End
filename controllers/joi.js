@@ -8,7 +8,7 @@ module.exports = {
       .min(5)
       .max(20)
       .pattern(/^[a-z0-9_-]{5,20}$/),
-    nickname: Joi.string().required(),
+    nickname: Joi.string().required().min(2).max(12),
     pw: Joi.string()
       .required()
       .min(8)
@@ -86,6 +86,6 @@ module.exports = {
   }),
   // 닉네임 변경 shcema
   editNickSchema: Joi.object({
-    nickname: Joi.string().required(),
+    nickname: Joi.string().required().min(2).max(12),
   }),
 };
