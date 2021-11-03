@@ -19,6 +19,7 @@ module.exports = class ChildComment extends Sequelize.Model {
         editedDate: {
           type: Sequelize.STRING,
           allowNull: true,
+          defaultValue: null,
         },
         deleted: {
           type: Sequelize.BOOLEAN,
