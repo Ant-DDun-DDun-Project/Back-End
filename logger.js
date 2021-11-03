@@ -1,5 +1,6 @@
 const winston = require('winston');
 const winstonDaily = require('winston-daily-rotate-file');
+require('dotenv').config;
 
 const { combine, timestamp, printf, colorize, json, simple } = winston.format;
 
@@ -26,7 +27,7 @@ const logger = winston.createLogger({
       datePattern: 'YYYY-MM-DD',
       dirname: logDir + '/warn',
       filename: `%DATE%.warn.log`, // file 이름 날짜로 저장
-      maxFiles: 20, // 30일치 로그 파일 저장
+      maxFiles: 20, // 20일치 로그 파일 저장
       zippedArchive: true,
     }),
     // error 레벨 로그를 저장할 파일 설정
@@ -44,9 +45,7 @@ const logger = winston.createLogger({
 logger.stream = {
   // morgan wiston 설정
   write: (message) => {
-    console.log(message);
-    const state = message.split(' ')[6];
-    console.log(state);
+    const state = message.split(' ')[2].replace(/\x1b\[[0-9;]*m/g, '');
     if (state < 400) {
       logger.info(message);
     } else if (400 <= state && state < 500) {

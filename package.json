@@ -32,7 +32,8 @@
     "mysql2": "^2.3.2",
     "nodemon": "^2.0.14",
     "sequelize": "^6.7.0",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
     "artillery": "^1.7.9",
