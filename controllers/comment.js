@@ -1,4 +1,4 @@
-const { Comment, CommentLike } = require('../models');
+const { Comment, CommentLike, User } = require('../models');
 const { postCommentSchema, editCommentSchema } = require('./joi');
 
 module.exports = {
@@ -8,12 +8,18 @@ module.exports = {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id } = req.params;
       const user = res.locals.user;
-      const newComment = await Comment.create({
+      const targetComment = await Comment.create({
         user,
         multi: multi_id,
         comment,
         date,
       });
+      const nickname = await User.findOne({
+        attributes: ['nickname'],
+        where: { id: user },
+        raw: true,
+      });
+      const newComment = Object.assign(nickname, targetComment.dataValues);
       res.status(200).json({
         success: true,
         newComment,
@@ -29,7 +35,6 @@ module.exports = {
       const { comment, editedDate } = await editCommentSchema.validateAsync(req.body); // Todo --> 조이 확인
       const { multi_id, comment_id } = req.params;
       const user = res.locals.user;
-
       if (await Comment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         await Comment.update(
           {
@@ -39,9 +44,15 @@ module.exports = {
           },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        const newComment = await Comment.findOne({
+        const targetComment = await Comment.findOne({
           where: { user, multi: multi_id, id: comment_id },
         });
+        const nickname = await User.findOne({
+          attributes: ['nickname'],
+          where: { id: user },
+          raw: true,
+        });
+        const newComment = Object.assign(nickname, targetComment.dataValues);
         res.status(200).json({
           success: true,
           newComment,
@@ -69,9 +80,15 @@ module.exports = {
           },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        const newComment = await Comment.findOne({
+        const targetComment = await Comment.findOne({
           where: { user, multi: multi_id, id: comment_id },
         });
+        const nickname = await User.findOne({
+          attributes: ['nickname'],
+          where: { id: user },
+          raw: true,
+        });
+        const newComment = Object.assign(nickname, targetComment.dataValues);
         res.status(200).json({
           success: true,
           newComment,
