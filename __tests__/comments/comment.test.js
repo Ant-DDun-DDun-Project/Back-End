@@ -33,9 +33,10 @@ describe('댓글등록', () => {
   };
   next = jest.fn();
   test('댓글을 등록에 성공하면 response로 success:true를 보내준다', async () => {
+    await Comment.create.mockReturnValue(true);
     await postComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({ success: true });
+    expect(res.json).toBeCalledWith({ success: true, newComment: true });
   });
   test('댓글 작성시 DB에러 발생 시 next(err)를 호출한다', async () => {
     const err = 'DB에러';
@@ -66,11 +67,12 @@ describe('댓글 수정에 대한 검사', () => {
   const next = jest.fn();
 
   test('댓글 수정에 성공하였으면 / success: true / 를 응답으로 보내준다.', async () => {
-    await Comment.findOne.mockReturnValue(true);
+    await Comment.findOne.mockReturnValueOnce(true);
     await Comment.update.mockReturnValue(true);
+    await Comment.findOne.mockReturnValueOnce(true);
     await editComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({ success: true });
+    expect(res.json).toBeCalledWith({ success: true, newComment: true });
   });
 
   test('DB 에 정보가 없을 경우 / success: false / 를 응답으로 보내준다.', async () => {
@@ -80,10 +82,18 @@ describe('댓글 수정에 대한 검사', () => {
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
-  test('DB 요청에 대한 에러가 발생', async () => {
+  test('DB 수정요청에 대한 에러가 발생', async () => {
     const err = 'DB error';
     await Comment.findOne.mockReturnValue(true);
-    Comment.update.mockReturnValue(Promise.reject(err));
+    await Comment.update.mockRejectedValue(err);
+    await editComment(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+  test('DB 수정 후 찾기 대한 에러가 발생', async () => {
+    const err = 'DB error';
+    await Comment.findOne.mockReturnValueOnce(true);
+    await Comment.update.mockReturnValue(true);
+    await Comment.findOne.mockRejectedValueOnce(err);
     await editComment(req, res, next);
     expect(next).toBeCalledWith(err);
   });
@@ -110,7 +120,7 @@ describe('댓글 삭제에 대한 검사', () => {
     await Comment.update.mockReturnValue(true);
     await deleteComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({ success: true });
+    expect(res.json).toBeCalledWith({ success: true, newComment: true });
   });
 
   test('DB 에 정보가 없을 경우 / success: false / 를 응답으로 보내준다.', async () => {
@@ -120,10 +130,18 @@ describe('댓글 삭제에 대한 검사', () => {
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
-  test('DB 요청에 대한 에러가 발생', async () => {
+  test('DB 삭제요청에 대한 에러가 발생', async () => {
     const err = 'DB error';
     await Comment.findOne.mockReturnValue(true);
-    Comment.update.mockReturnValue(Promise.reject(err));
+    await Comment.update.mockRejectedValue(err);
+    await deleteComment(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+  test('DB 삭제 후 찾기요청에 대한 에러가 발생', async () => {
+    const err = 'DB error';
+    await Comment.findOne.mockReturnValue(true);
+    await Comment.update.mockReturnValue(true);
+    await Comment.findOne.mockRejectedValue(err);
     await deleteComment(req, res, next);
     expect(next).toBeCalledWith(err);
   });
