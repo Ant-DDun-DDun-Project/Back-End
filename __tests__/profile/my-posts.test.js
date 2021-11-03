@@ -8,7 +8,7 @@ jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
 jest.mock('sequelize');
 const { Either, sequelize, User } = require('../../models');
-const { getMyPosts, getMyPolls, editNickname, getProfile } = require('../../controllers/porfile');
+const { getMyPosts, getMyPolls, editNickname, getProfile } = require('../../controllers/profile');
 
 describe('내가 쓴 글', () => {
   const req = {

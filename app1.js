@@ -34,10 +34,6 @@ sequelize
     console.error(err);
   });
 
-app.get('/qq', (req, res, next) => {
-  res.status(503).send('hi');
-});
-
 //helmet
 app.use(helmet());
 
