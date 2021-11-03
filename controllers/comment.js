@@ -8,7 +8,7 @@ module.exports = {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id } = req.params;
       const user = res.locals.user;
-      await Comment.create({
+      const newComment = await Comment.create({
         user,
         multi: multi_id,
         comment,
@@ -16,6 +16,7 @@ module.exports = {
       });
       res.status(200).json({
         success: true,
+        newComment,
       });
     } catch (err) {
       console.error(err);
@@ -38,8 +39,12 @@ module.exports = {
           },
           { where: { user, multi: multi_id, id: comment_id } }
         );
+        const newComment = await Comment.findOne({
+          where: { user, multi: multi_id, id: comment_id },
+        });
         res.status(200).json({
           success: true,
+          newComment,
         });
       } else {
         res.status(400).json({
@@ -64,7 +69,13 @@ module.exports = {
           },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        res.status(200).json({ success: true });
+        const newComment = await Comment.findOne({
+          where: { user, multi: multi_id, id: comment_id },
+        });
+        res.status(200).json({
+          success: true,
+          newComment,
+        });
       } else {
         res.status(400).json({ success: false });
       }
