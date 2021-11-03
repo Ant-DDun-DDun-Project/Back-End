@@ -6,7 +6,7 @@ jest.mock('../../models/likes');
 jest.mock('../../models/comments');
 jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
-const { ChildComment, CommentLike } = require('../../models');
+const { ChildComment, CommentLike, User } = require('../../models');
 const {
   postChildComment,
   editChildComment,
@@ -34,15 +34,65 @@ describe('대댓글 등록', () => {
   };
   const next = jest.fn();
   test('대댓글 등록에 성공하면 success:true를 보내준다', async () => {
+    await ChildComment.create.mockReturnValue({
+      dataValues: {
+        edited: false,
+        editedDate: null,
+        deleted: false,
+        likeCnt: 0,
+        id: 15,
+        user: 4,
+        multi: '1',
+        parentComment: '1',
+        comment: 'asdfwadsfaf',
+        date: '2021-11-03 21:32:12',
+      },
+    });
+    await User.findOne.mockReturnValue({
+      nickname: '황창',
+    });
     await postChildComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
+      childComment: {
+        edited: false,
+        editedDate: null,
+        deleted: false,
+        likeCnt: 0,
+        id: 15,
+        user: 4,
+        nickname: '황창',
+        multi: '1',
+        parentComment: '1',
+        comment: 'asdfwadsfaf',
+        date: '2021-11-03 21:32:12',
+      },
     });
   });
-  test('댓글 작성시 DB에러 발생 시 next(err)를 호출한다', async () => {
+  test('댓글 작성시 DB에러(create) 발생 시 next(err)를 호출한다', async () => {
     const err = 'DB에러';
     await ChildComment.create.mockRejectedValue(err);
+    await postChildComment(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+  test('댓글 작성시 DB에러(findOne) 발생 시 next(err)를 호출한다', async () => {
+    const err = 'DB에러';
+    await ChildComment.create.mockReturnValue({
+      dataValues: {
+        edited: false,
+        editedDate: null,
+        deleted: false,
+        likeCnt: 0,
+        id: 15,
+        user: 4,
+        multi: '1',
+        parentComment: '1',
+        comment: 'asdfwadsfaf',
+        date: '2021-11-03 21:32:12',
+      },
+    });
+    await User.findOne.mockRejectedValue(err);
     await postChildComment(req, res, next);
     expect(next).toBeCalledWith(err);
   });
@@ -67,7 +117,7 @@ describe('대댓글 수정', () => {
     json: jest.fn(),
   };
   const next = jest.fn();
-  test('댓글수정에 성공하면 response로 success:true를 보낸다', async () => {
+  test('대댓글수정에 성공하면 response로 success:true를 보낸다', async () => {
     await ChildComment.findOne
       .mockReturnValueOnce(
         Promise.resolve({
@@ -82,13 +132,15 @@ describe('대댓글 수정', () => {
       )
       .mockReturnValueOnce(
         Promise.resolve({
-          id: 1,
-          comment: '하하하하하',
-          date: '2021-10-27 11:10:8',
-          edited: true,
-          editedDate: '2021-10-27 22:51:22',
-          user: '1',
-          multi: '1',
+          dataValues: {
+            id: 1,
+            comment: '하하하하하',
+            date: '2021-10-27 11:10:8',
+            edited: true,
+            editedDate: '2021-10-27 22:51:22',
+            user: '1',
+            multi: '1',
+          },
         })
       );
     await ChildComment.update.mockReturnValue(
@@ -102,6 +154,9 @@ describe('대댓글 수정', () => {
         multi: '1',
       })
     );
+    await User.findOne.mockReturnValue({
+      nickname: '황창',
+    });
     await editChildComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
@@ -110,6 +165,7 @@ describe('대댓글 수정', () => {
         id: 1,
         comment: '하하하하하',
         date: '2021-10-27 11:10:8',
+        nickname: '황창',
         edited: true,
         editedDate: '2021-10-27 22:51:22',
         user: '1',
@@ -117,7 +173,7 @@ describe('대댓글 수정', () => {
       },
     });
   });
-  test('댓글 수정 시 수정할 댓글을 찾지 못하면 response로 success:false를 보낸다', async () => {
+  test('대댓글 수정 시 수정할 댓글을 찾지 못하면 response로 success:false를 보낸다', async () => {
     await ChildComment.findOne.mockReturnValue(null);
     await editChildComment(req, res, next);
     expect(res.status).toBeCalledWith(400);
@@ -131,87 +187,82 @@ describe('대댓글 수정', () => {
   });
   test('DB 에러(update) 시 next(err)를 호출한다.', async () => {
     const err = 'DB에러';
+    await ChildComment.findOne.mockRejectedValueOnce({
+      id: 1,
+      comment: '하하하하하',
+      date: '2021-10-27 11:10:8',
+      edited: true,
+      editedDate: '2021-10-27 22:51:22',
+      user: '1',
+      multi: '1',
+    });
     await ChildComment.update.mockRejectedValue(err);
     await editChildComment(req, res, next);
     expect(next).toBeCalledWith(err);
   });
-});
-
-describe('대댓글에 대한 검사', () => {
-  const req = {
-    params: {
-      multi_id: 1,
-      comment_id: 1,
-    },
-  };
-  const res = {
-    status: jest.fn(() => res),
-    json: jest.fn(),
-    locals: {
-      user: 1,
-    },
-  };
-  const next = jest.fn();
-
-  test('대댓글 작성에 성공한 경우 / success: true / 를 응답으로 보낸다', async () => {
-    await ChildComment.findOne.mockReturnValue({
-      id: 5,
-      comment: 'zz',
-      date: '2021-10-26 10:24:23',
-      edited: false,
-      editedDate: '2021-11-03 17:14:21',
-      deleted: true,
-      likeCnt: 0,
-      user: 4,
-      multi: 1,
-      parentComment: 1,
-    });
-    await ChildComment.update.mockReturnValue(true);
-    await deleteChildComment(req, res, next);
-    expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({
-      success: true,
-      childComment: {
-        id: 5,
-        comment: 'zz',
-        date: '2021-10-26 10:24:23',
-        edited: false,
-        editedDate: '2021-11-03 17:14:21',
-        deleted: true,
-        likeCnt: 0,
-        user: 4,
-        multi: 1,
-        parentComment: 1,
-      },
-    });
-  });
-
-  test('대댓글 정보가 DB에 존재하지 않는 경우 / success: false / 를 응답으로 보낸다.', async () => {
-    await ChildComment.findOne.mockReturnValue(null);
-    await deleteChildComment(req, res, next);
-    expect(res.status).toBeCalledWith(400);
-    expect(res.json).toBeCalledWith({ success: false });
-  });
-
-  test('ChildComment.update() 에 대한 DB 에러 발생', async () => {
-    const err = 'DB err';
-    await ChildComment.findOne.mockReturnValue(true);
-    ChildComment.update.mockReturnValue(Promise.reject(err));
-    await deleteChildComment(req, res, next);
+  test('DB 에러(findOne 2번째) 시 next(err)를 호출한다.', async () => {
+    const err = 'DB에러';
+    await ChildComment.findOne
+      .mockReturnValueOnce({
+        id: 1,
+        comment: '하하하하하',
+        date: '2021-10-27 11:10:8',
+        edited: true,
+        editedDate: '2021-10-27 22:51:22',
+        user: '1',
+        multi: '1',
+      })
+      .mockReturnValueOnce({
+        dataValues: {
+          id: 1,
+          comment: '하하하하하',
+          date: '2021-10-27 11:10:8',
+          edited: true,
+          editedDate: '2021-10-27 22:51:22',
+          user: '1',
+          multi: '1',
+        },
+      });
+    ChildComment.update.mockReturnValue(
+      Promise.resolve({
+        id: 1,
+        comment: '하하하하하',
+        date: '2021-10-27 11:10:8',
+        edited: true,
+        editedDate: '2021-10-27 22:51:22',
+        user: '1',
+        multi: '1',
+      })
+    );
+    await editChildComment(req, res, next);
     expect(next).toBeCalledWith(err);
   });
-
-  test('ChildComment.findOne() 에 대한 DB 에러 발생', async () => {
-    const err = 'DB err';
-    ChildComment.findOne.mockReturnValue(Promise.reject(err));
-    await deleteChildComment(req, res, next);
-    expect(next).toBeCalledWith(err);
-  });
-  test('ChildComment.findOne()(2번째) 에 대한 DB 에러 발생', async () => {
-    const err = 'DB err';
-    await ChildComment.findOne.mockReturnValueOnce(true).mockRejectedValueOnce(Promise.reject(err));
-    ChildComment.update.mockReturnValue(true);
-    await deleteChildComment(req, res, next);
+  test('DB 에러(User.findOne) 시 next(err)를 호출한다.', async () => {
+    const err = 'DB에러';
+    await ChildComment.findOne
+      .mockReturnValueOnce({
+        id: 1,
+        comment: '하하하하하',
+        date: '2021-10-27 11:10:8',
+        edited: true,
+        editedDate: '2021-10-27 22:51:22',
+        user: '1',
+        multi: '1',
+      })
+      .mockRejectedValueOnce(err);
+    ChildComment.update.mockReturnValue(
+      Promise.resolve({
+        id: 1,
+        comment: '하하하하하',
+        date: '2021-10-27 11:10:8',
+        edited: true,
+        editedDate: '2021-10-27 22:51:22',
+        user: '1',
+        multi: '1',
+      })
+    );
+    await User.findOne.mockRejectedValue(err);
+    await editChildComment(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -379,15 +430,17 @@ describe('대댓글 삭제', () => {
       )
       .mockReturnValueOnce(
         Promise.resolve({
-          edited: false,
-          deleted: false,
-          likeCnt: 0,
-          id: 7,
-          user: 4,
-          multi: '1',
-          parentComment: '1',
-          comment: 'qqqq',
-          date: '2021-11-03 17:16:57',
+          dataValues: {
+            edited: false,
+            deleted: false,
+            likeCnt: 0,
+            id: 7,
+            user: 4,
+            multi: '1',
+            parentComment: '1',
+            comment: 'qqqq',
+            date: '2021-11-03 17:16:57',
+          },
         })
       );
     await ChildComment.update.mockReturnValue(
@@ -403,6 +456,9 @@ describe('대댓글 삭제', () => {
         date: '2021-11-03 17:16:57',
       })
     );
+    await User.findOne.mockReturnValue({
+      nickname: '황창',
+    });
     await deleteChildComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
@@ -417,6 +473,7 @@ describe('대댓글 삭제', () => {
         parentComment: '1',
         comment: 'qqqq',
         date: '2021-11-03 17:16:57',
+        nickname: '황창',
       },
     });
   });
@@ -435,12 +492,6 @@ describe('대댓글 삭제', () => {
   });
 
   test('DB 에러(첫번째 findOne에서 통과, update에서 실패)', async () => {
-    await ChildComment.findOne.mockRejectedValue(err);
-    await deleteChildComment(req, res, next);
-    expect(next).toBeCalledWith(err);
-  });
-
-  test('DB 에러(첫번째 findOne에서 에러)', async () => {
     await ChildComment.findOne.mockReturnValueOnce(
       Promise.resolve({
         edited: false,
@@ -459,7 +510,7 @@ describe('대댓글 삭제', () => {
     expect(next).toBeCalledWith(err);
   });
 
-  test('DB 에러(첫번째 findOne에서 에러)', async () => {
+  test('DB 에러(두번째 findOne에서 에러)', async () => {
     await ChildComment.findOne
       .mockReturnValueOnce(
         Promise.resolve({
@@ -475,7 +526,67 @@ describe('대댓글 삭제', () => {
         })
       )
       .mockRejectedValueOnce(err);
-    await ChildComment.update.mockReturnValue(true);
+    await ChildComment.update.mockReturnValue(
+      Promise.resolve({
+        edited: false,
+        deleted: false,
+        likeCnt: 0,
+        id: 7,
+        user: 4,
+        multi: '1',
+        parentComment: '1',
+        comment: 'qqqq',
+        date: '2021-11-03 17:16:57',
+      })
+    );
+    await deleteChildComment(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+
+  test('DB 에러(User.findOne에서 에러)', async () => {
+    await ChildComment.findOne
+      .mockReturnValueOnce(
+        Promise.resolve({
+          edited: false,
+          deleted: false,
+          likeCnt: 0,
+          id: 7,
+          user: 4,
+          multi: '1',
+          parentComment: '1',
+          comment: 'asdf',
+          date: '2021-11-03 17:16:57',
+        })
+      )
+      .mockRejectedValueOnce(
+        Promise.resolve({
+          dataValues: {
+            edited: false,
+            deleted: false,
+            likeCnt: 0,
+            id: 7,
+            user: 4,
+            multi: '1',
+            parentComment: '1',
+            comment: 'asdf',
+            date: '2021-11-03 17:16:57',
+          },
+        })
+      );
+    await ChildComment.update.mockReturnValue(
+      Promise.resolve({
+        edited: false,
+        deleted: false,
+        likeCnt: 0,
+        id: 7,
+        user: 4,
+        multi: '1',
+        parentComment: '1',
+        comment: 'qqqq',
+        date: '2021-11-03 17:16:57',
+      })
+    );
+    await User.findOne.mockRejectedValue(err);
     await deleteChildComment(req, res, next);
     expect(next).toBeCalledWith(err);
   });
