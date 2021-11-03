@@ -20,7 +20,7 @@ module.exports = {
         ],
         where: { user: user_id },
       });
-      const multi = await sequelize.query(profileQuery.getMyPosts(), {
+      const multi = await sequelize.query(profileQuery.getMyPosts(user_id), {
         type: sequelize.QueryTypes.SELECT,
       });
       const post = [...either, ...multi]; //either + multi

@@ -182,7 +182,7 @@ class MultiQuery {
 }
 
 class ProfileQuery {
-  getMyPosts = () => {
+  getMyPosts = (user_id) => {
     return `
         SELECT multiId,
                user,
@@ -193,7 +193,7 @@ class ProfileQuery {
                likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
                        (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId)) AS commentCnt
-        FROM multi;
+        FROM multi WHERE user = ${user_id};
     `;
   };
 

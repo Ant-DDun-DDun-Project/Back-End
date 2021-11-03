@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getMyPosts, getMyPolls, editNickname, getProfile } = require('../controllers/porfile');
+const { getMyPosts, getMyPolls, editNickname, getProfile } = require('../controllers/profile');
 const { auth } = require('../middlewares/auth');
 
 router.get('/:user_id/posts', auth, getMyPosts);
