@@ -1,4 +1,4 @@
-const { ChildComment, CommentLike } = require('../models');
+const { ChildComment, CommentLike, User } = require('../models');
 const { postCommentSchema, editCommentSchema } = require('./joi');
 
 module.exports = {
@@ -8,13 +8,19 @@ module.exports = {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id, comment_id } = req.params;
       const user = res.locals.user;
-      const childComment = await ChildComment.create({
+      const childMent = await ChildComment.create({
         user,
         multi: multi_id,
         parentComment: comment_id,
         comment,
         date,
       });
+      const nickname = await User.findOne({
+        attributes: ['nickname'],
+        where: { id: user },
+        raw: true,
+      });
+      const childComment = Object.assign(nickname, childMent.dataValues);
       res.status(200).json({
         success: true,
         childComment,
@@ -38,13 +44,20 @@ module.exports = {
           { comment, editedDate },
           { where: { multi: multi_id, id: comment_id, user } }
         );
-        const childComment = await ChildComment.findOne({
+        const childMent = await ChildComment.findOne({
           where: {
             multi: multi_id,
             id: comment_id,
             user,
           },
         });
+        const nickname = await User.findOne({
+          attributes: ['nickname'],
+          where: { id: user },
+          raw: true,
+        });
+        console.log(nickname);
+        const childComment = Object.assign(nickname, childMent.dataValues);
         res.status(200).json({
           success: true,
           childComment,
@@ -68,13 +81,19 @@ module.exports = {
           { deleted: true },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        const childComment = await ChildComment.findOne({
+        const childMent = await ChildComment.findOne({
           where: {
             multi: multi_id,
             id: comment_id,
             user,
           },
         });
+        const nickname = await User.findOne({
+          attributes: ['nickname'],
+          where: { id: user },
+          raw: true,
+        });
+        const childComment = Object.assign(nickname, childMent.dataValues);
         res.status(200).json({
           success: true,
           childComment,
