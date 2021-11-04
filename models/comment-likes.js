@@ -34,5 +34,10 @@ module.exports = class CommentLike extends Sequelize.Model {
       targetKey: 'id',
       onDelete: 'CASCADE',
     });
+    db.CommentLike.belongsTo(db.Multi, {
+      foreignKey: 'multi',
+      targetKey: 'multiId',
+      onDelete: 'CASCADE',
+    });
   }
 };

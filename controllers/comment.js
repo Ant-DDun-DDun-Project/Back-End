@@ -112,9 +112,11 @@ module.exports = {
       if (likeExist) {
         return res.status(400).json({ success: false });
       } else {
-        await CommentLike.create({ user, comment: comment_id });
-        const likeCnt = await CommentLike.count({ where: { comment: comment_id } });
-        await Comment.update({ likeCnt }, { wehre: { id: comment_id } });
+        await CommentLike.create({ user, comment: comment_id, multi: multi_id });
+        const likeCnt = await CommentLike.count({
+          where: { comment: comment_id, multi: multi_id },
+        });
+        await Comment.update({ likeCnt }, { where: { id: comment_id, multi: multi_id } });
         res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {

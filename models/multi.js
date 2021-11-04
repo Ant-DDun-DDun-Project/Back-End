@@ -91,6 +91,11 @@ module.exports = class Multi extends Sequelize.Model {
       sourceKey: 'multiId',
       onDelete: 'CASCADE',
     });
+    db.Multi.hasMany(db.CommentLike, {
+      foreignKey: 'multi',
+      sourceKey: 'multiId',
+      onDelete: 'CASCADE',
+    });
     db.Multi.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',
