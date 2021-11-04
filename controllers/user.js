@@ -136,13 +136,13 @@ module.exports = {
       if (user === 13) {
         res.status(401).json({ success: false });
       } else {
-        const loginUser = await User.findOne({ where: user }, { attributes: nickname });
+        const loginUser = await User.findOne({where: {id : user}})
         if (!loginUser) {
           res.status(400).json({ success: false });
         } else {
           res.status(200).json({
             success: true,
-            nickname: loginUser,
+            nickname: loginUser.nickname,
             user,
           });
         }
