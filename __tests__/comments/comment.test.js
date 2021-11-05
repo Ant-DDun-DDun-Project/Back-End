@@ -296,7 +296,7 @@ describe('댓글 좋아요', () => {
         multi: '1',
         comment: '테스트',
         date: '2021-10-28 14:16:11',
-        eidited: false,
+        edited: false,
         editedDate: null,
         deleted: false,
         likeCnt: '1',
