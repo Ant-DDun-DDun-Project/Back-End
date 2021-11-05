@@ -2129,6 +2129,10 @@
                     "date": {
                       "type": "string",
                       "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
                     }
                   }
                 }
@@ -2211,6 +2215,59 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
                 }
               }
             }
@@ -2272,6 +2329,59 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
                 }
               }
             }
