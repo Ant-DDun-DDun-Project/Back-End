@@ -10,7 +10,7 @@ module.exports = {
       const user = res.locals.user;
       const targetComment = await Comment.create({
         user,
-        multi: multi_id,
+        multi: Number(multi_id),
         comment,
         date,
       });
@@ -42,7 +42,7 @@ module.exports = {
             editedDate,
             edited: true,
           },
-          { where: { user, multi: multi_id, id: comment_id } }
+          { where: { user, multi: Number(multi_id), id: Number(comment_id) } }
         );
         const targetComment = await Comment.findOne({
           where: { user, multi: multi_id, id: comment_id },
@@ -112,11 +112,14 @@ module.exports = {
       if (likeExist) {
         return res.status(400).json({ success: false });
       } else {
-        await CommentLike.create({ user, comment: comment_id, multi: multi_id });
+        await CommentLike.create({ user, comment: Number(comment_id), multi: Number(multi_id) });
         const likeCnt = await CommentLike.count({
           where: { comment: comment_id, multi: multi_id },
         });
-        await Comment.update({ likeCnt }, { where: { id: comment_id, multi: multi_id } });
+        await Comment.update(
+          { likeCnt },
+          { where: { id: Number(comment_id), multi: Number(multi_id) } }
+        );
         res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {

@@ -5,6 +5,7 @@ class MainQuery {
                title,
                likeCnt,
                date,
+               completed,
                (SELECT nickname FROM users WHERE users.id = either.user) AS nickname
         FROM either
         WHERE completed = 0
@@ -20,6 +21,7 @@ class MainQuery {
                description,
                likeCnt,
                date,
+               completed,
                (SELECT nickname FROM users WHERE users.id = multi.user) AS nickname,
                (SELECT (SELECT COUNT(*)
                         FROM comments
