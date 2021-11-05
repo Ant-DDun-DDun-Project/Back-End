@@ -134,7 +134,7 @@ module.exports = {
       const user = res.locals.user;
       // Guest 일 경우 401 에러 전송
       if (user === 13) {
-        res.status(401).json({ success: false });
+        res.status(200).json({ success: false, nickname: 'GUEST' });
       } else {
         const loginUser = await User.findOne({where: {id : user}})
         if (!loginUser) {
