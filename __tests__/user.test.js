@@ -259,8 +259,8 @@ describe('로그인 상태를 확인', () => {
       }
     };
     await checkLoginStatus(req, res, next);
-    expect(res.status).toBeCalledWith(401);
-    expect(res.json).toBeCalledWith({ success: false });
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({ success: false, nickname: 'GUEST' });
   });
   test('현재 로그인 상태이지만 DB에 유저 정보가 존재하지 않는 경우', async () => {
     await User.findOne.mockReturnValue(null);
