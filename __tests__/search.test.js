@@ -1,7 +1,7 @@
 jest.mock('../models/either');
 jest.mock('../models/votes');
 jest.mock('../models/users');
-jest.mock('../models/Multi');
+jest.mock('../models/multi');
 jest.mock('../models/likes');
 jest.mock('../models/comments');
 jest.mock('../models/child-comments');

@@ -113,6 +113,7 @@ module.exports = {
       next(err);
     }
   },
+  // 로그아웃 기능
   logout: async (req, res, next) => {
     try {
       res.clearCookie('user', {
@@ -127,4 +128,29 @@ module.exports = {
       next(err);
     }
   },
+  // 로그인 상태 확인
+  checkLoginStatus: async (req, res, next) => {
+    try {
+      const user = res.locals.user;
+      // Guest 일 경우 401 에러 전송
+      if (user === 13) {
+        res.status(200).json({ success: false, nickname: 'GUEST' });
+      } else {
+        const loginUser = await User.findOne({where: {id : user}})
+        if (!loginUser) {
+          res.status(400).json({ success: false });
+        } else {
+          res.status(200).json({
+            success: true,
+            nickname: loginUser.nickname,
+            user,
+          });
+        }
+      }
+
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
 };
