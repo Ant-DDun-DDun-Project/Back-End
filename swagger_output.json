@@ -2714,7 +2714,83 @@
         }
       }
     },
-
+    "/users/login/": {
+      "get": {
+        "tags": [
+          "로그인"
+        ],
+        "description": "로그인 상태 확인",
+        "summary": "현재 로그인 상태인지를 확인하는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nickname": {
+                  "type": "string",
+                  "description": "로그인 유저와 비로그인 유저로 나뉜다.",
+                  "example": "testNick OR GUEST"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout/": {
+      "get": {
+        "tags": [
+          "로그아웃"
+        ],
+        "summary": "로그아웃",
+        "description": "로그아웃 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts/either/": {
       "get": {
         "tags": [
