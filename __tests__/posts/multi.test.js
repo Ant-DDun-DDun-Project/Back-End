@@ -6,6 +6,7 @@ jest.mock('../../models/likes');
 jest.mock('../../models/comments');
 jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
+jest.mock('../../controllers/utils/sort-posts');
 jest.mock('sequelize');
 
 const { Multi, sequelize, Like, Vote } = require('../../models');
@@ -21,7 +22,7 @@ const {
   completeMulti,
   getTargetMulti,
 } = require('../../controllers/multi');
-
+const { sortMulti } = require('../../controllers/utils/sort-posts');
 const { countVote } = require('../../controllers/utils/vote-count');
 
 describe('객관식 게시글을 작성에 대한 검사', () => {
@@ -129,7 +130,6 @@ describe('객관식 게시물 수정', () => {
 
 // 객관식 페이지 메인
 describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사', () => {
-  const req = {};
   const res = {
     status: jest.fn(() => res),
     json: jest.fn(),
@@ -140,6 +140,11 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
   const next = jest.fn();
 
   test('객관식 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
+    const req = {
+      params: {
+        multi_id: 'undefined',
+      },
+    };
     sequelize.query.mockReturnValue(
       Promise.resolve({
         multi: [
@@ -169,7 +174,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
     await getMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
-      success: 'true',
+      success: true,
       multi: {
         multi: [
           {
@@ -196,7 +201,210 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
       },
     });
   });
+  test('뒤로가기를 통해서 메인 뷰를 보내는것이 성공하면 success:true, multi데이터를 보내준다', async () => {
+    const req = {
+      params: {
+        multi_id: 9,
+      },
+    };
+    await sequelize.query.mockReturnValue([
+      {
+        multiId: 12,
+        title: 'ㄹㄹ',
+        description: 'ㄹㄹ',
+        contentA: 'ㅂㅂ',
+        contentB: 'ㅂㅂ',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 22:28:30',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 1,
+        voted: null,
+        liked: null,
+        commentCnt: 0,
+        nickanme: '황창환 ',
+      },
+      {
+        multiId: 11,
+        title: '스웨거 테스트용',
+        description: '테스용',
+        contentA: '하잇',
+        contentB: '바잇',
+        contentC: '호잇',
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 21:52:56',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 14,
+        voted: null,
+        liked: null,
+        commentCnt: 0,
+        nickanme: 'BadBoy',
+      },
+      {
+        multiId: 9,
+        title: 'test5',
+        description: 'test',
+        contentA: 'test',
+        contentB: 'stest',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 16:30:21',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 21,
+        voted: null,
+        liked: null,
+        commentCnt: 4,
+        nickanme: '관리자',
+      },
+    ]);
+    await sortMulti.mockReturnValue([
+      {
+        multiId: 9,
+        title: 'test5',
+        description: 'test',
+        contentA: 'test',
+        contentB: 'stest',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 16:30:21',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 21,
+        voted: null,
+        liked: null,
+        commentCnt: 4,
+        nickanme: '관리자',
+      },
+      {
+        multiId: 12,
+        title: 'ㄹㄹ',
+        description: 'ㄹㄹ',
+        contentA: 'ㅂㅂ',
+        contentB: 'ㅂㅂ',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 22:28:30',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 1,
+        voted: null,
+        liked: null,
+        commentCnt: 0,
+        nickanme: '황창환 ',
+      },
+      {
+        multiId: 11,
+        title: '스웨거 테스트용',
+        description: '테스용',
+        contentA: '하잇',
+        contentB: '바잇',
+        contentC: '호잇',
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 21:52:56',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 14,
+        voted: null,
+        liked: null,
+        commentCnt: 0,
+        nickanme: 'BadBoy',
+      },
+    ]);
+    await getMulti(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      multi: [
+        {
+          multiId: 9,
+          title: 'test5',
+          description: 'test',
+          contentA: 'test',
+          contentB: 'stest',
+          contentC: null,
+          contentD: null,
+          contentE: null,
+          date: '2021-11-05 16:30:21',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 21,
+          voted: null,
+          liked: null,
+          commentCnt: 4,
+          nickanme: '관리자',
+        },
+        {
+          multiId: 12,
+          title: 'ㄹㄹ',
+          description: 'ㄹㄹ',
+          contentA: 'ㅂㅂ',
+          contentB: 'ㅂㅂ',
+          contentC: null,
+          contentD: null,
+          contentE: null,
+          date: '2021-11-05 22:28:30',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 1,
+          user: 1,
+          voted: null,
+          liked: null,
+          commentCnt: 0,
+          nickanme: '황창환 ',
+        },
+        {
+          multiId: 11,
+          title: '스웨거 테스트용',
+          description: '테스용',
+          contentA: '하잇',
+          contentB: '바잇',
+          contentC: '호잇',
+          contentD: null,
+          contentE: null,
+          date: '2021-11-05 21:52:56',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 14,
+          voted: null,
+          liked: null,
+          commentCnt: 0,
+          nickanme: 'BadBoy',
+        },
+      ],
+    });
+  });
   test('DB 에러 발생한 경우에 대한 검사', async () => {
+    const req = {
+      params: {
+        multi_id: 'undefined',
+      },
+    };
     const err = 'DB Err';
     sequelize.query.mockReturnValue(Promise.reject(err));
     await getMulti(req, res, next);
@@ -206,7 +414,6 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
 
 // 객관식 진행중
 describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대한 검사', () => {
-  const req = {};
   const res = {
     status: jest.fn(() => res),
     json: jest.fn(),
@@ -217,6 +424,11 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
   const next = jest.fn();
 
   test('객관식 진행중 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
+    const req = {
+      params: {
+        multi_id: 'undefined',
+      },
+    };
     sequelize.query.mockReturnValue(
       Promise.resolve({
         multi: [
@@ -246,7 +458,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
     await getIngMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
-      success: 'true',
+      success: true,
       multi: {
         multi: [
           {
@@ -273,7 +485,210 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
       },
     });
   });
+  test('뒤로가기를 통해서 객관식 진행중 페이지로 넘어가면 response로 success:true와 multi 데이터를 보내준다', async () => {
+    const req = {
+      params: {
+        multi_id: 9,
+      },
+    };
+    await sequelize.query.mockReturnValue([
+      {
+        multiId: 12,
+        title: 'ㄹㄹ',
+        description: 'ㄹㄹ',
+        contentA: 'ㅂㅂ',
+        contentB: 'ㅂㅂ',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 22:28:30',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 1,
+        voted: null,
+        liked: null,
+        commentCnt: 0,
+        nickanme: '황창환 ',
+      },
+      {
+        multiId: 9,
+        title: 'test5',
+        description: 'test',
+        contentA: 'test',
+        contentB: 'stest',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 16:30:21',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 21,
+        voted: null,
+        liked: null,
+        commentCnt: 4,
+        nickanme: '관리자',
+      },
+      {
+        multiId: 8,
+        title: 'test4',
+        description: 'test',
+        contentA: 'test',
+        contentB: 'etst',
+        contentC: 'set',
+        contentD: 'set',
+        contentE: 'setst',
+        date: '2021-11-05 16:27:12',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 21,
+        voted: null,
+        liked: null,
+        commentCnt: 2,
+        nickanme: '관리자',
+      },
+    ]);
+    await sortMulti.mockReturnValue([
+      {
+        multiId: 9,
+        title: 'test5',
+        description: 'test',
+        contentA: 'test',
+        contentB: 'stest',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 16:30:21',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 21,
+        voted: null,
+        liked: null,
+        commentCnt: 4,
+        nickanme: '관리자',
+      },
+      {
+        multiId: 8,
+        title: 'test4',
+        description: 'test',
+        contentA: 'test',
+        contentB: 'etst',
+        contentC: 'set',
+        contentD: 'set',
+        contentE: 'setst',
+        date: '2021-11-05 16:27:12',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 21,
+        voted: null,
+        liked: null,
+        commentCnt: 2,
+        nickanme: '관리자',
+      },
+      {
+        multiId: 12,
+        title: 'ㄹㄹ',
+        description: 'ㄹㄹ',
+        contentA: 'ㅂㅂ',
+        contentB: 'ㅂㅂ',
+        contentC: null,
+        contentD: null,
+        contentE: null,
+        date: '2021-11-05 22:28:30',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 1,
+        voted: null,
+        liked: null,
+        commentCnt: 0,
+        nickanme: '황창환 ',
+      },
+    ]);
+    await getIngMulti(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      multi: [
+        {
+          multiId: 9,
+          title: 'test5',
+          description: 'test',
+          contentA: 'test',
+          contentB: 'stest',
+          contentC: null,
+          contentD: null,
+          contentE: null,
+          date: '2021-11-05 16:30:21',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 21,
+          voted: null,
+          liked: null,
+          commentCnt: 4,
+          nickanme: '관리자',
+        },
+        {
+          multiId: 8,
+          title: 'test4',
+          description: 'test',
+          contentA: 'test',
+          contentB: 'etst',
+          contentC: 'set',
+          contentD: 'set',
+          contentE: 'setst',
+          date: '2021-11-05 16:27:12',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 21,
+          voted: null,
+          liked: null,
+          commentCnt: 2,
+          nickanme: '관리자',
+        },
+        {
+          multiId: 12,
+          title: 'ㄹㄹ',
+          description: 'ㄹㄹ',
+          contentA: 'ㅂㅂ',
+          contentB: 'ㅂㅂ',
+          contentC: null,
+          contentD: null,
+          contentE: null,
+          date: '2021-11-05 22:28:30',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 1,
+          user: 1,
+          voted: null,
+          liked: null,
+          commentCnt: 0,
+          nickanme: '황창환 ',
+        },
+      ],
+    });
+  });
   test('DB 에러 발생한 경우에 대한 검사', async () => {
+    const req = {
+      params: {
+        multi_id: 'undefined',
+      },
+    };
     const err = 'DB Err';
     sequelize.query.mockReturnValue(Promise.reject(err));
     await getIngMulti(req, res, next);
@@ -282,7 +697,6 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
 
   // 객관식 완료 페이지
   describe('객관식 완료된 페이지에서 게시물 리스트 전송에 대한 검사', () => {
-    const req = {};
     const res = {
       locals: { user: 1 },
       status: jest.fn(() => res),
@@ -290,6 +704,11 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
     };
     const next = jest.fn();
     test('객관식 완료된 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
+      const req = {
+        params: {
+          multi_id: 'undefined',
+        },
+      };
       sequelize.query.mockReturnValue(
         Promise.resolve({
           multi: [
@@ -319,7 +738,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
       await getCompleteMulti(req, res, next);
       expect(res.status).toBeCalledWith(200);
       expect(res.json).toBeCalledWith({
-        success: 'true',
+        success: true,
         multi: {
           multi: [
             {
@@ -346,8 +765,150 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         },
       });
     });
-
+    test('뒤로가기로 완료 페이지로 넘어가면 response로 success:true와 multi 데이터를 보내준다', async () => {
+      const req = {
+        params: {
+          multi_id: 11,
+        },
+      };
+      await sequelize.query.mockReturnValue([
+        {
+          multiId: 13,
+          title: 'feqfwe',
+          description: 'fqweqfew',
+          contentA: 'qfewqewf',
+          contentB: 'fqweqef',
+          contentC: null,
+          contentD: null,
+          contentE: null,
+          date: '2021-11-06 18:34:52',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 1,
+          voted: null,
+          liked: null,
+          commentCnt: 0,
+          nickanme: '황창환 ',
+        },
+        {
+          multiId: 11,
+          title: '스웨거 테스트용',
+          description: '테스용',
+          contentA: '하잇',
+          contentB: '바잇',
+          contentC: '호잇',
+          contentD: null,
+          contentE: null,
+          date: '2021-11-05 21:52:56',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 14,
+          voted: null,
+          liked: null,
+          commentCnt: 0,
+          nickanme: 'BadBoy',
+        },
+      ]);
+      await sortMulti.mockReturnValue([
+        {
+          multiId: 11,
+          title: '스웨거 테스트용',
+          description: '테스용',
+          contentA: '하잇',
+          contentB: '바잇',
+          contentC: '호잇',
+          contentD: null,
+          contentE: null,
+          date: '2021-11-05 21:52:56',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 14,
+          voted: null,
+          liked: null,
+          commentCnt: 0,
+          nickanme: 'BadBoy',
+        },
+        {
+          multiId: 13,
+          title: 'feqfwe',
+          description: 'fqweqfew',
+          contentA: 'qfewqewf',
+          contentB: 'fqweqef',
+          contentC: null,
+          contentD: null,
+          contentE: null,
+          date: '2021-11-06 18:34:52',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 1,
+          voted: null,
+          liked: null,
+          commentCnt: 0,
+          nickanme: '황창환 ',
+        },
+      ]);
+      await getCompleteMulti(req, res, next);
+      expect(res.status).toBeCalledWith(200);
+      expect(res.json).toBeCalledWith({
+        success: true,
+        multi: [
+          {
+            multiId: 11,
+            title: '스웨거 테스트용',
+            description: '테스용',
+            contentA: '하잇',
+            contentB: '바잇',
+            contentC: '호잇',
+            contentD: null,
+            contentE: null,
+            date: '2021-11-05 21:52:56',
+            completed: 1,
+            edited: 0,
+            editedDate: null,
+            likeCnt: 0,
+            user: 14,
+            voted: null,
+            liked: null,
+            commentCnt: 0,
+            nickanme: 'BadBoy',
+          },
+          {
+            multiId: 13,
+            title: 'feqfwe',
+            description: 'fqweqfew',
+            contentA: 'qfewqewf',
+            contentB: 'fqweqef',
+            contentC: null,
+            contentD: null,
+            contentE: null,
+            date: '2021-11-06 18:34:52',
+            completed: 1,
+            edited: 0,
+            editedDate: null,
+            likeCnt: 0,
+            user: 1,
+            voted: null,
+            liked: null,
+            commentCnt: 0,
+            nickanme: '황창환 ',
+          },
+        ],
+      });
+    });
     test('DB 에러 발생한 경우에 대한 검사', async () => {
+      const req = {
+        params: {
+          multi_id: 'undefined',
+        },
+      };
       const err = 'DB Err';
       sequelize.query.mockReturnValue(Promise.reject(err));
       await getCompleteMulti(req, res, next);

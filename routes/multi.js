@@ -21,9 +21,9 @@ const {
 } = require('../controllers/child-comment');
 const { authForGuest, auth } = require('../middlewares/auth');
 
-router.get('/', authForGuest, getMulti); // 객관식 게시글 메인화면
-router.get('/ing', authForGuest, getIngMulti); // 객관식 진행중 게시글
-router.get('/complete', authForGuest, getCompleteMulti); // 객관식 종료된 게시글
+router.get('/:multi_id', authForGuest, getMulti); // 객관식 게시글 메인화면
+router.get('/:multi_id/ing', authForGuest, getIngMulti); // 객관식 진행중 게시글
+router.get('/:multi_id/complete', authForGuest, getCompleteMulti); // 객관식 종료된 게시글
 router.get('/:multi_id/target', authForGuest, getTargetMulti); // 객관식 상세 페이지 뷰
 router.post('/', auth, postMulti); // 객관식 게시글 작성
 router.patch('/:multi_id', auth, editMulti); // 객관식 게시글 수정

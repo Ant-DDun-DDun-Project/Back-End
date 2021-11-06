@@ -56,7 +56,6 @@ module.exports = {
           where: { id: user },
           raw: true,
         });
-        console.log(nickname);
         const childComment = Object.assign(nickname, childMent.dataValues);
         res.status(200).json({
           success: true,
