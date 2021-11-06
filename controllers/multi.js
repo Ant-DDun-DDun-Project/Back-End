@@ -1,5 +1,6 @@
 const { sequelize, Multi, Like, Vote } = require('../models');
 const { multiSchema, editMultiSchema, voteMultiSchema } = require('./joi');
+const { sortMulti } = require('./utils/sort-posts');
 const { countVote } = require('./utils/vote-count');
 const { MultiQuery } = require('../models/query');
 const multiQuery = new MultiQuery();
@@ -7,42 +8,89 @@ const multiQuery = new MultiQuery();
 module.exports = {
   //객관식 페이지 메인뷰
   getMulti: async (req, res, next) => {
-    try {
-      const user = res.locals.user;
-      const multi = await sequelize.query(multiQuery.getMulti(user), {
-        type: sequelize.QueryTypes.SELECT,
-      }); // QueryType 로 1번만 뽑는다.
-
-      res.status(200).json({ success: 'true', multi });
-    } catch (err) {
-      console.error(err);
-      next(err);
+    const { multi_id } = req.params;
+    console.log(multi_id);
+    if (multi_id === 'undefined') {
+      try {
+        const user = res.locals.user;
+        const multi = await sequelize.query(multiQuery.getMulti(user), {
+          type: sequelize.QueryTypes.SELECT,
+        }); // QueryType 로 1번만 뽑는다.
+        res.status(200).json({ success: true, multi });
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
+    } else {
+      try {
+        const user = res.locals.user;
+        const unsortedMulti = await sequelize.query(multiQuery.getMulti(user), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        // console.log(unsortedMulti);
+        const multi = await sortMulti(unsortedMulti, multi_id);
+        res.status(200).json({ success: true, multi });
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
     }
   },
   //객관식 페이지 진행중 뷰
   getIngMulti: async (req, res, next) => {
-    try {
-      const user = res.locals.user;
-      const multi = await sequelize.query(multiQuery.getIngMulti(user), {
-        type: sequelize.QueryTypes.SELECT,
-      }); // QueryType 로 1번만 뽑는다.
-      res.status(200).json({ success: 'true', multi });
-    } catch (err) {
-      console.error(err);
-      next(err);
+    const { multi_id } = req.params;
+    if (multi_id === 'undefined') {
+      try {
+        const user = res.locals.user;
+        const multi = await sequelize.query(multiQuery.getIngMulti(user), {
+          type: sequelize.QueryTypes.SELECT,
+        }); // QueryType 로 1번만 뽑는다.
+        res.status(200).json({ success: true, multi });
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
+    } else {
+      try {
+        const user = res.locals.user;
+        const unsortedMulti = await sequelize.query(multiQuery.getIngMulti(user), {
+          type: sequelize.QueryTypes.SELECT,
+        }); // QueryType 로 1번만 뽑는다.
+        const multi = sortMulti(unsortedMulti, multi_id);
+        res.status(200).json({ success: true, multi });
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
     }
   },
   //객관식 페이지 투표종료 뷰
   getCompleteMulti: async (req, res, next) => {
-    try {
-      const user = res.locals.user;
-      const multi = await sequelize.query(multiQuery.getCompleteMulti(user), {
-        type: sequelize.QueryTypes.SELECT,
-      }); // QueryType 로 1번만 뽑는다.
-      res.status(200).json({ success: 'true', multi });
-    } catch (err) {
-      console.error(err);
-      next(err);
+    const { multi_id } = req.params;
+    if (multi_id === 'undefined') {
+      try {
+        const user = res.locals.user;
+        const multi = await sequelize.query(multiQuery.getCompleteMulti(user), {
+          type: sequelize.QueryTypes.SELECT,
+        }); // QueryType 로 1번만 뽑는다.
+        res.status(200).json({ success: true, multi });
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
+    } else {
+      try {
+        const user = res.locals.user;
+        const unsortedMulti = await sequelize.query(multiQuery.getCompleteMulti(user), {
+          type: sequelize.QueryTypes.SELECT,
+        }); // QueryType 로 1번만 뽑는다.
+        console.log(unsortedMulti);
+        const multi = sortMulti(unsortedMulti, multi_id);
+        res.status(200).json({ success: true, multi });
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
     }
   },
   // 객관식 상세페이지 뷰

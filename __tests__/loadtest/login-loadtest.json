@@ -1,0 +1,24 @@
+{
+  "config":{
+    "target": "http://localhost:3000",
+    "phases":[
+      {
+        "duration":60,
+        "arrivalRate":70
+      }
+    ]
+  },
+  "scenarios":[{
+    "flow":[
+      {
+        "post":{
+          "url": "/users/login",
+          "json":{
+            "userId": "hch950627",
+            "pw": "asdf1234!@"
+          }
+        }
+      }
+    ]
+  }]
+}
