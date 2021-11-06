@@ -21,7 +21,6 @@ module.exports = {
         break;
       }
     }
-    unsortedposts.push(either);
     return [...unsortedposts, ...either];
   },
 };

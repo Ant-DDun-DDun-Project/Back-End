@@ -1,6 +1,7 @@
 const { Either, sequelize, Like, Vote } = require('../models/');
 const { eitherSchema, editEitherSchema, voteEitherSchema } = require('./joi');
 const { EitherQuery } = require('../models/query');
+const { sortEither } = require('./utils/sort-posts');
 const eitherQuery = new EitherQuery();
 
 module.exports = {
@@ -24,50 +25,104 @@ module.exports = {
   },
   // 찬반투표 게시글 뷰
   getEither: async (req, res, next) => {
-    try {
-      const user = res.locals.user;
-      const either = await sequelize.query(eitherQuery.getEither(user), {
-        type: sequelize.QueryTypes.SELECT,
-      });
-      res.status(200).json({
-        success: true,
-        either,
-      });
-    } catch (err) {
-      console.log('글 받아올 때 에러발생', err);
-      next(err);
+    const { either_id } = req.params;
+    if (either_id == 'undefined') {
+      try {
+        const user = res.locals.user;
+        const either = await sequelize.query(eitherQuery.getEither(user), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        res.status(200).json({
+          success: true,
+          either,
+        });
+      } catch (err) {
+        console.log('글 받아올 때 에러발생', err);
+        next(err);
+      }
+    } else {
+      try {
+        const user = res.locals.user;
+        const unsortedEither = await sequelize.query(eitherQuery.getEither(user), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        const either = sortEither(unsortedEither, either_id);
+        res.status(200).json({
+          success: true,
+          either,
+        });
+      } catch (err) {
+        console.log('글 받아올 때 에러발생', err);
+        next(err);
+      }
     }
   },
   //찬반투표 진행중 게시글 뷰
   getIngEither: async (req, res, next) => {
-    try {
-      const user = res.locals.user;
-      const either = await sequelize.query(eitherQuery.getIngEither(user), {
-        type: sequelize.QueryTypes.SELECT,
-      });
-      res.status(200).json({
-        success: true,
-        either,
-      });
-    } catch (err) {
-      console.log('글 받아올 때 에러발생', err);
-      next(err);
+    const { either_id } = req.params;
+    if (either_id == 'undefined') {
+      try {
+        const user = res.locals.user;
+        const either = await sequelize.query(eitherQuery.getIngEither(user), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        res.status(200).json({
+          success: true,
+          either,
+        });
+      } catch (err) {
+        console.log('글 받아올 때 에러발생', err);
+        next(err);
+      }
+    } else {
+      try {
+        const user = res.locals.user;
+        const unsortedEither = await sequelize.query(eitherQuery.getIngEither(user), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        const either = sortEither(unsortedEither, either_id);
+        res.status(200).json({
+          success: true,
+          either,
+        });
+      } catch (err) {
+        console.log('글 받아올 때 에러발생', err);
+        next(err);
+      }
     }
   },
   //찬반투표 투표종료 게시글 뷰
   getCompleteEither: async (req, res, next) => {
-    try {
-      const user = res.locals.user;
-      const either = await sequelize.query(eitherQuery.getCompleteEither(user), {
-        type: sequelize.QueryTypes.SELECT,
-      });
-      res.status(200).json({
-        success: true,
-        either,
-      });
-    } catch (err) {
-      console.log('글 받아올 때 에러발생', err);
-      next(err);
+    const { either_id } = req.params;
+    if (either_id == 'undefined') {
+      try {
+        const user = res.locals.user;
+        const either = await sequelize.query(eitherQuery.getCompleteEither(user), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        res.status(200).json({
+          success: true,
+          either,
+        });
+      } catch (err) {
+        console.log('글 받아올 때 에러발생', err);
+        next(err);
+      }
+    } else {
+      try {
+        const user = res.locals.user;
+        const unsortedEither = await sequelize.query(eitherQuery.getCompleteEither(user), {
+          type: sequelize.QueryTypes.SELECT,
+        });
+        const either = sortEither(unsortedEither, either_id);
+        res.status(200).json({
+          success: true,
+          either,
+        });
+      } catch (err) {
+        console.log('글 받아올 때 에러발생', err);
+        next(err);
+      }
     }
   },
   //찬반투표 게시글 수정
