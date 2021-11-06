@@ -2714,6 +2714,7 @@
         }
       }
     },
+
     "/posts/either/": {
       "get": {
         "tags": [
@@ -3125,69 +3126,67 @@
                   "example": true
                 },
                 "either": {
-                  "type": "array",
-                  "items": {
-                    "properties": {
-                      "eitherId": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "user": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "예제"
-                      },
-                      "contentA": {
-                        "type": "string",
-                        "example": "내용 A"
-                      },
-                      "contentB": {
-                        "type": "string",
-                        "example": "내용 B"
-                      },
-                      "date": {
-                        "type": "string",
-                        "example": "2021-10-10"
-                      },
-                      "edited": {
-                        "type": "boolean",
-                        "example": 0
-                      },
-                      "editedDate": {
-                        "type": "string",
-                        "example": null
-                      },
-                      "likeCnt": {
-                        "type": "integer",
-                        "example": "3"
-                      },
-                      "completed": {
-                        "type": "boolean",
-                        "example": 0
-                      },
-                      "nickname": {
-                        "type": "string",
-                        "example": "test"
-                      },
-                      "voteCntA": {
-                        "type": "integer",
-                        "example": 4
-                      },
-                      "voteCntB": {
-                        "type": "integer",
-                        "example": 2
-                      },
-                      "liked": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "voted": {
-                        "type": "integer",
-                        "example": 1
-                      }
+                  "type": "object",
+                  "properties": {
+                    "eitherId": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "예제"
+                    },
+                    "contentA": {
+                      "type": "string",
+                      "example": "내용 A"
+                    },
+                    "contentB": {
+                      "type": "string",
+                      "example": "내용 B"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-10"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": "3"
+                    },
+                    "completed": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "voteCntA": {
+                      "type": "integer",
+                      "example": 4
+                    },
+                    "voteCntB": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "voted": {
+                      "type": "integer",
+                      "example": 1
                     }
                   }
                 }
@@ -3395,6 +3394,14 @@
                 "voteCntB": {
                   "type": "integer",
                   "example": 12
+                },
+                "either": {
+                  "type": "integer",
+                  "example": 3
+                },
+                "vote": {
+                  "type": "string",
+                  "example": "B"
                 }
               }
             }
