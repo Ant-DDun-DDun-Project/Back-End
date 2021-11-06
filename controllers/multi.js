@@ -28,7 +28,7 @@ module.exports = {
           type: sequelize.QueryTypes.SELECT,
         });
         // console.log(unsortedMulti);
-        const multi = await sortMulti(unsortedMulti, multi_id);
+        const multi = sortMulti(unsortedMulti, multi_id);
         res.status(200).json({ success: true, multi });
       } catch (err) {
         console.error(err);

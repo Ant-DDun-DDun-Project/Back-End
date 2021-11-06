@@ -6,6 +6,7 @@ jest.mock('../../models/likes');
 jest.mock('../../models/comments');
 jest.mock('../../models/child-comments');
 jest.mock('../../models/comment-likes');
+jest.mock('../../controllers/utils/sort-posts');
 jest.mock('sequelize');
 
 const {
@@ -20,6 +21,7 @@ const {
   completeEither,
   getTargetEither,
 } = require('../../controllers/either');
+const { sortEither } = require('../../controllers/utils/sort-posts');
 const { Either, sequelize, Like, Vote } = require('../../models');
 describe('양자택일 게시글 작성 테스트', () => {
   const res = {
@@ -120,7 +122,6 @@ describe('양자택일 게시물 수정', () => {
 });
 
 describe('양자택일 투표 모두보기', () => {
-  const req = {};
   const res = {
     locals: {
       user: 1,
@@ -130,6 +131,11 @@ describe('양자택일 투표 모두보기', () => {
   };
   const next = jest.fn();
   test('getEither 시 eitherId, title, contentA,B, date, completed, edited(date), likeCnt, user, voteCntA,B, nickname, voted 내려줌', async () => {
+    const req = {
+      params: {
+        either_id: 'undefined',
+      },
+    };
     await sequelize.query.mockReturnValue(
       Promise.resolve({
         either: [
@@ -210,7 +216,183 @@ describe('양자택일 투표 모두보기', () => {
       },
     });
   });
+  test('뒤로가기를 통해 찬반투표 페이지로 넘어가면 response로 success:true 와 either 데이터를 보내준다.', async () => {
+    const req = {
+      params: {
+        either_id: 7,
+      },
+    };
+    await sequelize.query.mockReturnValue([
+      {
+        eitherId: 9,
+        title: 'gg',
+        contentA: 'ss',
+        contentB: 'ee',
+        date: '2021-11-06 16:59:54',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 0,
+        liked: null,
+        nickname: 'Ant_man',
+        voted: null,
+      },
+      {
+        eitherId: 8,
+        title: '점심 뭐 먹지',
+        contentA: '햄버거',
+        contentB: '피자',
+        date: '2021-11-06 15:31:57',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 1,
+        liked: null,
+        nickname: 'Ant_man',
+        voted: null,
+      },
+      {
+        eitherId: 7,
+        title: '꽁돈 생겼다~  뭐 살까?',
+        contentA: '카카오',
+        contentB: '네이버',
+        date: '2021-11-06 01:42:32',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 19,
+        voteCntA: 1,
+        voteCntB: 1,
+        liked: null,
+        nickname: 'Ant_man',
+        voted: null,
+      },
+    ]);
+    await sortEither.mockReturnValue([
+      {
+        eitherId: 7,
+        title: '꽁돈 생겼다~  뭐 살까?',
+        contentA: '카카오',
+        contentB: '네이버',
+        date: '2021-11-06 01:42:32',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 19,
+        voteCntA: 1,
+        voteCntB: 1,
+        liked: null,
+        nickname: 'Ant_man',
+        voted: null,
+      },
+      {
+        eitherId: 9,
+        title: 'gg',
+        contentA: 'ss',
+        contentB: 'ee',
+        date: '2021-11-06 16:59:54',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 0,
+        liked: null,
+        nickname: 'Ant_man',
+        voted: null,
+      },
+      {
+        eitherId: 8,
+        title: '점심 뭐 먹지',
+        contentA: '햄버거',
+        contentB: '피자',
+        date: '2021-11-06 15:31:57',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 1,
+        liked: null,
+        nickname: 'Ant_man',
+        voted: null,
+      },
+    ]);
+    await getEither(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      either: [
+        {
+          eitherId: 7,
+          title: '꽁돈 생겼다~  뭐 살까?',
+          contentA: '카카오',
+          contentB: '네이버',
+          date: '2021-11-06 01:42:32',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 1,
+          user: 19,
+          voteCntA: 1,
+          voteCntB: 1,
+          liked: null,
+          nickname: 'Ant_man',
+          voted: null,
+        },
+        {
+          eitherId: 9,
+          title: 'gg',
+          contentA: 'ss',
+          contentB: 'ee',
+          date: '2021-11-06 16:59:54',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 19,
+          voteCntA: 0,
+          voteCntB: 0,
+          liked: null,
+          nickname: 'Ant_man',
+          voted: null,
+        },
+        {
+          eitherId: 8,
+          title: '점심 뭐 먹지',
+          contentA: '햄버거',
+          contentB: '피자',
+          date: '2021-11-06 15:31:57',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 19,
+          voteCntA: 0,
+          voteCntB: 1,
+          liked: null,
+          nickname: 'Ant_man',
+          voted: null,
+        },
+      ],
+    });
+  });
   test('DB 에러', async () => {
+    const req = {
+      params: {
+        either_id: 'undefined',
+      },
+    };
     const err = 'DB에러';
     await sequelize.query.mockRejectedValue(err);
     await getEither(req, res, next);
@@ -219,7 +401,6 @@ describe('양자택일 투표 모두보기', () => {
 });
 
 describe('진행중인 양자택일 투표 보기', () => {
-  const req = {};
   const res = {
     locals: {
       user: 1,
@@ -229,6 +410,11 @@ describe('진행중인 양자택일 투표 보기', () => {
   };
   const next = jest.fn();
   test('getIngEither 시 eitherId, title, contentA,B, date, completed: 0, edited(date), likeCnt, user, voteCntA,B, nickname, voted 내려줌', async () => {
+    const req = {
+      params: {
+        either_id: 'undefined',
+      },
+    };
     await sequelize.query.mockReturnValue(
       Promise.resolve({
         either: [
@@ -309,7 +495,132 @@ describe('진행중인 양자택일 투표 보기', () => {
       },
     });
   });
+  test('뒤로가기로 진행중인 양자택일로 가면 response로 success:true와 either 데이터를 보내준다.', async () => {
+    const req = {
+      params: {
+        either_id: 7,
+      },
+    };
+    await sequelize.query.mockReturnValue([
+      {
+        eitherId: 9,
+        title: 'gg',
+        contentA: 'ss',
+        contentB: 'ee',
+        date: '2021-11-06 16:59:54',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 0,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+      {
+        eitherId: 7,
+        title: '꽁돈 생겼다~  뭐 살까?',
+        contentA: '카카오',
+        contentB: '네이버',
+        date: '2021-11-06 01:42:32',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 19,
+        voteCntA: 1,
+        voteCntB: 1,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+    ]);
+    await sortEither.mockReturnValue([
+      {
+        eitherId: 7,
+        title: '꽁돈 생겼다~  뭐 살까?',
+        contentA: '카카오',
+        contentB: '네이버',
+        date: '2021-11-06 01:42:32',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 19,
+        voteCntA: 1,
+        voteCntB: 1,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+      {
+        eitherId: 9,
+        title: 'gg',
+        contentA: 'ss',
+        contentB: 'ee',
+        date: '2021-11-06 16:59:54',
+        completed: 0,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 0,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+    ]);
+    await getIngEither(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      either: [
+        {
+          eitherId: 7,
+          title: '꽁돈 생겼다~  뭐 살까?',
+          contentA: '카카오',
+          contentB: '네이버',
+          date: '2021-11-06 01:42:32',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 1,
+          user: 19,
+          voteCntA: 1,
+          voteCntB: 1,
+          nickname: 'Ant_man',
+          liked: null,
+          voted: null,
+        },
+        {
+          eitherId: 9,
+          title: 'gg',
+          contentA: 'ss',
+          contentB: 'ee',
+          date: '2021-11-06 16:59:54',
+          completed: 0,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 19,
+          voteCntA: 0,
+          voteCntB: 0,
+          nickname: 'Ant_man',
+          liked: null,
+          voted: null,
+        },
+      ],
+    });
+  });
   test('DB 에러', async () => {
+    const req = {
+      params: {
+        either_id: 'undefined',
+      },
+    };
     const err = 'DB에러';
     await sequelize.query.mockRejectedValue(err);
     await getIngEither(req, res, next);
@@ -318,7 +629,6 @@ describe('진행중인 양자택일 투표 보기', () => {
 });
 
 describe('종료된 양자택일 투표 보기', () => {
-  const req = {};
   const res = {
     locals: {
       user: '1',
@@ -328,6 +638,11 @@ describe('종료된 양자택일 투표 보기', () => {
   };
   const next = jest.fn();
   test('getComepleteEither 시 eitherId, title, contentA,B, date, completed: 1, edited(date), likeCnt, user, voteCntA,B, nickname, voted 내려줌', async () => {
+    const req = {
+      params: {
+        either_id: 'undefined',
+      },
+    };
     await sequelize.query.mockReturnValue(
       Promise.resolve({
         either: [
@@ -408,7 +723,183 @@ describe('종료된 양자택일 투표 보기', () => {
       },
     });
   });
+  test('뒤로가기로 종료된 페이지로 가면 response로 success:true 와 either 데이터를 보내준다.', async () => {
+    const req = {
+      params: {
+        either_id: 8,
+      },
+    };
+    await sequelize.query.mockReturnValue([
+      {
+        eitherId: 10,
+        title: 'qq',
+        contentA: 'qq',
+        contentB: 'qq',
+        date: '2021-11-06 20:15:46',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 1,
+        voteCntA: 0,
+        voteCntB: 0,
+        nickname: '황창환 ',
+        liked: null,
+        voted: null,
+      },
+      {
+        eitherId: 8,
+        title: '점심 뭐 먹지',
+        contentA: '햄버거',
+        contentB: '피자',
+        date: '2021-11-06 15:31:57',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 1,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+      {
+        eitherId: 6,
+        title: '콘솔게임',
+        contentA: '플스',
+        contentB: '액박',
+        date: '2021-11-06 01:35:31',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 19,
+        voteCntA: 1,
+        voteCntB: 0,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+    ]);
+    await sortEither.mockReturnValue([
+      {
+        eitherId: 8,
+        title: '점심 뭐 먹지',
+        contentA: '햄버거',
+        contentB: '피자',
+        date: '2021-11-06 15:31:57',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 19,
+        voteCntA: 0,
+        voteCntB: 1,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+      {
+        eitherId: 6,
+        title: '콘솔게임',
+        contentA: '플스',
+        contentB: '액박',
+        date: '2021-11-06 01:35:31',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 1,
+        user: 19,
+        voteCntA: 1,
+        voteCntB: 0,
+        nickname: 'Ant_man',
+        liked: null,
+        voted: null,
+      },
+      {
+        eitherId: 10,
+        title: 'qq',
+        contentA: 'qq',
+        contentB: 'qq',
+        date: '2021-11-06 20:15:46',
+        completed: 1,
+        edited: 0,
+        editedDate: null,
+        likeCnt: 0,
+        user: 1,
+        voteCntA: 0,
+        voteCntB: 0,
+        nickname: '황창환 ',
+        liked: null,
+        voted: null,
+      },
+    ]);
+    await getCompleteEither(req, res, next);
+    expect(res.status).toBeCalledWith(200);
+    expect(res.json).toBeCalledWith({
+      success: true,
+      either: [
+        {
+          eitherId: 8,
+          title: '점심 뭐 먹지',
+          contentA: '햄버거',
+          contentB: '피자',
+          date: '2021-11-06 15:31:57',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 19,
+          voteCntA: 0,
+          voteCntB: 1,
+          nickname: 'Ant_man',
+          liked: null,
+          voted: null,
+        },
+        {
+          eitherId: 6,
+          title: '콘솔게임',
+          contentA: '플스',
+          contentB: '액박',
+          date: '2021-11-06 01:35:31',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 1,
+          user: 19,
+          voteCntA: 1,
+          voteCntB: 0,
+          nickname: 'Ant_man',
+          liked: null,
+          voted: null,
+        },
+        {
+          eitherId: 10,
+          title: 'qq',
+          contentA: 'qq',
+          contentB: 'qq',
+          date: '2021-11-06 20:15:46',
+          completed: 1,
+          edited: 0,
+          editedDate: null,
+          likeCnt: 0,
+          user: 1,
+          voteCntA: 0,
+          voteCntB: 0,
+          nickname: '황창환 ',
+          liked: null,
+          voted: null,
+        },
+      ],
+    });
+  });
   test('DB 에러', async () => {
+    const req = {
+      params: {
+        either_id: 'undefined',
+      },
+    };
     const err = 'DB에러';
     await sequelize.query.mockRejectedValue(err);
     await getCompleteEither(req, res, next);

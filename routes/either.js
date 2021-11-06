@@ -14,9 +14,9 @@ const {
 } = require('../controllers/either');
 const { authForGuest, auth } = require('../middlewares/auth');
 
-router.get('/', authForGuest, getEither); //찬반투표 뷰
-router.get('/ing', authForGuest, getIngEither); //찬반투표 진행중 뷰
-router.get('/complete', authForGuest, getCompleteEither); //찬반투표 투표종료 뷰
+router.get('/:either_id', authForGuest, getEither); //찬반투표 뷰
+router.get('/:either_id/ing', authForGuest, getIngEither); //찬반투표 진행중 뷰
+router.get('/:either_id/complete', authForGuest, getCompleteEither); //찬반투표 투표종료 뷰
 router.get('/:either_id/target', authForGuest, getTargetEither); // 찬반투표 특정페이지 뷰
 
 router.post('/', auth, postEither); //찬반투표 게시글 작성
