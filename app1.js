@@ -38,7 +38,7 @@ sequelize
 app.use(helmet());
 
 app.get('/asdf', (req, res) => {
-  res.send('자동으로 되나??????');
+  res.send('자동으로 되나??????!!!!');
 });
 
 //routing
