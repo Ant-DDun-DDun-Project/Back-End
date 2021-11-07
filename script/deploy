@@ -3,7 +3,7 @@ ssh ubuntu@13.124.207.230 <<EOF
   cd ~/Back-End
   git pull origin master
   npm install
-  pm2 restart app1.js --watch
-  pm2 restart app2.js --watch
+  pm2 restart app1.js
+  pm2 restart app2.js
   exit
 EOF
