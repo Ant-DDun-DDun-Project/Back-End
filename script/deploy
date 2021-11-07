@@ -3,5 +3,5 @@ ssh ubuntu@13.124.207.230 <<EOF
   cd ~/Back-End
   git pull origin master
   npm install
-  eixt
+  exit
 EOF
