@@ -10,7 +10,7 @@ module.exports = {
   getMulti: async (req, res, next) => {
     const { multi_id } = req.params;
     console.log(multi_id);
-    if (multi_id === 'undefined') {
+    if (multi_id === 'all') {
       try {
         const user = res.locals.user;
         const multi = await sequelize.query(multiQuery.getMulti(user), {
@@ -39,7 +39,7 @@ module.exports = {
   //객관식 페이지 진행중 뷰
   getIngMulti: async (req, res, next) => {
     const { multi_id } = req.params;
-    if (multi_id === 'undefined') {
+    if (multi_id === 'all') {
       try {
         const user = res.locals.user;
         const multi = await sequelize.query(multiQuery.getIngMulti(user), {
@@ -67,7 +67,7 @@ module.exports = {
   //객관식 페이지 투표종료 뷰
   getCompleteMulti: async (req, res, next) => {
     const { multi_id } = req.params;
-    if (multi_id === 'undefined') {
+    if (multi_id === 'all') {
       try {
         const user = res.locals.user;
         const multi = await sequelize.query(multiQuery.getCompleteMulti(user), {

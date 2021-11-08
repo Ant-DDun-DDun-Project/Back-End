@@ -26,7 +26,7 @@ module.exports = {
   // 찬반투표 게시글 뷰
   getEither: async (req, res, next) => {
     const { either_id } = req.params;
-    if (either_id == 'undefined') {
+    if (either_id === 'all') {
       try {
         const user = res.locals.user;
         const either = await sequelize.query(eitherQuery.getEither(user), {
@@ -60,7 +60,7 @@ module.exports = {
   //찬반투표 진행중 게시글 뷰
   getIngEither: async (req, res, next) => {
     const { either_id } = req.params;
-    if (either_id == 'undefined') {
+    if (either_id === 'all') {
       try {
         const user = res.locals.user;
         const either = await sequelize.query(eitherQuery.getIngEither(user), {
@@ -94,7 +94,7 @@ module.exports = {
   //찬반투표 투표종료 게시글 뷰
   getCompleteEither: async (req, res, next) => {
     const { either_id } = req.params;
-    if (either_id == 'undefined') {
+    if (either_id === 'all') {
       try {
         const user = res.locals.user;
         const either = await sequelize.query(eitherQuery.getCompleteEither(user), {
