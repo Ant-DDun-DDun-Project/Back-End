@@ -43,7 +43,7 @@ module.exports = {
       if (childExist) {
         await ChildComment.update(
           { comment, editedDate },
-          { where: { multi: multi_id, id: comment_id, user } }
+          { where: { multi: Number(multi_id), id: Number(comment_id), user } }
         );
         const [childMent, nickname] = await Promise.all([
           ChildComment.findOne({
@@ -80,7 +80,7 @@ module.exports = {
       if (await ChildComment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         await ChildComment.update(
           { deleted: true },
-          { where: { user, multi: multi_id, id: comment_id } }
+          { where: { user, multi: Number(multi_id), id: Number(comment_id) } }
         );
         const [childMent, nickname] = await Promise.all([
           ChildComment.findOne({
@@ -119,11 +119,18 @@ module.exports = {
       if (likeExist) {
         return res.status(400).json({ success: false });
       } else {
-        await CommentLike.create({ user, childComment: comment_id, multi: multi_id });
+        await CommentLike.create({
+          user,
+          childComment: Number(comment_id),
+          multi: Number(multi_id),
+        });
         const likeCnt = await CommentLike.count({
           where: { childComment: comment_id, multi: multi_id },
         });
-        await ChildComment.update({ likeCnt }, { where: { id: comment_id, multi: multi_id } });
+        await ChildComment.update(
+          { likeCnt },
+          { where: { id: Number(comment_id), multi: Number(multi_id) } }
+        );
         res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {

@@ -103,7 +103,7 @@ class MultiQuery {
                (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
                        (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
-               (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
+               (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickname
         FROM multi
         ORDER BY date DESC
     `;
@@ -116,7 +116,7 @@ class MultiQuery {
                (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
                        (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
-               (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
+               (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickname
         FROM multi
         WHERE completed = 0
         ORDER BY date DESC
@@ -130,7 +130,7 @@ class MultiQuery {
                (SELECT user FROM likes WHERE likes.user = ${user} AND multi = multi.multiId) AS liked,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
                        (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId))     AS commentCnt,
-               (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickanme
+               (SELECT nickname FROM users WHERE users.id = multi.user)                      AS nickname
         FROM multi
         WHERE completed = 1
         ORDER BY date DESC

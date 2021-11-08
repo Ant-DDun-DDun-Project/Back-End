@@ -35,6 +35,10 @@ sequelize
 //helmet(보안)
 app.use(helmet());
 
+app.get('/asdf', (req, res) => {
+  res.send('제에에에에에에발');
+});
+
 //routing
 const router = require('./routes/index');
 

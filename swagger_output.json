@@ -64,13 +64,13 @@
                         "type": "string",
                         "example": "2021-10-29 10:45:41"
                       },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 0
+                      },
                       "nickname": {
                         "type": "string",
                         "example": "닉네임"
-                      },
-                      "commentCnt": {
-                        "type": "integer",
-                        "example": 6
                       }
                     }
                   }
@@ -99,6 +99,10 @@
                       "date": {
                         "type": "string",
                         "example": "2021-10-29 10:45:41"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 0
                       },
                       "nickname": {
                         "type": "string",
@@ -146,8 +150,8 @@
         "description": "특정 키워드로 게시물을 검색하여 보여주는 API",
         "parameters": [
           {
-            "name": "keyword",
-            "in": "path",
+            "name": "search",
+            "in": "query",
             "required": true
           }
         ],
@@ -260,7 +264,56 @@
         ],
         "responses": {
           "200": {
-            "description": "정상적인 응답"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "posts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 14
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "첫 글"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-05 14:58:33"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "잘못된 요청",
@@ -306,7 +359,56 @@
         ],
         "responses": {
           "200": {
-            "description": "정상적인 응답"
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "posts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 14
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "첫 글"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-05 14:58:33"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "잘못된 요청",
@@ -587,7 +689,7 @@
                 "date": {
                   "type": "string",
                   "description": "날짜",
-                  "example": "2021-9-15 10:45:36"
+                  "example": "2021-12-15 10:45:36"
                 }
               }
             }
@@ -1008,6 +1110,10 @@
                     "votedCntE": {
                       "type": "integer",
                       "example": 20
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "example": "관리자"
                     }
                   }
                 },
@@ -1406,6 +1512,26 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "voteCntA": {
+                  "type": "integer",
+                  "example": 12
+                },
+                "voteCntB": {
+                  "type": "integer",
+                  "example": 65
+                },
+                "voteCntC": {
+                  "type": "integer",
+                  "example": 28
+                },
+                "voteCntD": {
+                  "type": "integer",
+                  "example": 5
+                },
+                "voteCntE": {
+                  "type": "integer",
+                  "example": 12
                 }
               }
             }
@@ -1535,6 +1661,51 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "newComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 13
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 10:10:10"
+                    }
+                  }
                 }
               }
             }
@@ -1615,6 +1786,51 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "newComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "댓글 수정 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 10:10:10"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 13
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
                 }
               }
             }
@@ -1676,6 +1892,51 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "newComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 11
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "삭제할 내용"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 10:10:10"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": "2021-10-20 20:10:10"
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 3
+                    }
+                  }
                 }
               }
             }
@@ -1821,6 +2082,59 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
                 }
               }
             }
@@ -1901,6 +2215,59 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
                 }
               }
             }
@@ -1962,6 +2329,59 @@
                 "success": {
                   "type": "boolean",
                   "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
                 }
               }
             }
@@ -2275,6 +2695,83 @@
                 "userId": {
                   "type": "string",
                   "example": "testid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login/": {
+      "get": {
+        "tags": [
+          "로그인"
+        ],
+        "description": "로그인 상태 확인",
+        "summary": "현재 로그인 상태인지를 확인하는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nickname": {
+                  "type": "string",
+                  "description": "로그인 유저와 비로그인 유저로 나뉜다.",
+                  "example": "testNick OR GUEST"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout/": {
+      "get": {
+        "tags": [
+          "로그아웃"
+        ],
+        "summary": "로그아웃",
+        "description": "로그아웃 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
                 }
               }
             }
@@ -2705,69 +3202,67 @@
                   "example": true
                 },
                 "either": {
-                  "type": "array",
-                  "items": {
-                    "properties": {
-                      "eitherId": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "user": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "예제"
-                      },
-                      "contentA": {
-                        "type": "string",
-                        "example": "내용 A"
-                      },
-                      "contentB": {
-                        "type": "string",
-                        "example": "내용 B"
-                      },
-                      "date": {
-                        "type": "string",
-                        "example": "2021-10-10"
-                      },
-                      "edited": {
-                        "type": "boolean",
-                        "example": 0
-                      },
-                      "editedDate": {
-                        "type": "string",
-                        "example": null
-                      },
-                      "likeCnt": {
-                        "type": "integer",
-                        "example": "3"
-                      },
-                      "completed": {
-                        "type": "boolean",
-                        "example": 0
-                      },
-                      "nickname": {
-                        "type": "string",
-                        "example": "test"
-                      },
-                      "voteCntA": {
-                        "type": "integer",
-                        "example": 4
-                      },
-                      "voteCntB": {
-                        "type": "integer",
-                        "example": 2
-                      },
-                      "liked": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "voted": {
-                        "type": "integer",
-                        "example": 1
-                      }
+                  "type": "object",
+                  "properties": {
+                    "eitherId": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "예제"
+                    },
+                    "contentA": {
+                      "type": "string",
+                      "example": "내용 A"
+                    },
+                    "contentB": {
+                      "type": "string",
+                      "example": "내용 B"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-10"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": "3"
+                    },
+                    "completed": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "voteCntA": {
+                      "type": "integer",
+                      "example": 4
+                    },
+                    "voteCntB": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "voted": {
+                      "type": "integer",
+                      "example": 1
                     }
                   }
                 }
@@ -2975,6 +3470,14 @@
                 "voteCntB": {
                   "type": "integer",
                   "example": 12
+                },
+                "either": {
+                  "type": "integer",
+                  "example": 3
+                },
+                "vote": {
+                  "type": "string",
+                  "example": "B"
                 }
               }
             }

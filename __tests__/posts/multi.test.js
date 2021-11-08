@@ -23,7 +23,6 @@ const {
   getTargetMulti,
 } = require('../../controllers/multi');
 const { sortMulti } = require('../../controllers/utils/sort-posts');
-const { countVote } = require('../../controllers/utils/vote-count');
 
 describe('객관식 게시글을 작성에 대한 검사', () => {
   const req = {
@@ -142,7 +141,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
   test('객관식 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
     const req = {
       params: {
-        multi_id: 'undefined',
+        multi_id: 'all',
       },
     };
     sequelize.query.mockReturnValue(
@@ -226,7 +225,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         voted: null,
         liked: null,
         commentCnt: 0,
-        nickanme: '황창환 ',
+        nickname: '황창환 ',
       },
       {
         multiId: 11,
@@ -246,7 +245,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         voted: null,
         liked: null,
         commentCnt: 0,
-        nickanme: 'BadBoy',
+        nickname: 'BadBoy',
       },
       {
         multiId: 9,
@@ -266,7 +265,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         voted: null,
         liked: null,
         commentCnt: 4,
-        nickanme: '관리자',
+        nickname: '관리자',
       },
     ]);
     await sortMulti.mockReturnValue([
@@ -288,7 +287,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         voted: null,
         liked: null,
         commentCnt: 4,
-        nickanme: '관리자',
+        nickname: '관리자',
       },
       {
         multiId: 12,
@@ -308,7 +307,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         voted: null,
         liked: null,
         commentCnt: 0,
-        nickanme: '황창환 ',
+        nickname: '황창환 ',
       },
       {
         multiId: 11,
@@ -328,7 +327,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         voted: null,
         liked: null,
         commentCnt: 0,
-        nickanme: 'BadBoy',
+        nickname: 'BadBoy',
       },
     ]);
     await getMulti(req, res, next);
@@ -354,7 +353,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
           voted: null,
           liked: null,
           commentCnt: 4,
-          nickanme: '관리자',
+          nickname: '관리자',
         },
         {
           multiId: 12,
@@ -374,7 +373,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
           voted: null,
           liked: null,
           commentCnt: 0,
-          nickanme: '황창환 ',
+          nickname: '황창환 ',
         },
         {
           multiId: 11,
@@ -394,7 +393,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
           voted: null,
           liked: null,
           commentCnt: 0,
-          nickanme: 'BadBoy',
+          nickname: 'BadBoy',
         },
       ],
     });
@@ -402,7 +401,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
   test('DB 에러 발생한 경우에 대한 검사', async () => {
     const req = {
       params: {
-        multi_id: 'undefined',
+        multi_id: 'all',
       },
     };
     const err = 'DB Err';
@@ -426,7 +425,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
   test('객관식 진행중 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
     const req = {
       params: {
-        multi_id: 'undefined',
+        multi_id: 'all',
       },
     };
     sequelize.query.mockReturnValue(
@@ -510,7 +509,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         voted: null,
         liked: null,
         commentCnt: 0,
-        nickanme: '황창환 ',
+        nickname: '황창환 ',
       },
       {
         multiId: 9,
@@ -530,7 +529,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         voted: null,
         liked: null,
         commentCnt: 4,
-        nickanme: '관리자',
+        nickname: '관리자',
       },
       {
         multiId: 8,
@@ -550,7 +549,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         voted: null,
         liked: null,
         commentCnt: 2,
-        nickanme: '관리자',
+        nickname: '관리자',
       },
     ]);
     await sortMulti.mockReturnValue([
@@ -572,7 +571,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         voted: null,
         liked: null,
         commentCnt: 4,
-        nickanme: '관리자',
+        nickname: '관리자',
       },
       {
         multiId: 8,
@@ -592,7 +591,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         voted: null,
         liked: null,
         commentCnt: 2,
-        nickanme: '관리자',
+        nickname: '관리자',
       },
       {
         multiId: 12,
@@ -612,7 +611,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         voted: null,
         liked: null,
         commentCnt: 0,
-        nickanme: '황창환 ',
+        nickname: '황창환 ',
       },
     ]);
     await getIngMulti(req, res, next);
@@ -638,7 +637,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: null,
           liked: null,
           commentCnt: 4,
-          nickanme: '관리자',
+          nickname: '관리자',
         },
         {
           multiId: 8,
@@ -658,7 +657,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: null,
           liked: null,
           commentCnt: 2,
-          nickanme: '관리자',
+          nickname: '관리자',
         },
         {
           multiId: 12,
@@ -678,7 +677,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: null,
           liked: null,
           commentCnt: 0,
-          nickanme: '황창환 ',
+          nickname: '황창환 ',
         },
       ],
     });
@@ -686,7 +685,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
   test('DB 에러 발생한 경우에 대한 검사', async () => {
     const req = {
       params: {
-        multi_id: 'undefined',
+        multi_id: 'all',
       },
     };
     const err = 'DB Err';
@@ -706,7 +705,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
     test('객관식 완료된 페이지 GET 이 성공적으로 동작하면 / success: true / 와 객관식 게시글 리스트를 보낸다.', async () => {
       const req = {
         params: {
-          multi_id: 'undefined',
+          multi_id: 'all',
         },
       };
       sequelize.query.mockReturnValue(
@@ -790,7 +789,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: null,
           liked: null,
           commentCnt: 0,
-          nickanme: '황창환 ',
+          nickname: '황창환 ',
         },
         {
           multiId: 11,
@@ -810,7 +809,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: null,
           liked: null,
           commentCnt: 0,
-          nickanme: 'BadBoy',
+          nickname: 'BadBoy',
         },
       ]);
       await sortMulti.mockReturnValue([
@@ -832,7 +831,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: null,
           liked: null,
           commentCnt: 0,
-          nickanme: 'BadBoy',
+          nickname: 'BadBoy',
         },
         {
           multiId: 13,
@@ -852,7 +851,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           voted: null,
           liked: null,
           commentCnt: 0,
-          nickanme: '황창환 ',
+          nickname: '황창환 ',
         },
       ]);
       await getCompleteMulti(req, res, next);
@@ -878,7 +877,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
             voted: null,
             liked: null,
             commentCnt: 0,
-            nickanme: 'BadBoy',
+            nickname: 'BadBoy',
           },
           {
             multiId: 13,
@@ -898,7 +897,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
             voted: null,
             liked: null,
             commentCnt: 0,
-            nickanme: '황창환 ',
+            nickname: '황창환 ',
           },
         ],
       });
@@ -906,7 +905,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
     test('DB 에러 발생한 경우에 대한 검사', async () => {
       const req = {
         params: {
-          multi_id: 'undefined',
+          multi_id: 'all',
         },
       };
       const err = 'DB Err';

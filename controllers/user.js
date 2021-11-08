@@ -40,10 +40,8 @@ module.exports = {
   login: async (req, res, next) => {
     try {
       const { userId, pw } = await loginSchema.validateAsync(req.body);
-      const [userData, pwCheck] = await Promise.all([
-        User.findOne({ where: { userId } }),
-        bcrypt.compare(pw, userData.pw),
-      ]);
+      const userData = await User.findOne({ where: { userId } });
+      const pwCheck = await bcrypt.compare(pw, userData.pw);
       if (!userData || !pwCheck) {
         res.status(400).json({
           success: false,
