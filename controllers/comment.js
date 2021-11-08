@@ -8,24 +8,25 @@ module.exports = {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id } = req.params;
       const user = res.locals.user;
-      const targetComment = await Comment.create({
-        user,
-        multi: multi_id,
-        comment,
-        date,
-      });
-      const nickname = await User.findOne({
-        attributes: ['nickname'],
-        where: { id: user },
-        raw: true,
-      });
+      const [targetComment, nickname] = await Promise.all([
+        Comment.create({
+          user,
+          multi: multi_id,
+          comment,
+          date,
+        }),
+        User.findOne({
+          attributes: ['nickname'],
+          where: { id: user },
+          raw: true,
+        }),
+      ]);
       const newComment = Object.assign(nickname, targetComment.dataValues);
       res.status(200).json({
         success: true,
         newComment,
       });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -44,14 +45,16 @@ module.exports = {
           },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        const targetComment = await Comment.findOne({
-          where: { user, multi: multi_id, id: comment_id },
-        });
-        const nickname = await User.findOne({
-          attributes: ['nickname'],
-          where: { id: user },
-          raw: true,
-        });
+        const [targetComment, nickname] = await Promise.all([
+          Comment.findOne({
+            where: { user, multi: multi_id, id: comment_id },
+          }),
+          User.findOne({
+            attributes: ['nickname'],
+            where: { id: user },
+            raw: true,
+          }),
+        ]);
         const newComment = Object.assign(nickname, targetComment.dataValues);
         res.status(200).json({
           success: true,
@@ -63,7 +66,6 @@ module.exports = {
         });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -72,7 +74,6 @@ module.exports = {
     try {
       const { multi_id, comment_id } = req.params;
       const user = res.locals.user;
-      console.log(req.params);
       if (await Comment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         await Comment.update(
           {
@@ -80,14 +81,16 @@ module.exports = {
           },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        const targetComment = await Comment.findOne({
-          where: { user, multi: multi_id, id: comment_id },
-        });
-        const nickname = await User.findOne({
-          attributes: ['nickname'],
-          where: { id: user },
-          raw: true,
-        });
+        const [targetComment, nickname] = await Promise.all([
+          Comment.findOne({
+            where: { user, multi: multi_id, id: comment_id },
+          }),
+          User.findOne({
+            attributes: ['nickname'],
+            where: { id: user },
+            raw: true,
+          }),
+        ]);
         const newComment = Object.assign(nickname, targetComment.dataValues);
         res.status(200).json({
           success: true,
@@ -97,7 +100,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -120,7 +122,6 @@ module.exports = {
         res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },

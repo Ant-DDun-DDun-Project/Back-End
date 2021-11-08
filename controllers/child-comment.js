@@ -8,25 +8,26 @@ module.exports = {
       const { comment, date } = await postCommentSchema.validateAsync(req.body);
       const { multi_id, comment_id } = req.params;
       const user = res.locals.user;
-      const childMent = await ChildComment.create({
-        user,
-        multi: multi_id,
-        parentComment: comment_id,
-        comment,
-        date,
-      });
-      const nickname = await User.findOne({
-        attributes: ['nickname'],
-        where: { id: user },
-        raw: true,
-      });
-      const childComment = Object.assign(nickname, childMent.dataValues);
+      const [childMent, nickname] = await Promise.all([
+        ChildComment.create({
+          user,
+          multi: multi_id,
+          parentComment: comment_id,
+          comment,
+          date,
+        }),
+        User.findOne({
+          attributes: ['nickname'],
+          where: { id: user },
+          raw: true,
+        }),
+      ]);
+      const childComment = Object.assign(nickname, childMent.dataValues); //객체 병합
       res.status(200).json({
         success: true,
         childComment,
       });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -44,18 +45,20 @@ module.exports = {
           { comment, editedDate },
           { where: { multi: multi_id, id: comment_id, user } }
         );
-        const childMent = await ChildComment.findOne({
-          where: {
-            multi: multi_id,
-            id: comment_id,
-            user,
-          },
-        });
-        const nickname = await User.findOne({
-          attributes: ['nickname'],
-          where: { id: user },
-          raw: true,
-        });
+        const [childMent, nickname] = await Promise.all([
+          ChildComment.findOne({
+            where: {
+              multi: multi_id,
+              id: comment_id,
+              user,
+            },
+          }),
+          User.findOne({
+            attributes: ['nickname'],
+            where: { id: user },
+            raw: true,
+          }),
+        ]);
         const childComment = Object.assign(nickname, childMent.dataValues);
         res.status(200).json({
           success: true,
@@ -65,7 +68,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -80,18 +82,20 @@ module.exports = {
           { deleted: true },
           { where: { user, multi: multi_id, id: comment_id } }
         );
-        const childMent = await ChildComment.findOne({
-          where: {
-            multi: multi_id,
-            id: comment_id,
-            user,
-          },
-        });
-        const nickname = await User.findOne({
-          attributes: ['nickname'],
-          where: { id: user },
-          raw: true,
-        });
+        const [childMent, nickname] = await Promise.all([
+          ChildComment.findOne({
+            where: {
+              multi: multi_id,
+              id: comment_id,
+              user,
+            },
+          }),
+          User.findOne({
+            attributes: ['nickname'],
+            where: { id: user },
+            raw: true,
+          }),
+        ]);
         const childComment = Object.assign(nickname, childMent.dataValues);
         res.status(200).json({
           success: true,
@@ -101,7 +105,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -124,7 +127,6 @@ module.exports = {
         res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },

@@ -14,12 +14,10 @@ module.exports = {
         req.body
       );
       if (validatePassword(pw, confirmPw)) {
-        const encryptedPw = await bcrypt.hash(pw, salt);
-        const userExist = await User.findOne({
-          where: {
-            userId,
-          },
-        });
+        const [encryptedPw, userExist] = await Promise.all([
+          bcrypt.hash(pw, salt),
+          User.findOne({ where: { userId } }),
+        ]);
         if (!userExist) {
           await User.create({
             userId,
@@ -29,19 +27,12 @@ module.exports = {
           });
           return res.status(201).json({ success: true });
         } else {
-          return res.status(400).json({
-            success: false,
-            msg: '중복된 아이디입니다.',
-          });
+          return res.status(400).json({ success: false, msg: '중복된 아이디입니다.' });
         }
       } else {
-        res.status(400).json({
-          success: false,
-          msg: '비밀번호를 확인해주세요.',
-        });
+        res.status(400).json({ success: false, msg: '비밀번호를 확인해주세요.' });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -49,12 +40,10 @@ module.exports = {
   login: async (req, res, next) => {
     try {
       const { userId, pw } = await loginSchema.validateAsync(req.body);
-      const userData = await User.findOne({
-        where: {
-          userId,
-        },
-      });
-      const pwCheck = await bcrypt.compare(pw, userData.pw);
+      const [userData, pwCheck] = await Promise.all([
+        User.findOne({ where: { userId } }),
+        bcrypt.compare(pw, userData.pw),
+      ]);
       if (!userData || !pwCheck) {
         res.status(400).json({
           success: false,
@@ -70,14 +59,9 @@ module.exports = {
           // sameSite: 'None',
           // signed: true,
         });
-        res.status(200).json({
-          success: true,
-          nickname,
-          userId,
-        });
+        res.status(200).json({ success: true, nickname, userId });
       }
     } catch (err) {
-      console.log('로그인 시 에러발생', err);
       next(err);
     }
   },
@@ -93,7 +77,6 @@ module.exports = {
         res.status(200).json({ success: true });
       }
     } catch (err) {
-      console.log(err);
       next(err);
     }
   },
@@ -109,7 +92,6 @@ module.exports = {
         res.status(200).json({ success: true });
       }
     } catch (err) {
-      console.log(err);
       next(err);
     }
   },
@@ -124,7 +106,6 @@ module.exports = {
       });
       res.status(200).json({ success: true });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -136,21 +117,15 @@ module.exports = {
       if (user === 13) {
         res.status(200).json({ success: false, nickname: 'GUEST' });
       } else {
-        const loginUser = await User.findOne({where: {id : user}})
+        const loginUser = await User.findOne({ where: { id: user } });
         if (!loginUser) {
           res.status(400).json({ success: false });
         } else {
-          res.status(200).json({
-            success: true,
-            nickname: loginUser.nickname,
-            user,
-          });
+          res.status(200).json({ success: true, nickname: loginUser.nickname, user });
         }
       }
-
     } catch (err) {
-      console.error(err);
       next(err);
     }
-  }
+  },
 };

@@ -26,4 +26,5 @@ router.delete('/:either_id', auth, deleteEither); //찬반투표 게시글 삭�
 router.post('/:either_id/votes', auth, voteEither); // 찬반 투표
 router.patch('/:either_id/complete', auth, completeEither); // 찬반 투표 종료
 router.post('/:either_id/likes', auth, likeEither); // 찬반투표 좋아요
+
 module.exports = router;

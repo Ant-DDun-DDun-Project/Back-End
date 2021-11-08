@@ -18,7 +18,6 @@ module.exports = class Like extends Sequelize.Model {
   }
 
   static associate(db) {
-    // User 와 Either 게시물 --> 1:N 관계
     db.Like.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',

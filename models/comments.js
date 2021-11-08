@@ -45,7 +45,6 @@ module.exports = class Comment extends Sequelize.Model {
   }
 
   static associate(db) {
-    // User 와 Either 게시물 --> 1:N 관계
     db.Comment.hasMany(db.CommentLike, {
       foreignKey: 'comment',
       sourceKey: 'id',
