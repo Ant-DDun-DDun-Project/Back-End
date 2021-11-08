@@ -133,7 +133,7 @@ describe('양자택일 투표 모두보기', () => {
   test('getEither 시 eitherId, title, contentA,B, date, completed, edited(date), likeCnt, user, voteCntA,B, nickname, voted 내려줌', async () => {
     const req = {
       params: {
-        either_id: 'undefined',
+        either_id: 'all',
       },
     };
     await sequelize.query.mockReturnValue(
@@ -390,7 +390,7 @@ describe('양자택일 투표 모두보기', () => {
   test('DB 에러', async () => {
     const req = {
       params: {
-        either_id: 'undefined',
+        either_id: 'all',
       },
     };
     const err = 'DB에러';
@@ -412,7 +412,7 @@ describe('진행중인 양자택일 투표 보기', () => {
   test('getIngEither 시 eitherId, title, contentA,B, date, completed: 0, edited(date), likeCnt, user, voteCntA,B, nickname, voted 내려줌', async () => {
     const req = {
       params: {
-        either_id: 'undefined',
+        either_id: 'all',
       },
     };
     await sequelize.query.mockReturnValue(
@@ -618,7 +618,7 @@ describe('진행중인 양자택일 투표 보기', () => {
   test('DB 에러', async () => {
     const req = {
       params: {
-        either_id: 'undefined',
+        either_id: 'all',
       },
     };
     const err = 'DB에러';
@@ -640,7 +640,7 @@ describe('종료된 양자택일 투표 보기', () => {
   test('getComepleteEither 시 eitherId, title, contentA,B, date, completed: 1, edited(date), likeCnt, user, voteCntA,B, nickname, voted 내려줌', async () => {
     const req = {
       params: {
-        either_id: 'undefined',
+        either_id: 'all',
       },
     };
     await sequelize.query.mockReturnValue(
@@ -897,7 +897,7 @@ describe('종료된 양자택일 투표 보기', () => {
   test('DB 에러', async () => {
     const req = {
       params: {
-        either_id: 'undefined',
+        either_id: 'all',
       },
     };
     const err = 'DB에러';
