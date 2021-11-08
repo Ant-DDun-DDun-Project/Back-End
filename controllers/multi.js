@@ -9,88 +9,64 @@ module.exports = {
   //객관식 페이지 메인뷰
   getMulti: async (req, res, next) => {
     const { multi_id } = req.params;
-    console.log(multi_id);
-    if (multi_id === 'all') {
-      try {
-        const user = res.locals.user;
+    const user = res.locals.user;
+    try {
+      if (multi_id === 'all') {
         const multi = await sequelize.query(multiQuery.getMulti(user), {
           type: sequelize.QueryTypes.SELECT,
-        }); // QueryType 로 1번만 뽑는다.
+        });
         res.status(200).json({ success: true, multi });
-      } catch (err) {
-        console.error(err);
-        next(err);
-      }
-    } else {
-      try {
-        const user = res.locals.user;
+      } else {
         const unsortedMulti = await sequelize.query(multiQuery.getMulti(user), {
           type: sequelize.QueryTypes.SELECT,
         });
-        // console.log(unsortedMulti);
         const multi = sortMulti(unsortedMulti, multi_id);
         res.status(200).json({ success: true, multi });
-      } catch (err) {
-        console.error(err);
-        next(err);
       }
+    } catch (err) {
+      next(err);
     }
   },
   //객관식 페이지 진행중 뷰
   getIngMulti: async (req, res, next) => {
     const { multi_id } = req.params;
-    if (multi_id === 'all') {
-      try {
-        const user = res.locals.user;
+    const user = res.locals.user;
+    try {
+      if (multi_id === 'all') {
         const multi = await sequelize.query(multiQuery.getIngMulti(user), {
           type: sequelize.QueryTypes.SELECT,
-        }); // QueryType 로 1번만 뽑는다.
+        });
         res.status(200).json({ success: true, multi });
-      } catch (err) {
-        console.error(err);
-        next(err);
-      }
-    } else {
-      try {
-        const user = res.locals.user;
+      } else {
         const unsortedMulti = await sequelize.query(multiQuery.getIngMulti(user), {
           type: sequelize.QueryTypes.SELECT,
-        }); // QueryType 로 1번만 뽑는다.
+        });
         const multi = sortMulti(unsortedMulti, multi_id);
         res.status(200).json({ success: true, multi });
-      } catch (err) {
-        console.error(err);
-        next(err);
       }
+    } catch (err) {
+      next(err);
     }
   },
   //객관식 페이지 투표종료 뷰
   getCompleteMulti: async (req, res, next) => {
     const { multi_id } = req.params;
-    if (multi_id === 'all') {
-      try {
-        const user = res.locals.user;
+    const user = res.locals.user;
+    try {
+      if (multi_id === 'all') {
         const multi = await sequelize.query(multiQuery.getCompleteMulti(user), {
           type: sequelize.QueryTypes.SELECT,
-        }); // QueryType 로 1번만 뽑는다.
+        });
         res.status(200).json({ success: true, multi });
-      } catch (err) {
-        console.error(err);
-        next(err);
-      }
-    } else {
-      try {
-        const user = res.locals.user;
+      } else {
         const unsortedMulti = await sequelize.query(multiQuery.getCompleteMulti(user), {
           type: sequelize.QueryTypes.SELECT,
-        }); // QueryType 로 1번만 뽑는다.
-        console.log(unsortedMulti);
+        });
         const multi = sortMulti(unsortedMulti, multi_id);
         res.status(200).json({ success: true, multi });
-      } catch (err) {
-        console.error(err);
-        next(err);
       }
+    } catch (err) {
+      next(err);
     }
   },
   // 객관식 상세페이지 뷰
@@ -103,19 +79,20 @@ module.exports = {
       });
       if (multi.length > 0) {
         // 객관식 게시글이 존재하지 하는 경우
-        const comment = await sequelize.query(multiQuery.getComment(user, multi_id), {
-          type: sequelize.QueryTypes.SELECT,
-        });
-        const childComment = await sequelize.query(multiQuery.getChildComment(user, multi_id), {
-          type: sequelize.QueryTypes.SELECT,
-        });
+        const [comment, childComment] = await Promise.all([
+          sequelize.query(multiQuery.getComment(user, multi_id), {
+            type: sequelize.QueryTypes.SELECT,
+          }),
+          sequelize.query(multiQuery.getChildComment(user, multi_id), {
+            type: sequelize.QueryTypes.SELECT,
+          }),
+        ]);
         res.status(200).json({ success: true, multi: multi[0], comment, childComment });
       } else {
         // 객관식 상세 페이지가 존재하지 않는 경우
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -139,10 +116,10 @@ module.exports = {
       });
       res.status(200).json({ success: true }); // 게시글 작성 성공시 { success: true } 전송
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
+
   //객관식 게시글 수정
   editMulti: async (req, res, next) => {
     try {
@@ -165,11 +142,8 @@ module.exports = {
           where: { multiId: multi_id },
         }
       );
-      res.status(200).json({
-        success: true,
-      });
+      res.status(200).json({ success: true });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -181,16 +155,11 @@ module.exports = {
       const multiExist = await Multi.findOne({ where: { multiId: multi_id, user } });
       if (multiExist) {
         await Multi.destroy({ where: { multiId: multi_id, user } });
-        res.status(200).json({
-          success: true,
-        });
+        res.status(200).json({ success: true });
       } else {
-        res.status(400).json({
-          success: false,
-        });
+        res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -201,27 +170,14 @@ module.exports = {
       const user = res.locals.user;
       const alreadyLike = await Like.findOne({ where: { multi: multi_id, user } });
       if (alreadyLike) {
-        res.status(400).json({
-          success: false,
-        });
+        res.status(400).json({ success: false });
       } else {
-        await Like.create({
-          user,
-          multi: multi_id,
-        });
-        const likeCnt = await Like.count({
-          where: {
-            multi: multi_id,
-          },
-        });
+        await Like.create({ user, multi: multi_id });
+        const likeCnt = await Like.count({ where: { multi: multi_id } });
         await Multi.update({ likeCnt }, { where: { multiId: multi_id } });
-        res.status(200).json({
-          success: true,
-          likeCnt,
-        });
+        res.status(200).json({ success: true, likeCnt });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -248,7 +204,6 @@ module.exports = {
         });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -265,7 +220,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },

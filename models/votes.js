@@ -23,7 +23,6 @@ module.exports = class Vote extends Sequelize.Model {
   }
 
   static associate(db) {
-    // User 와 Either 게시물 --> 1:N 관계
     db.Vote.belongsTo(db.User, {
       foreignKey: 'user',
       targetKey: 'id',

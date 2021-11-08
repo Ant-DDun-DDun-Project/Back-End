@@ -1,14 +1,8 @@
 const { Either, Multi } = require('../../models');
 
+//포스팅 갯수 카운트 함수
 exports.countPosting = async () => {
-  // 기존 방식
-  // const eitherNum = await Either.count({});
-  // const multiNum = await Multi.count({});
-
-  const either = await Either.findAll();
-  const multi = await Multi.findAll();
-  const eitherNum = either.length;
-  const multiNum = multi.length;
-  const postingNum = eitherNum + multiNum;
-  return postingNum;
+  const [either, multi] = await Promise.all([Either.findAll(), Multi.findAll()]);
+  const totalCnt = either.length + multi.length;
+  return totalCnt;
 };
