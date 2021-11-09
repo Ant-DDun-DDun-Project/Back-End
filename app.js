@@ -35,10 +35,6 @@ sequelize
 //helmet(보안)
 app.use(helmet());
 
-app.get('/asdfhh', (req, res) => {
-  res.send('완료??????????');
-});
-
 //routing
 const router = require('./routes/index');
 

@@ -41,6 +41,8 @@ module.exports = {
           type: sequelize.QueryTypes.SELECT,
         });
         const either = sortEither(unsortedEither, either_id);
+        console.log(either);
+        console.log('response');
         res.status(200).json({
           success: true,
           either,
