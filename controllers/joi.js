@@ -8,7 +8,7 @@ module.exports = {
       .min(5)
       .max(20)
       .pattern(/^[a-z0-9_-]{5,20}$/),
-    nickname: Joi.string().required().min(2).max(12),
+    nickname: Joi.string().required().min(2).max(7),
     pw: Joi.string()
       .required()
       .min(8)
@@ -61,31 +61,31 @@ module.exports = {
     contentE: Joi.string().allow(null),
     editedDate: Joi.string().allow(null),
   }),
-  // 찬반투표 게시물 수정 schema
+  // 찬반투표 게시물 수정 Schema
   editEitherSchema: Joi.object({
     title: Joi.string().required().min(1),
     contentA: Joi.string().required().min(1),
     contentB: Joi.string().required().min(1),
     editedDate: Joi.string().required(),
   }),
-  // 아이디 중복 체크 schema
+  // 아이디 중복 체크 Schema
   duplicatedIdSchema: Joi.object({
     userId: Joi.string().required().min(1),
   }),
-  // 닉네임 중복 체크 schema
+  // 닉네임 중복 체크 Schema
   duplicatedNickSchema: Joi.object({
     nickname: Joi.string().required().min(1),
   }),
-  // 찬반 투표하기 schema
+  // 찬반 투표하기 Schema
   voteEitherSchema: Joi.object({
     vote: Joi.string().required(),
   }),
-  // 객관식 투표 schema
+  // 객관식 투표 Schema
   voteMultiSchema: Joi.object({
     select: Joi.string().required(),
   }),
-  // 닉네임 변경 shcema
+  // 닉네임 변경 Schema
   editNickSchema: Joi.object({
-    nickname: Joi.string().required().min(2).max(12),
+    nickname: Joi.string().required().min(2).max(7),
   }),
 };
