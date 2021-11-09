@@ -25,9 +25,9 @@ module.exports = {
   },
   // 찬반투표 게시글 뷰
   getEither: async (req, res, next) => {
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { either_id } = req.params;
+      const user = res.locals.user;
       if (either_id === 'all') {
         const either = await sequelize.query(eitherQuery.getEither(user), {
           type: sequelize.QueryTypes.SELECT,
@@ -53,9 +53,9 @@ module.exports = {
   },
   //찬반투표 진행중 게시글 뷰
   getIngEither: async (req, res, next) => {
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { either_id } = req.params;
+      const user = res.locals.user;
       if (either_id === 'all') {
         const either = await sequelize.query(eitherQuery.getIngEither(user), {
           type: sequelize.QueryTypes.SELECT,
@@ -81,9 +81,9 @@ module.exports = {
   },
   //찬반투표 투표종료 게시글 뷰
   getCompleteEither: async (req, res, next) => {
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { either_id } = req.params;
+      const user = res.locals.user;
       if (either_id === 'all') {
         const either = await sequelize.query(eitherQuery.getCompleteEither(user), {
           type: sequelize.QueryTypes.SELECT,
@@ -109,10 +109,12 @@ module.exports = {
   },
   //찬반투표 게시글 수정
   editEither: async (req, res, next) => {
-    const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(req.body);
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(
+        req.body
+      );
+      const { either_id } = req.params;
+      const user = res.locals.user;
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
         await Either.update(
@@ -129,9 +131,9 @@ module.exports = {
   },
   //찬반투표 게시글 삭제
   deleteEither: async (req, res, next) => {
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { either_id } = req.params;
+      const user = res.locals.user;
       const eitherExist = await Either.findOne({ where: { eitherId: either_id, user } });
       if (eitherExist) {
         await Either.destroy({ where: { eitherId: either_id, user } });
@@ -146,9 +148,9 @@ module.exports = {
 
   // 찬반투표 게시글 좋아요
   likeEither: async (req, res, next) => {
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { either_id } = req.params;
+      const user = res.locals.user;
       if (!(await Like.findOne({ where: { either: either_id, user } }))) {
         await Like.create({
           user,
@@ -198,9 +200,9 @@ module.exports = {
 
   // 찬반 투표 종료하기
   completeEither: async (req, res, next) => {
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { either_id } = req.params;
+      const user = res.locals.user;
       if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {
         // DB에 해당 게시물이 존재하는 경우
         await Either.update({ completed: true }, { where: { user, eitherId: either_id } });
@@ -215,9 +217,9 @@ module.exports = {
 
   // 찬반 투표 특정페이지 뷰
   getTargetEither: async (req, res, next) => {
-    const { either_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { either_id } = req.params;
+      const user = res.locals.user;
       const either = await sequelize.query(eitherQuery.getTargetEither(user, either_id), {
         type: sequelize.QueryTypes.SELECT,
       });

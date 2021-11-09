@@ -6,7 +6,7 @@ module.exports = {
       //잘못된 파라미터가 들어왔을때를 방지하기 위한 조건
       if (unsortedPosts[0].multiId != posts_id) {
         multi.push(unsortedPosts.shift());
-      } else if (unsortedPosts[0].multiId === posts_id) {
+      } else if (unsortedPosts[0].multiId == posts_id) {
         break;
       }
     }
@@ -19,7 +19,7 @@ module.exports = {
       //잘못된 파라미터가 들어왔을때를 방지하기 위한 조건
       if (unsortedPosts[0].eitherId != posts_id) {
         either.push(unsortedPosts.shift());
-      } else if (unsortedPosts[0].eitherId === posts_id) {
+      } else if (unsortedPosts[0].eitherId == posts_id) {
         break;
       }
     }

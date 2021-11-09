@@ -8,9 +8,9 @@ const multiQuery = new MultiQuery();
 module.exports = {
   //객관식 페이지 메인뷰
   getMulti: async (req, res, next) => {
-    const { multi_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { multi_id } = req.params;
+      const user = res.locals.user;
       if (multi_id === 'all') {
         const multi = await sequelize.query(multiQuery.getMulti(user), {
           type: sequelize.QueryTypes.SELECT,
@@ -29,9 +29,9 @@ module.exports = {
   },
   //객관식 페이지 진행중 뷰
   getIngMulti: async (req, res, next) => {
-    const { multi_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { multi_id } = req.params;
+      const user = res.locals.user;
       if (multi_id === 'all') {
         const multi = await sequelize.query(multiQuery.getIngMulti(user), {
           type: sequelize.QueryTypes.SELECT,
@@ -50,9 +50,9 @@ module.exports = {
   },
   //객관식 페이지 투표종료 뷰
   getCompleteMulti: async (req, res, next) => {
-    const { multi_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { multi_id } = req.params;
+      const user = res.locals.user;
       if (multi_id === 'all') {
         const multi = await sequelize.query(multiQuery.getCompleteMulti(user), {
           type: sequelize.QueryTypes.SELECT,
