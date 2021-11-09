@@ -1,7 +1,6 @@
 logs
 node_modules/
 *.idea
-config/
 coverage
 .eslintcache
 *.DS_Store
