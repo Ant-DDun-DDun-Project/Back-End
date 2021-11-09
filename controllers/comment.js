@@ -105,9 +105,9 @@ module.exports = {
   },
   // 댓글 좋아요
   likeComment: async (req, res, next) => {
-    const { multi_id, comment_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { multi_id, comment_id } = req.params;
+      const user = res.locals.user;
       const likeExist = await CommentLike.findOne({
         where: { multi: multi_id, comment: comment_id, user },
       });

@@ -33,10 +33,10 @@ module.exports = {
   },
   //대댓글 수정
   editChildComment: async (req, res, next) => {
-    const { comment, editedDate } = await editCommentSchema.validateAsync(req.body);
-    const { multi_id, comment_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { comment, editedDate } = await editCommentSchema.validateAsync(req.body);
+      const { multi_id, comment_id } = req.params;
+      const user = res.locals.user;
       const childExist = await ChildComment.findOne({
         where: { multi: multi_id, id: comment_id, user },
       });
@@ -76,7 +76,6 @@ module.exports = {
     try {
       const { multi_id, comment_id } = req.params;
       const user = res.locals.user;
-
       if (await ChildComment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         await ChildComment.update(
           { deleted: true },
@@ -110,9 +109,9 @@ module.exports = {
   },
   //대댓글 좋아요
   likeChildComment: async (req, res, next) => {
-    const { multi_id, comment_id } = req.params;
-    const user = res.locals.user;
     try {
+      const { multi_id, comment_id } = req.params;
+      const user = res.locals.user;
       const likeExist = await CommentLike.findOne({
         where: { multi: multi_id, childComment: comment_id, user },
       });

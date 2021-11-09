@@ -6,8 +6,8 @@ const profileQuery = new ProfileQuery();
 module.exports = {
   //내가 쓴 글
   getMyPosts: async (req, res, next) => {
-    const { user_id } = req.params;
     try {
+      const { user_id } = req.params;
       const [either, multi] = await Promise.all([
         Either.findAll({
           attributes: [
@@ -37,8 +37,8 @@ module.exports = {
   },
   //내가 참여한 글
   getMyPolls: async (req, res, next) => {
-    const { user_id } = req.params;
     try {
+      const { user_id } = req.params;
       const [either, multi] = await Promise.all([
         sequelize.query(profileQuery.getMyPollsForEither(user_id), {
           type: sequelize.QueryTypes.SELECT,
@@ -77,8 +77,8 @@ module.exports = {
   },
   //프로필페이지 뷰
   getProfile: async (req, res, next) => {
-    const { user_id } = req.params;
     try {
+      const { user_id } = req.params;
       const user = await User.findOne({ where: { id: user_id } });
       if (user) {
         const nickname = user.nickname;
