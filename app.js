@@ -35,8 +35,8 @@ sequelize
 //helmet(보안)
 app.use(helmet());
 
-app.get('/asdf', (req, res) => {
-  res.send('자동으로 되나??????!!!!');
+app.get('/asdfgg', (req, res) => {
+  res.send('완료!!!!!!!!!');
 });
 
 //routing
