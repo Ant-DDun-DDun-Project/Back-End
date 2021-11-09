@@ -65,7 +65,7 @@ describe('메인페이지 뷰', () => {
           ],
         })
       );
-    await countPosting.mockReturnValue(200);
+    await countPosting.mockReturnValue([200, 250]);
     await countAttend.mockReturnValue(12312);
     await getMain(req, res, next);
     expect(res.status).toBeCalledWith(200);
@@ -109,7 +109,9 @@ describe('메인페이지 뷰', () => {
           },
         ],
       },
-      postingNum: 200,
+      postingNum: 450,
+      eitherNum: 200,
+      multiNum: 250,
       attendNum: 12312,
     });
   });
