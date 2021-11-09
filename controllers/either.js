@@ -26,9 +26,9 @@ module.exports = {
   // 찬반투표 게시글 뷰
   getEither: async (req, res, next) => {
     const { either_id } = req.params;
-    if (either_id == 'undefined') {
-      try {
-        const user = res.locals.user;
+    const user = res.locals.user;
+    try {
+      if (either_id === 'all') {
         const either = await sequelize.query(eitherQuery.getEither(user), {
           type: sequelize.QueryTypes.SELECT,
         });
@@ -36,13 +36,7 @@ module.exports = {
           success: true,
           either,
         });
-      } catch (err) {
-        console.log('글 받아올 때 에러발생', err);
-        next(err);
-      }
-    } else {
-      try {
-        const user = res.locals.user;
+      } else {
         const unsortedEither = await sequelize.query(eitherQuery.getEither(user), {
           type: sequelize.QueryTypes.SELECT,
         });
@@ -51,18 +45,18 @@ module.exports = {
           success: true,
           either,
         });
-      } catch (err) {
-        console.log('글 받아올 때 에러발생', err);
-        next(err);
       }
+    } catch (err) {
+      console.error('글 받아올 때 에러발생', err);
+      next(err);
     }
   },
   //찬반투표 진행중 게시글 뷰
   getIngEither: async (req, res, next) => {
     const { either_id } = req.params;
-    if (either_id == 'undefined') {
-      try {
-        const user = res.locals.user;
+    const user = res.locals.user;
+    try {
+      if (either_id === 'all') {
         const either = await sequelize.query(eitherQuery.getIngEither(user), {
           type: sequelize.QueryTypes.SELECT,
         });
@@ -70,13 +64,7 @@ module.exports = {
           success: true,
           either,
         });
-      } catch (err) {
-        console.log('글 받아올 때 에러발생', err);
-        next(err);
-      }
-    } else {
-      try {
-        const user = res.locals.user;
+      } else {
         const unsortedEither = await sequelize.query(eitherQuery.getIngEither(user), {
           type: sequelize.QueryTypes.SELECT,
         });
@@ -85,18 +73,18 @@ module.exports = {
           success: true,
           either,
         });
-      } catch (err) {
-        console.log('글 받아올 때 에러발생', err);
-        next(err);
       }
+    } catch (err) {
+      console.error('글 받아올 때 에러발생', err);
+      next(err);
     }
   },
   //찬반투표 투표종료 게시글 뷰
   getCompleteEither: async (req, res, next) => {
     const { either_id } = req.params;
-    if (either_id == 'undefined') {
-      try {
-        const user = res.locals.user;
+    const user = res.locals.user;
+    try {
+      if (either_id === 'all') {
         const either = await sequelize.query(eitherQuery.getCompleteEither(user), {
           type: sequelize.QueryTypes.SELECT,
         });
@@ -104,13 +92,7 @@ module.exports = {
           success: true,
           either,
         });
-      } catch (err) {
-        console.log('글 받아올 때 에러발생', err);
-        next(err);
-      }
-    } else {
-      try {
-        const user = res.locals.user;
+      } else {
         const unsortedEither = await sequelize.query(eitherQuery.getCompleteEither(user), {
           type: sequelize.QueryTypes.SELECT,
         });
@@ -119,10 +101,10 @@ module.exports = {
           success: true,
           either,
         });
-      } catch (err) {
-        console.log('글 받아올 때 에러발생', err);
-        next(err);
       }
+    } catch (err) {
+      console.error('글 받아올 때 에러발생', err);
+      next(err);
     }
   },
   //찬반투표 게시글 수정
@@ -142,7 +124,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -159,7 +140,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -184,7 +164,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -198,29 +177,21 @@ module.exports = {
       if (await Vote.findOne({ where: { user, either: either_id } })) {
         // 이미 투표한 이력이 존재하는 경우
         await Vote.update({ vote }, { where: { either: either_id, user } });
-        const voteCntA = await Vote.count({ where: { vote: 'A', either: either_id } }); // 현재 게시물에 대한 A 수
-        const voteCntB = await Vote.count({ where: { vote: 'B', either: either_id } }); // 현재 게시물에 대한 B 수
-        res.status(200).json({
-          success: true,
-          either: Number(either_id),
-          voteCntA,
-          voteCntB,
-          vote,
-        });
       } else {
         await Vote.create({ user, vote, either: either_id }); // 투표한 이력없을 경우 투표 실시
-        const voteCntA = await Vote.count({ where: { vote: 'A', either: either_id } }); // 현재 게시물에 대한 A 수
-        const voteCntB = await Vote.count({ where: { vote: 'B', either: either_id } }); // 현재 게시물에 대한 B 수
-        res.status(200).json({
-          success: true,
-          either: Number(either_id),
-          voteCntA,
-          voteCntB,
-          vote,
-        });
       }
+      const [voteCntA, voteCntB] = await Promise.all([
+        Vote.count({ where: { vote: 'A', either: either_id } }),
+        Vote.count({ where: { vote: 'B', either: either_id } }),
+      ]); // 현재 게시물에 대한 A,B 수
+      res.status(200).json({
+        success: true,
+        either: Number(either_id),
+        voteCntA,
+        voteCntB,
+        vote,
+      });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -229,7 +200,6 @@ module.exports = {
   completeEither: async (req, res, next) => {
     const { either_id } = req.params;
     const user = res.locals.user;
-
     try {
       if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {
         // DB에 해당 게시물이 존재하는 경우
@@ -239,7 +209,6 @@ module.exports = {
         res.status(400).json({ success: false });
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -254,7 +223,6 @@ module.exports = {
       });
       res.status(200).json({ success: true, either });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },

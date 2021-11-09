@@ -14,7 +14,6 @@ module.exports = {
         next();
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },
@@ -29,7 +28,6 @@ module.exports = {
         next();
       }
     } catch (err) {
-      console.error(err);
       next(err);
     }
   },

@@ -8,10 +8,10 @@ const profileRouter = require('./profile');
 const searchRouter = require('./search');
 
 router.use('/', mainRouter);
-router.use('/search', searchRouter);
-router.use('/profiles', profileRouter);
-router.use('/posts/multi', multiRouter);
 router.use('/users', userRouter);
+router.use('/profiles', profileRouter);
+router.use('/search', searchRouter);
+router.use('/posts/multi', multiRouter);
 router.use('/posts/either', eitherRouter);
 
 module.exports = router;
