@@ -36,7 +36,7 @@ sequelize
 app.use(helmet());
 
 app.get('/asdfhh', (req, res) => {
-  res.send('완료!!!!!!!!!');
+  res.send('완료??????????');
 });
 
 //routing
