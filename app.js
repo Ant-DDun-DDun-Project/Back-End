@@ -35,7 +35,7 @@ sequelize
 //helmet(보안)
 app.use(helmet());
 
-app.get('/asdfgg', (req, res) => {
+app.get('/asdfhh', (req, res) => {
   res.send('완료!!!!!!!!!');
 });
 
