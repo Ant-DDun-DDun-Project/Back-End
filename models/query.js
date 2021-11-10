@@ -208,7 +208,8 @@ class ProfileQuery {
                either.edited,
                either.editedDate,
                either.completed,
-               either.likeCnt
+               either.likeCnt,
+               (SELECT nickname FROM users WHERE users.id = either.user) AS nickname
         FROM votes
                  INNER JOIN either ON votes.either = either.eitherId
         WHERE votes.user = ${user_id}
@@ -227,7 +228,8 @@ class ProfileQuery {
                multi.completed,
                multi.likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                       (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId)) AS commentCnt
+                       (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId)) AS commentCnt,
+               (SELECT nickname FROM users WHERE users.id = multi.user) AS nickname
         FROM votes
                  INNER JOIN multi ON votes.multi = multi.multiId
         WHERE votes.user = ${user_id}
@@ -239,7 +241,8 @@ class ProfileQuery {
 class SearchQuery {
   searchEither = (keyword) => {
     return `
-        SELECT eitherId, user, title, date, editedDate, completed, likeCnt
+        SELECT eitherId, user, title, date, editedDate, completed, likeCnt,
+               (SELECT nickname FROM users WHERE either.user = users.id) AS nickname
         FROM either
         WHERE title LIKE '%${keyword}%'
         ORDER BY eitherId DESC
@@ -256,7 +259,9 @@ class SearchQuery {
                completed,
                likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
-                       (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId)) AS commentCnt
+                       (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId)) AS commentCnt,
+               (SELECT nickname FROM users WHERE multi.user = users.id) AS nickanme
+        
         FROM multi
         WHERE title LIKE '%${keyword}%'
            OR description LIKE '%${keyword}%'
