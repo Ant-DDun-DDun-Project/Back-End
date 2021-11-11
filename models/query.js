@@ -260,7 +260,7 @@ class SearchQuery {
                likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
                        (SELECT COUNT(*) FROM childcomments WHERE multi = multi.multiId)) AS commentCnt,
-               (SELECT nickname FROM users WHERE multi.user = users.id) AS nickanme
+               (SELECT nickname FROM users WHERE multi.user = users.id) AS nickname
         
         FROM multi
         WHERE title LIKE '%${keyword}%'
