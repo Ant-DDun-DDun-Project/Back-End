@@ -47,11 +47,14 @@ logger.stream = {
   write: (message) => {
     const state = message.split(' ')[2].replace(/\x1b\[[0-9;]*m/g, '');
     if (state < 400) {
-      logger.info(message);
+      //status code가 400보다 아래면
+      logger.info(message); //level info
     } else if (400 <= state && state < 500) {
-      logger.warn(message);
+      //status code가 400이상 500 미만이면
+      logger.warn(message); //level warn
     } else if (state >= 500) {
-      logger.error(message);
+      //status code가 500이상이면
+      logger.error(message); //level error
     }
   },
 };
