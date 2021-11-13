@@ -7,7 +7,7 @@ module.exports = {
       .required()
       .min(5)
       .max(20)
-      .pattern(/^[a-zA-Z0-9_-]{5,20}$/),
+      .pattern(/^[a-z0-9_-]{5,20}$/),
     nickname: Joi.string().required().min(2).max(7),
     pw: Joi.string()
       .required()
