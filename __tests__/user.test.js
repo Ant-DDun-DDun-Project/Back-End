@@ -14,7 +14,7 @@ const {
   CheckDuplicatedId,
   CheckDuplicatedNick,
   logout,
-  checkLoginStatus
+  checkLoginStatus,
 } = require('../controllers/user');
 const { validatePassword } = require('../controllers/utils/password-validation');
 
@@ -231,22 +231,21 @@ describe('로그인 상태를 확인', () => {
     json: jest.fn(),
     locals: {
       user: 1,
-
-    }
+    },
   };
   const next = jest.fn();
   const err = 'DB 에러';
 
   test('현재 로그인 상태일 경우 / success: true / 와 유저 정보를 보낸다.', async () => {
     await User.findOne.mockReturnValue({
-      nickname: 'test'
+      nickname: 'test',
     });
     await checkLoginStatus(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
       user: 1,
-      nickname: 'test'
+      nickname: 'test',
     });
   });
 
@@ -255,12 +254,12 @@ describe('로그인 상태를 확인', () => {
       status: jest.fn(() => res),
       json: jest.fn(),
       locals: {
-        user: 13
-      }
+        user: 13,
+      },
     };
     await checkLoginStatus(req, res, next);
     expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({ success: false, nickname: 'GUEST' });
+    expect(res.json).toBeCalledWith({ success: true, nickname: 'GUEST' });
   });
   test('현재 로그인 상태이지만 DB에 유저 정보가 존재하지 않는 경우', async () => {
     await User.findOne.mockReturnValue(null);

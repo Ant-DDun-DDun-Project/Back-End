@@ -7,7 +7,7 @@ const clearData = {
   ageGroup: 50,
 };
 
-test('회원가입 시 아이디는 5-20자의 영문소문자, 숫자, 특수기호(-),(_)가 아니면 에러를 반환한다', async () => {
+test('회원가입 시 아이디는 5-20자의 영문대소문자, 숫자, 특수기호(-),(_)가 아니면 에러를 반환한다', async () => {
   await expect(
     schema.signUpSchema.validateAsync({
       userId: '!!!!!',
