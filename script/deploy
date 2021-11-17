@@ -1,7 +1,0 @@
-#!/bin/sh
-ssh ubuntu@13.125.98.1 <<EOF
-  cd ~/Back-End
-  git pull origin master
-  npm install
-  exit
-EOF
