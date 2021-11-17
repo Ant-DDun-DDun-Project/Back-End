@@ -8,6 +8,7 @@ import * as morgan from 'morgan';
 import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerFile from './swagger_output.json';
 import * as helmet from 'helmet';
+import { sequelize } from './models';
 
 //morgan(로그)
 // app.use(morgan('dev', { stream: logger.stream }));
@@ -20,14 +21,14 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //sequelize(ORM)
-// sequelize
-//   .sync({ force: false })
-//   .then(() => {
-//     console.log('MYSQL 연결 성공');
-//   })
-//   .catch((err) => {
-//     next(err);
-//   });
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log('MYSQL 연결 성공');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 //helmet(보안)
 app.use(helmet());

@@ -5,5 +5,5 @@ coverage
 .eslintcache
 *.DS_Store
 .env
-
+dist
 

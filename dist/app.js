@@ -9,6 +9,7 @@ require("dotenv/config");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger_output.json");
 const helmet = require("helmet");
+const models_1 = require("./models");
 //morgan(로그)
 // app.use(morgan('dev', { stream: logger.stream }));
 //cors
@@ -18,14 +19,14 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 //sequelize(ORM)
-// sequelize
-//   .sync({ force: false })
-//   .then(() => {
-//     console.log('MYSQL 연결 성공');
-//   })
-//   .catch((err) => {
-//     next(err);
-//   });
+models_1.sequelize
+    .sync({ force: false })
+    .then(() => {
+    console.log('MYSQL 연결 성공');
+})
+    .catch((err) => {
+    console.error(err);
+});
 //helmet(보안)
 app.use(helmet());
 //routing
