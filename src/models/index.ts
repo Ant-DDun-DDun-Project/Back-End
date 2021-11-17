@@ -5,6 +5,9 @@ import { EitherFactory } from './either';
 import { MultiFactory } from './multi';
 import { ChildCommentFactory } from './child-comments';
 import { CommentLikeFactory } from './comment-likes';
+import { CommentFactory } from './comments';
+import { VoteFactory } from './votes';
+import { LikeFactory } from './likes';
 
 export const sequelize = new Sequelize.Sequelize(
   config.development.database,
@@ -25,6 +28,9 @@ export const Multi = MultiFactory(sequelize);
 export const Either = EitherFactory(sequelize);
 export const ChildComment = ChildCommentFactory(sequelize);
 export const CommentLike = CommentLikeFactory(sequelize);
+export const Comment = CommentFactory(sequelize);
+export const Vote = VoteFactory(sequelize);
+export const Like = LikeFactory(sequelize);
 
 // User relationship
 User.hasMany(Either, {
@@ -47,8 +53,33 @@ User.hasMany(CommentLike, {
   sourceKey: 'id',
   onDelete: 'CASCADE',
 });
+User.hasMany(Comment, {
+  foreignKey: 'user',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+User.hasMany(Vote, {
+  foreignKey: 'user',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+User.hasMany(Like, {
+  foreignKey: 'user',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
 
 // Either relationship
+Either.hasMany(Vote, {
+  foreignKey: 'either',
+  sourceKey: 'eitherId',
+  onDelete: 'CASCADE',
+});
+Either.hasMany(Like, {
+  foreignKey: 'either',
+  sourceKey: 'eitherId',
+  onDelete: 'CASCADE',
+});
 Either.belongsTo(User, {
   foreignKey: 'user',
   as: 'users',
@@ -57,12 +88,27 @@ Either.belongsTo(User, {
 });
 
 // Multi relationship
+Multi.hasMany(CommentLike, {
+  foreignKey: 'multi',
+  sourceKey: 'multiId',
+  onDelete: 'CASCADE',
+});
+Multi.hasMany(Comment, {
+  foreignKey: 'multi',
+  sourceKey: 'multiId',
+  onDelete: 'CASCADE',
+});
 Multi.hasMany(ChildComment, {
   foreignKey: 'multi',
   sourceKey: 'multiId',
   onDelete: 'CASCADE',
 });
-Multi.hasMany(CommentLike, {
+Multi.hasMany(Vote, {
+  foreignKey: 'multi',
+  sourceKey: 'multiId',
+  onDelete: 'CASCADE',
+});
+Multi.hasMany(Like, {
   foreignKey: 'multi',
   sourceKey: 'multiId',
   onDelete: 'CASCADE',
@@ -92,11 +138,56 @@ ChildComment.belongsTo(Multi, {
   targetKey: 'multiId',
   onDelete: 'CASCADE',
 });
-// ChildComment.belongsTo(Comment, {
-//   foreignKey: 'parentComment',
-//   targetKey: 'id',
-//   onDelete: 'CASCADE',
-// });
+ChildComment.belongsTo(Comment, {
+  foreignKey: 'parentComment',
+  as: 'parentComments',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+
+// Vote relationship
+Vote.belongsTo(User, {
+  foreignKey: 'user',
+  as: 'users',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+Vote.belongsTo(Either, {
+  foreignKey: 'either',
+  as: 'Either',
+  targetKey: 'eitherId',
+  onDelete: 'CASCADE',
+});
+Vote.belongsTo(Multi, {
+  foreignKey: 'multi',
+  as: 'Multi',
+  targetKey: 'multiId',
+  onDelete: 'CASCADE',
+});
+
+// Commnet relationship
+Comment.hasMany(ChildComment, {
+  foreignKey: 'parentComment',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+Comment.hasMany(CommentLike, {
+  foreignKey: 'comment',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+Comment.belongsTo(User, {
+  foreignKey: 'user',
+  as: 'users',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+Comment.belongsTo(Multi, {
+  foreignKey: 'multi',
+  as: 'Multi',
+  targetKey: 'multiId',
+  onDelete: 'CASCADE',
+});
 
 // CommentLike relationship
 CommentLike.belongsTo(User, {
@@ -117,8 +208,29 @@ CommentLike.belongsTo(Multi, {
   targetKey: 'multiId',
   onDelete: 'CASCADE',
 });
-// CommentLike.belongsTo(Comment,{
-//   foreignKey: 'comment',
-//   targetKey: 'id',
-//   onDelete: 'CASCADE',
-// })
+CommentLike.belongsTo(Comment, {
+  foreignKey: 'comment',
+  as: 'comments',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+
+// Like relationship
+Like.belongsTo(User, {
+  foreignKey: 'user',
+  as: 'users',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+Like.belongsTo(Either, {
+  foreignKey: 'either',
+  as: 'Either',
+  targetKey: 'eitherId',
+  onDelete: 'CASCADE',
+});
+Like.belongsTo(Multi, {
+  foreignKey: 'multi',
+  as: 'Multi',
+  targetKey: 'multiId',
+  onDelete: 'CASCADE',
+});
