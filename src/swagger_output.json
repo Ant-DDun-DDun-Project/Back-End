@@ -1,0 +1,4245 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "개미들의 곡소리",
+    "description": "주식 커뮤니티 개미들의 곡소리 웹 서비스의 API 명세서"
+  },
+  "host": "starandnight.shop",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "token"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "메인 페이지"
+        ],
+        "summary": "개미의 곡소리 메인 페이지 뷰",
+        "description": "개미의 곡소리 인기글 리스트를 불러오는 API 입니다.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "either": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "안녕하세요"
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 12
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-29 10:45:41"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "닉네임"
+                      }
+                    }
+                  }
+                },
+                "multi": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "multiId": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "안녕하세요"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "부가 내용"
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 12
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-29 10:45:41"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "닉네임"
+                      },
+                      "commentCnt": {
+                        "type": "integer",
+                        "example": 6
+                      }
+                    }
+                  }
+                },
+                "postingNum": {
+                  "type": "integer",
+                  "example": 860
+                },
+                "attendNum": {
+                  "type": "integer",
+                  "example": 524
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/": {
+      "get": {
+        "tags": [
+          "검색"
+        ],
+        "summary": "특정 키워드 검색",
+        "description": "특정 키워드로 게시물을 검색하여 보여주는 API",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "either": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "안녕하세요"
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 12
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-29 10:45:41"
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "닉네임"
+                      }
+                    }
+                  }
+                },
+                "multi": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "multiId": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "안녕하세요"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "부가 내용"
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 12
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-29 10:45:41"
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "닉네임"
+                      },
+                      "commentCnt": {
+                        "type": "integer",
+                        "example": 6
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/posts": {
+      "get": {
+        "tags": [
+          "마이 페이지"
+        ],
+        "summary": "내가 쓴 글 리스트",
+        "description": "사용자가 작성한 모든 글의 목록을 최신순으로 나열하는 API",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "posts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 14
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "첫 글"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-05 14:58:33"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/polls": {
+      "get": {
+        "tags": [
+          "마이 페이지"
+        ],
+        "summary": "내가 참여한 게시글 리스트",
+        "description": "사용자가 투표에 참여한 게시글의 리스트를 불러오는 API",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "posts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 14
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "첫 글"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-05 14:58:33"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/nick": {
+      "patch": {
+        "tags": [
+          "마이 페이지"
+        ],
+        "summary": "닉네임 변경",
+        "description": "사용자가 닉네임을 변경하는 API",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nickname": {
+                  "type": "string",
+                  "description": "닉네임",
+                  "example": "hiworld"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "nickname": {
+                  "type": "string",
+                  "example": "hiworld"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "상황에 따른 실패 메세지"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/": {
+      "get": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 전체 리스트",
+        "description": "객관식 게시글의 전체 리스트를 볼러오는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "multi": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "multiId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "무야호"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "내용 설명"
+                      },
+                      "contentA": {
+                        "type": "string",
+                        "required": true,
+                        "example": "예시 A"
+                      },
+                      "contentB": {
+                        "type": "string",
+                        "required": true,
+                        "example": "예시 B"
+                      },
+                      "contentC": {
+                        "type": "string",
+                        "example": "예시 C"
+                      },
+                      "contentD": {
+                        "type": "string",
+                        "example": "예시 D"
+                      },
+                      "contentE": {
+                        "type": "string",
+                        "example": "예시 E"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-11"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 1
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voted": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "liked": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "commentCnt": {
+                        "type": "integer",
+                        "example": 3
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "test"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 작성",
+        "description": "객관식 게시글을 작성하는 API",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "제목"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "설명",
+                  "example": "설명"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 B"
+                },
+                "contentC": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 C"
+                },
+                "contentD": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 D"
+                },
+                "contentE": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 E"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "날짜",
+                  "example": "2021-12-15 10:45:36"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/ing": {
+      "get": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 투표가 진행중인 게시글",
+        "description": "객관식 게시글 중 투표가 현재 진행중인 게시글을 불러오는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "multi": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "multiId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "무야호"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "내용 설명"
+                      },
+                      "contentA": {
+                        "type": "string",
+                        "required": true,
+                        "example": "예시 A"
+                      },
+                      "contentB": {
+                        "type": "string",
+                        "required": true,
+                        "example": "예시 B"
+                      },
+                      "contentC": {
+                        "type": "string",
+                        "example": "예시 C"
+                      },
+                      "contentD": {
+                        "type": "string",
+                        "example": "예시 D"
+                      },
+                      "contentE": {
+                        "type": "string",
+                        "example": "예시 E"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-11"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voted": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "liked": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "commentCnt": {
+                        "type": "integer",
+                        "example": 3
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "test"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/complete": {
+      "get": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 중 투표가 끝난 게시글",
+        "description": "객관식 게시글 중 투표가 끝나 게시글을 불러오는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "multi": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "multiId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "무야호"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "내용 설명"
+                      },
+                      "contentA": {
+                        "type": "string",
+                        "required": true,
+                        "example": "예시 A"
+                      },
+                      "contentB": {
+                        "type": "string",
+                        "required": true,
+                        "example": "예시 B"
+                      },
+                      "contentC": {
+                        "type": "string",
+                        "example": "예시 C"
+                      },
+                      "contentD": {
+                        "type": "string",
+                        "example": "예시 D"
+                      },
+                      "contentE": {
+                        "type": "string",
+                        "example": "예시 E"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-11"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 1
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voted": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "liked": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "commentCnt": {
+                        "type": "integer",
+                        "example": 3
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "test"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/target": {
+      "get": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "특정 객관식 게시글",
+        "description": "특정 객관식 게시글의 정보를 불러오는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "multi": {
+                  "type": "object",
+                  "properties": {
+                    "multiId": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "제목"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "내용입니다"
+                    },
+                    "contentA": {
+                      "type": "string",
+                      "required": true,
+                      "example": "예시 A"
+                    },
+                    "contentB": {
+                      "type": "string",
+                      "required": true,
+                      "example": "예시 B"
+                    },
+                    "contentC": {
+                      "type": "string",
+                      "example": "예시 C"
+                    },
+                    "contentD": {
+                      "type": "string",
+                      "example": "예시 D"
+                    },
+                    "contentE": {
+                      "type": "string",
+                      "example": "예시 E"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20"
+                    },
+                    "completed": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "editedDated": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "commentCnt": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "voted": {
+                      "type": "string",
+                      "example": "A"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "votedCntA": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "votedCntB": {
+                      "type": "integer",
+                      "example": 10
+                    },
+                    "votedCntC": {
+                      "type": "integer",
+                      "example": 8
+                    },
+                    "votedCntD": {
+                      "type": "integer",
+                      "example": 4
+                    },
+                    "votedCntE": {
+                      "type": "integer",
+                      "example": 20
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "example": "관리자"
+                    }
+                  }
+                },
+                "comment": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "comment": {
+                        "type": "string",
+                        "example": "댓글 내용"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-27 11:11:11"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 1
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": "2021-10-28 12:11:8"
+                      },
+                      "deleted": {
+                        "type": "boolean",
+                        "example": 1
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "multi": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "commentLikeCnt": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "liked": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "testNick"
+                      }
+                    }
+                  }
+                },
+                "childComment": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "comment": {
+                        "type": "string",
+                        "example": "댓글 내용"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-27 11:11:11"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "deleted": {
+                        "type": "boolean",
+                        "example": 1
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "multi": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "parentComment": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "commentLikeCnt": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "testNick"
+                      },
+                      "liked": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}": {
+      "patch": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 수정",
+        "description": "작성자가 객관식 게시글을 수정하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "수정된 제목"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "설명",
+                  "example": "수정된 설명"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "예시",
+                  "required": true,
+                  "example": "예시 B"
+                },
+                "contentC": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 C"
+                },
+                "contentD": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 D"
+                },
+                "contentE": {
+                  "type": "string",
+                  "description": "예시",
+                  "example": "예시 E"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "날짜",
+                  "example": "2021-9-15 10:45:36"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 삭제",
+        "description": "작성자가 객관식 게시글을 삭제하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/likes": {
+      "post": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 좋아요",
+        "description": "사용자가 객관식 게시글을 좋아요하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 6
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/votes": {
+      "post": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 투표",
+        "description": "객관식 게시글 선택지에 투표를 하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "select": {
+                  "type": "string",
+                  "description": "항목",
+                  "example": "A"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "voteCntA": {
+                  "type": "integer",
+                  "example": 12
+                },
+                "voteCntB": {
+                  "type": "integer",
+                  "example": 65
+                },
+                "voteCntC": {
+                  "type": "integer",
+                  "example": 28
+                },
+                "voteCntD": {
+                  "type": "integer",
+                  "example": 5
+                },
+                "voteCntE": {
+                  "type": "integer",
+                  "example": 12
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/complete": {
+      "patch": {
+        "tags": [
+          "객관식 게시글"
+        ],
+        "summary": "객관식 게시글 투표 종료",
+        "description": "작성자가 객관식 게시글 투표 상황을 종료하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/comment": {
+      "post": {
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "객관식 게시글 댓글 작성",
+        "description": "객관식 게시글에 댓글을 작성하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "댓글 내용",
+                  "example": "댓글 예시입니다."
+                },
+                "date": {
+                  "type": "string",
+                  "description": "작성 날짜",
+                  "example": "2021-10-20 10:00:00"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "newComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 13
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 10:10:10"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/comment/{comment_id}/edit": {
+      "patch": {
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "객관식 게시글 댓글 수정",
+        "description": "객관식 게시글의 댓글을 수정하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "수정할 내용",
+                  "example": "수정할 내용"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "수정한 날짜",
+                  "example": "2021-10-30 10:00:00"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "newComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "댓글 수정 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 10:10:10"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 13
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/comment/{comment_id}/delete": {
+      "patch": {
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "객관식 댓글 삭제",
+        "description": "객관식 댓글 삭제 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "newComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 11
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "삭제할 내용"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 10:10:10"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": "2021-10-20 20:10:10"
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 3
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/comment/{comment_id}/likes": {
+      "post": {
+        "tags": [
+          "객관식 게시글 댓글"
+        ],
+        "summary": "댓글좋아요 기능",
+        "description": "객관식 게시글 댓글에 좋아요를 하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 10
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/comment/{comment_id}": {
+      "post": {
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "객관식 게시글 대댓글 작성",
+        "description": "객관식 게시글 댓글에 대댓글을 작성하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "대댓글 내용",
+                  "example": "대댓글 예시입니다."
+                },
+                "date": {
+                  "type": "string",
+                  "description": "작성 날짜",
+                  "example": "2021-10-20 10:00:00"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/childComment/{comment_id}/edit": {
+      "patch": {
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "객관식 게시글 대댓글 수정",
+        "description": "객관식 게시글 대댓글을 수정하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "내용",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "수정할 내용",
+                  "example": "수정할 내용"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "수정한 날짜",
+                  "example": "2021-10-30 10:00:00"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/childComment/{comment_id}/delete": {
+      "patch": {
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "객관식 대댓글 삭제",
+        "description": "객관식 대댓글 삭제 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "childComment": {
+                  "type": "object",
+                  "properties": {
+                    "nickname": {
+                      "type": "string",
+                      "example": "BadBoy"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "multi": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "parentComment": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "대댓글 예시입니다."
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-20 11:13:11"
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/multi/{multi_id}/childComment/{comment_id}/likes": {
+      "post": {
+        "tags": [
+          "객관식 게시글 대댓글"
+        ],
+        "summary": "대댓글좋아요 기능",
+        "description": "객관식 게시글 대댓글에 좋아요를 하는 API",
+        "parameters": [
+          {
+            "name": "multi_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 10
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/signup": {
+      "post": {
+        "tags": [
+          "회원 가입"
+        ],
+        "summary": "회원 가입",
+        "description": "회원 가입을 위한 API",
+        "parameters": [
+          {
+            "name": "회원 가입",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "testid"
+                },
+                "nickname": {
+                  "type": "string",
+                  "example": "helloworld"
+                },
+                "pw": {
+                  "type": "string",
+                  "example": "disco123@"
+                },
+                "confirmPw": {
+                  "type": "string",
+                  "example": "disco123@"
+                },
+                "ageGroup": {
+                  "type": "integer",
+                  "example": 10
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 / 상황에 따라 메세지도 전송됩니다.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": "false"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "상황에 따른 실패 메세지"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/signup/id": {
+      "post": {
+        "tags": [
+          "회원 가입"
+        ],
+        "summary": "아이디 중복 체크",
+        "description": "회원 가입 시 중복된 아이디인지를 판별하는 API",
+        "parameters": [
+          {
+            "name": "아이디",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "description": "아이디",
+                  "example": "testid"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/signup/nick": {
+      "post": {
+        "tags": [
+          "회원 가입"
+        ],
+        "summary": "닉네임 중복 체크",
+        "description": "회원 가입 시 닉네임 중복을 확인하는 API",
+        "parameters": [
+          {
+            "name": "아이디",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nickname": {
+                  "type": "string",
+                  "description": "닉네임 중복",
+                  "example": "helloworld"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "로그인"
+        ],
+        "summary": "로그인",
+        "description": "로그인 API",
+        "parameters": [
+          {
+            "name": "로그인",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "description": "유저 아이디",
+                  "example": "testid"
+                },
+                "pw": {
+                  "type": "string",
+                  "description": "유저 비밀번호",
+                  "example": "testid123@"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nickname": {
+                  "type": "string",
+                  "example": "hello world"
+                },
+                "userId": {
+                  "type": "string",
+                  "example": "testid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login/": {
+      "get": {
+        "tags": [
+          "로그인"
+        ],
+        "description": "로그인 상태 확인",
+        "summary": "현재 로그인 상태인지를 확인하는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nickname": {
+                  "type": "string",
+                  "description": "로그인 유저와 비로그인 유저로 나뉜다.",
+                  "example": "testNick OR GUEST"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout/": {
+      "get": {
+        "tags": [
+          "로그아웃"
+        ],
+        "summary": "로그아웃",
+        "description": "로그아웃 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "비정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/": {
+      "get": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 전체 게시글 리스트",
+        "description": "양자택일 전체 게시글 리스트를 불러오는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "either": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "예제"
+                      },
+                      "contentA": {
+                        "type": "string",
+                        "example": "내용 A"
+                      },
+                      "contentB": {
+                        "type": "string",
+                        "example": "내용 B"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-10"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": "3"
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voteCntA": {
+                        "type": "integer",
+                        "example": 4
+                      },
+                      "voteCntB": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "test"
+                      },
+                      "liked": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voted": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 작성",
+        "description": "양자택일 게시글을 작성하는 API",
+        "parameters": [
+          {
+            "name": "작성",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "제목"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "선택지 A",
+                  "example": "예제 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "선택지 B",
+                  "example": "예제 B"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "작성 날짜",
+                  "example": "2021-10-29 21:34:10"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/ing": {
+      "get": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 투표 진행 상태의 게시물",
+        "description": "양자택일 게시물 중 투표가 진행중인 게시물의 리스트를 불러오는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "either": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "예제"
+                      },
+                      "contentA": {
+                        "type": "string",
+                        "example": "내용 A"
+                      },
+                      "contentB": {
+                        "type": "string",
+                        "example": "내용 B"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-10"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": "3"
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voteCntA": {
+                        "type": "integer",
+                        "example": 4
+                      },
+                      "voteCntB": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "test"
+                      },
+                      "liked": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voted": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/complete": {
+      "get": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 투표 종료 상태의 게시물",
+        "description": "양자택일 게시물 중 투표가 종료된 게시물의 리스트를 불러오는 API",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "either": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "eitherId": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "예제"
+                      },
+                      "contentA": {
+                        "type": "string",
+                        "example": "내용 A"
+                      },
+                      "contentB": {
+                        "type": "string",
+                        "example": "내용 B"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-10-10"
+                      },
+                      "completed": {
+                        "type": "boolean",
+                        "example": 1
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": 0
+                      },
+                      "editedDate": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "likeCnt": {
+                        "type": "integer",
+                        "example": "3"
+                      },
+                      "user": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voteCntA": {
+                        "type": "integer",
+                        "example": 4
+                      },
+                      "voteCntB": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "example": "test"
+                      },
+                      "liked": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "voted": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/{either_id}/target": {
+      "get": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 특정 게시물 불러오기",
+        "description": "양자택일 특정 게시물을 불러오는 API",
+        "parameters": [
+          {
+            "name": "either_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "either": {
+                  "type": "object",
+                  "properties": {
+                    "eitherId": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "user": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "예제"
+                    },
+                    "contentA": {
+                      "type": "string",
+                      "example": "내용 A"
+                    },
+                    "contentB": {
+                      "type": "string",
+                      "example": "내용 B"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-10-10"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "editedDate": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "likeCnt": {
+                      "type": "integer",
+                      "example": "3"
+                    },
+                    "completed": {
+                      "type": "boolean",
+                      "example": 0
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "voteCntA": {
+                      "type": "integer",
+                      "example": 4
+                    },
+                    "voteCntB": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "liked": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "voted": {
+                      "type": "integer",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/{either_id}/edit": {
+      "patch": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 수정",
+        "description": "작성자가 양자택일 게시글을 수정하는 API",
+        "parameters": [
+          {
+            "name": "either_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "작성",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "제목",
+                  "example": "수정 제목"
+                },
+                "contentA": {
+                  "type": "string",
+                  "description": "선택지 A",
+                  "example": "수정된 예제 A"
+                },
+                "contentB": {
+                  "type": "string",
+                  "description": "선택지 B",
+                  "example": "수정된 예제 B"
+                },
+                "editedDate": {
+                  "type": "string",
+                  "description": "수정된 날짜",
+                  "example": "2021-10-29 21:34:10"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/{either_id}": {
+      "delete": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 삭제",
+        "description": "작성자가 양자택일 게시글을 삭제하는 API",
+        "parameters": [
+          {
+            "name": "either_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/{either_id}/votes": {
+      "post": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글에 대한 투표",
+        "description": "양자택일 게시글에 대한 투표를 하는 API",
+        "parameters": [
+          {
+            "name": "either_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vote": {
+                  "type": "string",
+                  "description": "투표",
+                  "example": "A"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "voteCntA": {
+                  "type": "integer",
+                  "example": 8
+                },
+                "voteCntB": {
+                  "type": "integer",
+                  "example": 12
+                },
+                "either": {
+                  "type": "integer",
+                  "example": 3
+                },
+                "vote": {
+                  "type": "string",
+                  "example": "B"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/{either_id}/complete": {
+      "patch": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 종료",
+        "description": "작성자가 양자택일 게시글을 종료하는 API",
+        "parameters": [
+          {
+            "name": "either_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/either/{either_id}/likes": {
+      "post": {
+        "tags": [
+          "양자택일 게시글"
+        ],
+        "summary": "양자택일 게시글 좋아요",
+        "description": "사용자가 양자택일 게시글을 좋아요하는 API",
+        "parameters": [
+          {
+            "name": "either_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적인 응답",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "likeCnt": {
+                  "type": "integer",
+                  "example": 12
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "권한이 없는 요청",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "users": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "Id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "userId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "nickname": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "pw": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "ageGroup": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "exp": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "either": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "eitherId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "title": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "contentA": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "contentB": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "date": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "completed": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Boolean"
+                }
+              }
+            },
+            "edited": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Boolean"
+                }
+              }
+            },
+            "editedDate": {
+              "type": "object",
+              "properties": {
+                "editedDate": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "multi": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "multiId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "title": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "description": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "contentA": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "contentB": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "contentC": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "contentD": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "contentE": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "date": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "completed": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Boolean"
+                }
+              }
+            },
+            "edited": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Boolean"
+                }
+              }
+            },
+            "editedDate": {
+              "type": "object",
+              "properties": {
+                "editedDate": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "comments": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "multi": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "comment": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "date": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "edited": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Boolean"
+                }
+              }
+            },
+            "editedDate": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "childComments": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "multi": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "parentComment": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "comment": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "date": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "edited": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Boolean"
+                }
+              }
+            },
+            "editedDate": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "commentLikes": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "childComment": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "comment": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "likes": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "either": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "multi": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "votes": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "either": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "multi": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "vote": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
