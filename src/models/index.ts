@@ -49,11 +49,6 @@ User.hasMany(Vote, {
   sourceKey: 'id',
   onDelete: 'CASCADE',
 });
-// Multi.hasMany(Comment, {
-//   foreignKey: 'multi',
-//   sourceKey: 'multiId',
-//   onDelete: 'CASCADE',
-// });
 Multi.hasMany(Vote, {
   foreignKey: 'multi',
   sourceKey: 'multiId',
@@ -74,18 +69,6 @@ Either.hasMany(Like, {
   sourceKey: 'eitherId',
   onDelete: 'CASCADE',
 });
-
-//
-// Comment.hasMany(CommentLike, {
-//   foreignKey: 'comment',
-//   sourceKey: 'id',
-//   onDelete: 'CASCADE',
-// });
-// Comment.hasMany(ChildComment, {
-//   foreignKey: 'parentComment',
-//   sourceKey: 'id',
-//   onDelete: 'CASCADE',
-// });
 // or instead of that, maybe many users have many either
 Either.belongsTo(User, {
   foreignKey: 'user',
