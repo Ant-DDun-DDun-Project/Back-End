@@ -24,7 +24,7 @@ export type MultiStatic = typeof Model & {
 
 export function MultiFactory(sequelize: Sequelize): MultiStatic {
   return <MultiStatic>sequelize.define(
-    'multi',
+    'Multi',
     {
       multiId: {
         type: DataTypes.INTEGER,

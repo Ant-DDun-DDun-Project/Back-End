@@ -17,7 +17,7 @@ export type UserStatic = typeof Model & {
 
 export function UserFactory(sequelize: Sequelize): UserStatic {
   return <UserStatic>sequelize.define(
-    'users',
+    'User',
     {
       id: {
         type: DataTypes.INTEGER,

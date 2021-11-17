@@ -16,7 +16,7 @@ export type CommentLikeStatic = typeof Model & {
 
 export function CommentLikeFactory(sequelize: Sequelize): CommentLikeStatic {
   return <CommentLikeStatic>sequelize.define(
-    'commentlikes',
+    'CommentLike',
     {
       id: {
         type: DataTypes.INTEGER,

@@ -88,7 +88,7 @@ ChildComment.belongsTo(User, {
 });
 ChildComment.belongsTo(Multi, {
   foreignKey: 'multi',
-  as: 'multies',
+  as: 'Multi',
   targetKey: 'multiId',
   onDelete: 'CASCADE',
 });
@@ -113,7 +113,7 @@ CommentLike.belongsTo(ChildComment, {
 });
 CommentLike.belongsTo(Multi, {
   foreignKey: 'multi',
-  as: 'multies',
+  as: 'Multi',
   targetKey: 'multiId',
   onDelete: 'CASCADE',
 });

@@ -21,7 +21,7 @@ export type ChildCommentStatic = typeof Model & {
 
 export function ChildCommentFactory(sequelize: Sequelize): ChildCommentStatic {
   return <ChildCommentStatic>sequelize.define(
-    'childcomments',
+    'ChildComment',
     {
       id: {
         type: DataTypes.INTEGER,
