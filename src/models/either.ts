@@ -21,7 +21,7 @@ export type EitherStatic = typeof Model & {
 
 export function EitherFactory(sequelize: Sequelize): EitherStatic {
   return <EitherStatic>sequelize.define(
-    'either',
+    'Either',
     {
       eitherId: {
         type: DataTypes.INTEGER,
