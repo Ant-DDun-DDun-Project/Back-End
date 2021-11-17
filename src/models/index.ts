@@ -1,8 +1,10 @@
 import * as Sequelize from 'sequelize';
+import { config } from '../config/config';
 import { UserFactory } from './users';
 import { EitherFactory } from './either';
-import { config } from '../config/config';
 import { MultiFactory } from './multi';
+import { ChildCommentFactory } from './child-comments';
+import { CommentLikeFactory } from './comment-likes';
 
 export const sequelize = new Sequelize.Sequelize(
   config.development.database,
@@ -21,8 +23,10 @@ export const sequelize = new Sequelize.Sequelize(
 export const User = UserFactory(sequelize);
 export const Multi = MultiFactory(sequelize);
 export const Either = EitherFactory(sequelize);
+export const ChildComment = ChildCommentFactory(sequelize);
+export const CommentLike = CommentLikeFactory(sequelize);
 
-// Users have either then lets create that relationship
+// User relationship
 User.hasMany(Either, {
   foreignKey: 'user',
   sourceKey: 'id',
@@ -33,11 +37,34 @@ User.hasMany(Multi, {
   sourceKey: 'id',
   onDelete: 'CASCADE',
 });
-// or instead of that, maybe many users have many either
+User.hasMany(ChildComment, {
+  foreignKey: 'user',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+User.hasMany(CommentLike, {
+  foreignKey: 'user',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+
+// Either relationship
 Either.belongsTo(User, {
   foreignKey: 'user',
   as: 'users',
   targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+
+// Multi relationship
+Multi.hasMany(ChildComment, {
+  foreignKey: 'multi',
+  sourceKey: 'multiId',
+  onDelete: 'CASCADE',
+});
+Multi.hasMany(CommentLike, {
+  foreignKey: 'multi',
+  sourceKey: 'multiId',
   onDelete: 'CASCADE',
 });
 Multi.belongsTo(User, {
@@ -46,3 +73,52 @@ Multi.belongsTo(User, {
   targetKey: 'id',
   onDelete: 'CASCADE',
 });
+
+// ChildComment relationship
+ChildComment.hasMany(CommentLike, {
+  foreignKey: 'childComment',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+ChildComment.belongsTo(User, {
+  foreignKey: 'user',
+  as: 'users',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+ChildComment.belongsTo(Multi, {
+  foreignKey: 'multi',
+  as: 'multies',
+  targetKey: 'multiId',
+  onDelete: 'CASCADE',
+});
+// ChildComment.belongsTo(Comment, {
+//   foreignKey: 'parentComment',
+//   targetKey: 'id',
+//   onDelete: 'CASCADE',
+// });
+
+// CommentLike relationship
+CommentLike.belongsTo(User, {
+  foreignKey: 'user',
+  as: 'users',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+CommentLike.belongsTo(ChildComment, {
+  foreignKey: 'childComment',
+  as: 'childComments',
+  targetKey: 'id',
+  onDelete: 'CASCADE',
+});
+CommentLike.belongsTo(Multi, {
+  foreignKey: 'multi',
+  as: 'multies',
+  targetKey: 'multiId',
+  onDelete: 'CASCADE',
+});
+// CommentLike.belongsTo(Comment,{
+//   foreignKey: 'comment',
+//   targetKey: 'id',
+//   onDelete: 'CASCADE',
+// })
