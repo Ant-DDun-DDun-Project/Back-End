@@ -72,7 +72,7 @@ export class EitherQuery {
             ORDER BY eitherId DESC;`;
   };
 
-  public getTargetEither = (user: number, either_id: number) => {
+  public getTargetEither = (user: number, either_id: string) => {
     return `
         SELECT eitherId,
                either.user,
@@ -137,7 +137,7 @@ export class MultiQuery {
     `;
   };
 
-  public getTargetMulti = (user: number, multi_id: number) => {
+  public getTargetMulti = (user: number, multi_id: string) => {
     return `
         SELECT *,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = ${multi_id}) +
@@ -155,7 +155,7 @@ export class MultiQuery {
     `;
   };
 
-  public getComment = (user: number, multi_id: number) => {
+  public getComment = (user: number, multi_id: string) => {
     return `
         SELECT *,
                (SELECT COUNT(*) FROM commentlikes WHERE commentlikes.comment = comments.id)                AS CommentLikeCnt,
@@ -167,7 +167,7 @@ export class MultiQuery {
     `;
   };
 
-  public getChildComment = (user: number, multi_id: number) => {
+  public getChildComment = (user: number, multi_id: string) => {
     return `
         SELECT *,
                (SELECT COUNT(*) FROM commentlikes WHERE commentlikes.childComment = childcomments.id) AS commentLikeCnt,
@@ -184,7 +184,7 @@ export class MultiQuery {
 }
 
 export class ProfileQuery {
-  public getMyPosts = (user_id: number) => {
+  public getMyPosts = (user_id: string) => {
     return `
         SELECT multiId,
                user,
@@ -199,7 +199,7 @@ export class ProfileQuery {
     `;
   };
 
-  public getMyPollsForEither = (user_id: number) => {
+  public getMyPollsForEither = (user_id: string) => {
     return `
         SELECT either AS eitherId,
                either.user,
@@ -217,7 +217,7 @@ export class ProfileQuery {
     `;
   };
 
-  public getMyPollsForMulti = (user_id: number) => {
+  public getMyPollsForMulti = (user_id: string) => {
     return `
         SELECT multi                                                                     AS multiId,
                multi.user,
