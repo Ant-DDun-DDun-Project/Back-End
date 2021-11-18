@@ -4,7 +4,7 @@ import { User } from '../models';
 class userControllers {
   public checkLoginStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = res.locals.user; //auth 미들웨어를 통해서 받은 user의 고유id
+      const user: number = res.locals.user; //auth 미들웨어를 통해서 받은 user의 고유id
       if (user === 13) {
         //guest일 경우
         res.status(200).json({ success: true, nickname: 'GUEST' }); //status code는 200, success: true, nickname: 'GUEST'라는 메세지를 보내준다.
