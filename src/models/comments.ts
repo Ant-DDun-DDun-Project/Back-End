@@ -3,9 +3,9 @@ import { BuildOptions, DataTypes, Model, Sequelize } from 'sequelize';
 export interface CommentAttributes {
   id?: number;
   comment: string;
-  data: string;
+  date: string;
   edited?: boolean;
-  editedData?: string;
+  editedDate?: string;
   deleted?: boolean;
   likeCnt?: number;
   user?: number | string;
@@ -49,9 +49,10 @@ export function CommentFactory(sequelize: Sequelize): CommentStatic {
       },
       likeCnt: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
-      }
-    }, {
+        defaultValue: 0,
+      },
+    },
+    {
       timestamps: false,
       underscored: false,
       modelName: 'Comment',
@@ -60,5 +61,5 @@ export function CommentFactory(sequelize: Sequelize): CommentStatic {
       charset: 'utf8',
       collate: 'utf8_general_ci',
     }
-  )
+  );
 }

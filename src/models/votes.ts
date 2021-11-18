@@ -4,7 +4,7 @@ export interface VoteAttributes {
   id?: number;
   vote: string;
   user?: number | string;
-  either?: number | string
+  either?: number | string;
   multi?: number | string;
 }
 
@@ -27,7 +27,7 @@ export function VoteFactory(sequelize: Sequelize): VoteStatic {
       },
       vote: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
     },
     {

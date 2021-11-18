@@ -17,8 +17,7 @@ export type LikeStatic = typeof Model & {
 export function LikeFactory(sequelize: Sequelize): LikeStatic {
   return <LikeStatic>sequelize.define(
     'Like',
-    {
-    },
+    {},
     {
       timestamps: false,
       underscored: false,
