@@ -3,6 +3,7 @@ import { BuildOptions, DataTypes, Model, Sequelize } from 'sequelize';
 export interface MultiAttributes {
   multiId?: number;
   title: string;
+  description: string;
   contentA: string;
   contentB: string;
   contentC?: string;
@@ -33,6 +34,10 @@ export function MultiFactory(sequelize: Sequelize): MultiStatic {
         allowNull: false,
       },
       title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
         type: DataTypes.STRING,
         allowNull: false,
       },
