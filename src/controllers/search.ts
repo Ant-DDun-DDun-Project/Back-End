@@ -31,7 +31,7 @@ class searchControllers {
       }
       const posts :object[] = searchedPosts.flat().sort((b, a) => {
         // @ts-ignore
-        return a['date'] < b['date'] ? -1 : a['date'] > b['date'] ? 1 : 0;
+        return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
       }); //다차원 배열을 1차원 배열로 만든 후 날짜순으로 정렬
       res.status(200).json({ success: true, posts }); //status code는 200, success: true, 검색된 포스트들을 보내준다.
     } catch (err) {
