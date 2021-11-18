@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.stream = void 0;
 const winston = require("winston");
 const winstonDaily = require("winston-daily-rotate-file");
 require("dotenv/config");
@@ -37,22 +38,24 @@ const logger = winston.createLogger({
         }),
     ],
 });
-// logger.stream = {
-//   // morgan wiston 설정
-//   write: (message) => {
-//     const state = message.split(' ')[2].replace(/\x1b\[[0-9;]*m/g, '');
-//     if (state < 400) {
-//       //status code가 400보다 아래면
-//       logger.info(message); //level info
-//     } else if (400 <= state && state < 500) {
-//       //status code가 400이상 500 미만이면
-//       logger.warn(message); //level warn
-//     } else if (state >= 500) {
-//       //status code가 500이상이면
-//       logger.error(message); //level error
-//     }
-//   },
-// };
+exports.stream = {
+    // morgan wiston 설정
+    write: (message) => {
+        const state = Number(message.split(' ')[2].replace(/\x1b\[[0-9;]*m/g, ''));
+        if (state < 400) {
+            //status code가 400보다 아래면
+            logger.info(message); //level info
+        }
+        else if (400 <= state && state < 500) {
+            //status code가 400이상 500 미만이면
+            logger.warn(message); //level warn
+        }
+        else if (state >= 500) {
+            //status code가 500이상이면
+            logger.error(message); //level error
+        }
+    },
+};
 // Production 환경이 아닌 경우(dev 등) 배포 환경에서는 최대한 자원을 안잡아 먹는 로그를 출력해야함
 if (process.env.NODE_ENV == 'production') {
     logger.add(new winston.transports.Console({
@@ -61,5 +64,4 @@ if (process.env.NODE_ENV == 'production') {
         ),
     }));
 }
-module.exports = logger;
 //# sourceMappingURL=logger.js.map

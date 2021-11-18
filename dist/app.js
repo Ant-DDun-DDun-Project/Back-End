@@ -6,12 +6,14 @@ const app = express();
 const compression = require("compression");
 const cors = require("cors");
 require("dotenv/config");
+const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger_output.json");
 const helmet = require("helmet");
 const models_1 = require("./models");
+const logger_1 = require("./logger");
 //morgan(로그)
-// app.use(morgan('dev', { stream: logger.stream }));
+app.use(morgan('dev', { stream: logger_1.stream }));
 //cors
 const corsOptions = {
     origin: true, // 전체 허용
