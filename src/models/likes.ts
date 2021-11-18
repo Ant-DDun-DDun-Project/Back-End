@@ -2,9 +2,9 @@ import { BuildOptions, Model, Sequelize } from 'sequelize';
 
 export interface LikeAttributes {
   id?: number;
-  user?: number;
-  either?: number;
-  multi?: number;
+  user?: number | string;
+  either?: number | string;
+  multi?: number | string;
 }
 
 export interface LikeModel extends Model<LikeAttributes>, LikeAttributes {}

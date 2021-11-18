@@ -8,9 +8,9 @@ export interface ChildCommentAttributes {
   editedDate?: string;
   deleted?: boolean;
   likeCnt?: number;
-  user?: number;
-  multi?: number;
-  parentComment?: number;
+  user?: number | string;
+  multi?: number | string;
+  parentComment?: number | string;
 }
 export interface ChildCommentModel extends Model<ChildCommentAttributes>, ChildCommentAttributes {}
 export class ChildComment extends Model<ChildCommentModel, ChildCommentAttributes> {}

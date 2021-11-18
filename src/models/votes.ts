@@ -3,9 +3,9 @@ import { BuildOptions, DataTypes, Model, Sequelize } from 'sequelize';
 export interface VoteAttributes {
   id?: number;
   vote: string;
-  user?: number;
-  either?: number;
-  multi?: number;
+  user?: number | string;
+  either?: number | string
+  multi?: number | string;
 }
 
 export interface VoteModel extends Model<VoteAttributes>, VoteAttributes {}
@@ -29,18 +29,6 @@ export function VoteFactory(sequelize: Sequelize): VoteStatic {
         type: DataTypes.STRING,
         allowNull: false
       },
-      // user: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false,
-      // },
-      // either: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false,
-      // },
-      // multi: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false,
-      // }
     },
     {
       timestamps: false,
