@@ -47,7 +47,7 @@ class eitherControllers {
         const unsortedEither: object[] = await sequelize.query(eitherQuery.getEither(user), {
           type: QueryTypes.SELECT,
         }); //전체 게시물
-        const either = sortEither(unsortedEither, either_id); //해당 고유id를 가진 포스팅이 가장 먼저 오도록 정렬
+        const either: object[] = sortEither(unsortedEither, either_id); //해당 고유id를 가진 포스팅이 가장 먼저 오도록 정렬
         res.status(200).json({
           success: true,
           either,
@@ -76,7 +76,7 @@ class eitherControllers {
         const unsortedEither: object[] = await sequelize.query(eitherQuery.getIngEither(user), {
           type: QueryTypes.SELECT,
         }); //찬반투표 진행중 게시물
-        const either = sortEither(unsortedEither, either_id); //해당 고유id를 가진 포스팅이 가장 먼저 오도록 정렬
+        const either: object[] = sortEither(unsortedEither, either_id); //해당 고유id를 가진 포스팅이 가장 먼저 오도록 정렬
         res.status(200).json({
           success: true,
           either,
@@ -105,7 +105,7 @@ class eitherControllers {
         const unsortedEither: object[] = await sequelize.query(eitherQuery.getCompleteEither(user), {
           type: QueryTypes.SELECT,
         }); //찬반투표 종료 게시물
-        const either = sortEither(unsortedEither, either_id); //해당 고유id를 가진 포스팅이 가장 먼저 오도록 정렬
+        const either: object[] = sortEither(unsortedEither, either_id); //해당 고유id를 가진 포스팅이 가장 먼저 오도록 정렬
         res.status(200).json({
           success: true,
           either,
