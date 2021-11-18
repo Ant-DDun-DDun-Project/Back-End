@@ -37,7 +37,11 @@ export function CommentFactory(sequelize: Sequelize): CommentStatic {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      editedData: {
+      date: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      editedDate: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
