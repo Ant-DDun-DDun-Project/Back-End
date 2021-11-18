@@ -1,4 +1,4 @@
-interface unsortedEither {
+interface UnsortedEither {
   eitherId?: number;
   title?: string;
   contentA?: string;
@@ -9,9 +9,14 @@ interface unsortedEither {
   editedDate?: string;
   likeCnt?: number;
   user?: number | string;
+  voteCntA?: number;
+  voteCntB?: number;
+  nickname?: string;
+  voted?: string;
+  liked?: number;
 }
 
-export function sortEither(unsortedPosts: unsortedEither[], posts_id: string): object[] {
+export function sortEither(unsortedPosts: UnsortedEither[], posts_id: string): object[] {
   //정렬되지 않은 포스팅과 특정 찬반 고유id를 인자로 받음
   const either: object[] = []; //뒤에 붙일 찬반 포스팅을 담을 배열 생성
   // @ts-ignore
