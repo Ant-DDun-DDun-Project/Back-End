@@ -4,7 +4,7 @@ import { QueryTypes } from 'sequelize';
 import joi from './joi';
 import { EitherQuery } from '../models/query';
 import { EitherModel } from '../models/either';
-import { sortEither} from './utils/sort-posts';
+import { sortEither } from './utils/sort-posts';
 
 const eitherQuery = new EitherQuery();
 
@@ -31,7 +31,7 @@ class eitherControllers {
   // 찬반투표 게시글 뷰
   public getEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const either_id: string = req.params.either_id as string; //req.params로 찬반투표 포스팅의 고유 id를 받아온다, 상세페이지나 특정페이지를 본 경우에는 해당 고유 id가 오고 아닐시 all이라는 문자로 온다.
+      const { either_id } = req.params; //req.params로 찬반투표 포스팅의 고유 id를 받아온다, 상세페이지나 특정페이지를 본 경우에는 해당 고유 id가 오고 아닐시 all이라는 문자로 온다.
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       if (either_id === 'all') {
         //뒤로가기나 해당 게시물 클릭을 통해서 main view로 온 것이 아닐때
@@ -60,7 +60,7 @@ class eitherControllers {
   //찬반투표 진행중 게시글 뷰
   public getIngEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const either_id: string = req.params.either_id as string; //req.params로 찬반투표 포스팅의 고유 id를 받아온다, 상세페이지나 특정페이지를 본 경우에는 해당 고유 id가 오고 아닐시 all이라는 문자로 온다.
+      const { either_id } = req.params; //req.params로 찬반투표 포스팅의 고유 id를 받아온다, 상세페이지나 특정페이지를 본 경우에는 해당 고유 id가 오고 아닐시 all이라는 문자로 온다.
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       if (either_id === 'all') {
         //뒤로가기나 해당 게시물 클릭을 통해서 main view로 온 것이 아닐때
@@ -89,7 +89,7 @@ class eitherControllers {
   //찬반투표 투표종료 게시글 뷰
   public getCompleteEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const either_id: string = req.params.either_id as string; //req.params로 찬반투표 포스팅의 고유 id를 받아온다, 상세페이지나 특정페이지를 본 경우에는 해당 고유 id가 오고 아닐시 all이라는 문자로 온다.
+      const { either_id } = req.params; //req.params로 찬반투표 포스팅의 고유 id를 받아온다, 상세페이지나 특정페이지를 본 경우에는 해당 고유 id가 오고 아닐시 all이라는 문자로 온다.
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       if (either_id === 'all') {
         //뒤로가기나 해당 게시물 클릭을 통해서 main view로 온 것이 아닐때
@@ -123,7 +123,7 @@ class eitherControllers {
       } = await joi.editEitherSchema.validateAsync(
         req.body
       ); //req.body로 찬반투표 게시물 수정할 데이터(제목, 선택지, 수정날짜)를 받아온다
-      const either_id: string = req.params.either_id as string; //해당 게시물의 고유 id
+      const { either_id } = req.params; //해당 게시물의 고유 id
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       const userCheck: EitherModel = await Either.findOne({ where: { eitherId: either_id, user } }); //현재 로그인한 user가 작성한 포스팅인지
       if (userCheck) {
@@ -144,7 +144,7 @@ class eitherControllers {
   //찬반투표 게시글 삭제
   public deleteEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const either_id: string = req.params.either_id as string; //해당 게시물의 고유id
+      const { either_id } = req.params; //해당 게시물의 고유id
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       const userCheck: EitherModel = await Either.findOne({ where: { eitherId: either_id, user } }); //현재 로그인한 user가 작성한 포스팅인지
       if (userCheck) {
@@ -162,7 +162,7 @@ class eitherControllers {
   // 찬반투표 게시글 좋아요
   public likeEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const either_id: string = req.params.either_id as string; //해당 게시물의 고유id
+      const { either_id } = req.params; //해당 게시물의 고유id
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       if (!(await Like.findOne({ where: { either: either_id, user } }))) {
         //해당 게시물에 좋아요를 한적이 없으면
@@ -188,7 +188,7 @@ class eitherControllers {
   public voteEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { vote }: { vote: string } = await joi.voteEitherSchema.validateAsync(req.body); //req.body로 선택지를 받아옴
-      const either_id: string = req.params.either_id as string; //req.params로 해당 게시물의 고유id를 받아옴
+      const { either_id } = req.params; //req.params로 해당 게시물의 고유id를 받아옴
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       if (await Vote.findOne({ where: { user, either: either_id } })) {
         //이미 투표한 기록이 존재하는 경우
@@ -216,7 +216,7 @@ class eitherControllers {
 // 찬반 투표 종료하기
   public completeEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const either_id = req.params.either_id as string; //req.params로 해당 게시물의 고유id를 받아옴
+      const { either_id } = req.params; //req.params로 해당 게시물의 고유id를 받아옴
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       if (await Either.findOne({ where: { user, eitherId: either_id, completed: false } })) {
         //DB에 해당 게시물이 존재하는 경우
@@ -233,7 +233,7 @@ class eitherControllers {
   // 찬반 투표 특정페이지 뷰
   public getTargetEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const either_id: string  = req.params.either_id as string; //req.params로 해당 게시물의 고유id를 받아옴
+      const { either_id } = req.params; //req.params로 해당 게시물의 고유id를 받아옴
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       const either: object[] = await sequelize.query(eitherQuery.getTargetEither(user, either_id), {
         type: QueryTypes.SELECT,
