@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 
 //sequelize(ORM)
 sequelize
-  .sync({ force: true })
+  .sync({ force: false })
   .then(() => {
     console.log('MYSQL 연결 성공');
   })
