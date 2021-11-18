@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../models';
+import { UserModel } from '../models/users';
 
 class userControllers {
   public checkLoginStatus = async (req: Request, res: Response, next: NextFunction) => {
@@ -10,7 +11,7 @@ class userControllers {
         res.status(200).json({ success: true, nickname: 'GUEST' }); //status code는 200, success: true, nickname: 'GUEST'라는 메세지를 보내준다.
       } else {
         //user가 있으면
-        const loginUser = await User.findOne({ where: { id: user } }); //user의 고유id로 로그인한 user의 데이터를 불러온다
+        const loginUser: UserModel = await User.findOne({ where: { id: user } }); //user의 고유id로 로그인한 user의 데이터를 불러온다
         if (!loginUser) {
           //해당 id를 가진 user가 없으면
           res.status(400).json({ success: false }); //stauts code는 400, success: false라는 메세지를 보내준다.
