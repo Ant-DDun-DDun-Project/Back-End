@@ -1,9 +1,9 @@
-import joi from './joi'
-import { Request, Response , NextFunction} from 'express';
+import joi from './joi';
+import { Request, Response, NextFunction } from 'express';
 import { User } from '../models';
 import * as bcrypt from 'bcrypt';
-import { createToken} from './utils/create-token';
-import 'dotenv/config'
+import { createToken } from './utils/create-token';
+import 'dotenv/config';
 import { UserModel } from '../models/users';
 
 class userControllers {
@@ -30,6 +30,28 @@ class userControllers {
           //signed: true, //서명 쿠키옵션 사용(사이트에서 발급한 쿠키 인증)
         });
         res.status(200).json({ success: true, nickname, userId }); //status code는 200, success:true, 닉네임과 user의 아이디를 보내준다.
+      }
+    } catch (err) {
+      next(err);
+    }
+  };
+  // 로그인 상태 확인
+  public checkLoginStatus = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user: number = res.locals.user; //auth 미들웨어를 통해서 받은 user의 고유id
+      if (user === 13) {
+        //guest일 경우
+        res.status(200).json({ success: true, nickname: 'GUEST' }); //status code는 200, success: true, nickname: 'GUEST'라는 메세지를 보내준다.
+      } else {
+        //user가 있으면
+        const loginUser: UserModel = await User.findOne({ where: { id: user } }); //user의 고유id로 로그인한 user의 데이터를 불러온다
+        if (!loginUser) {
+          //해당 id를 가진 user가 없으면
+          res.status(400).json({ success: false }); //stauts code는 400, success: false라는 메세지를 보내준다.
+        } else {
+          //해당 id를 가진 user가 있으면
+          res.status(200).json({ success: true, nickname: loginUser.nickname, user }); //status code는 200, success:true, 닉네임과 user의 고유id를 보내준다
+        }
       }
     } catch (err) {
       next(err);

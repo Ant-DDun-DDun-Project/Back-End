@@ -9,9 +9,10 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerFile from './swagger_output.json';
 import * as helmet from 'helmet';
 import { sequelize } from './models';
+import { stream } from './logger';
 
 //morgan(로그)
-// app.use(morgan('dev', { stream: logger.stream }));
+app.use(morgan('dev', { stream }));
 
 //cors
 const corsOptions = {
