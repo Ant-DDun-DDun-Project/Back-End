@@ -4,11 +4,7 @@ export interface VoteAttributes {
   id?: number;
   vote: string;
   user?: number | string;
-<<<<<<< HEAD
   either?: number | string;
-=======
-  either?: number | string
->>>>>>> 02e8f5aefcd1aebc9ae846106fa52e93d65f733d
   multi?: number | string;
 }
 
