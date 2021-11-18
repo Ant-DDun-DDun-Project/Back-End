@@ -10,7 +10,12 @@ const mainQuery = new MainQuery();
 class mainControllers {
   public getMain = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const [either, multi, [eitherNum, multiNum], attendNum]: [object[], object[], number[], number] = await Promise.all([
+      const [either, multi, [eitherNum, multiNum], attendNum]: [
+        object[],
+        object[],
+        number[],
+        number
+      ] = await Promise.all([
         //Promise.all로 각각의 데이터들(찬반투표 포스팅, 객관식 포스팅, 찬반투표 포스팅갯수, 객관식 포스팅갯수, 참여자수)를 병렬적으로 받아온다.
         sequelize.query(mainQuery.getMainForEither(), { type: QueryTypes.SELECT }),
         sequelize.query(mainQuery.getMainForMulti(), { type: QueryTypes.SELECT }),
