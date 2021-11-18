@@ -19,10 +19,9 @@ class userControllers {
         nickname,
         pw,
         confirmPw,
-        ageGroup
-      }: { userId: string, nickname: string, pw: string, confirmPw: string, ageGroup: number } = await joi.signUpSchema.validateAsync(
-        req.body
-      ); //req.body로 user정보(아이디, 닉네임, 비밀번호, 비밀번호확인, 연령대)를 받는다.
+        ageGroup,
+      }: { userId: string; nickname: string; pw: string; confirmPw: string; ageGroup: number } =
+        await joi.signUpSchema.validateAsync(req.body); //req.body로 user정보(아이디, 닉네임, 비밀번호, 비밀번호확인, 연령대)를 받는다.
       if (validatePassword(pw, confirmPw)) {
         //비밀번호와 비밀번호 확인이 일치하면 true, 불일치하면 false를 return한다.
         const [encryptedPw, userExist] = await Promise.all([
@@ -56,7 +55,9 @@ class userControllers {
   // 로그인
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userId, pw }: { userId: string, pw: string } = await joi.loginSchema.validateAsync(req.body); //req.body로 user정보(아이디,비밀번호)를 받는다
+      const { userId, pw }: { userId: string; pw: string } = await joi.loginSchema.validateAsync(
+        req.body
+      ); //req.body로 user정보(아이디,비밀번호)를 받는다
       const userData: UserModel = await User.findOne({ where: { userId } }); //user의 아이디로 user 유무를 찾는다.
       const pwCheck: boolean = await bcrypt.compare(pw, userData.pw); //비밀번호를 db에 있는 비밀번호와 일치하는지 체크한다
       if (!userData || !pwCheck) {
@@ -124,7 +125,9 @@ class userControllers {
   //닉네임 중복 체크에 대한 함수
   public CheckDuplicatedNick = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { nickname }: { nickname: string } = await joi.duplicatedNickSchema.validateAsync(req.body); //req.body로 닉네임을 받아온다.
+      const { nickname }: { nickname: string } = await joi.duplicatedNickSchema.validateAsync(
+        req.body
+      ); //req.body로 닉네임을 받아온다.
       if (await User.findOne({ where: { nickname } })) {
         //이미 DB에 존재하는 닉네임일 경우
         res.status(400).json({ success: false }); //status code는 400, success:false라는 메세지를 보낸다.
