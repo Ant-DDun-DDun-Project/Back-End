@@ -80,8 +80,9 @@ class userControllers {
     } catch (err) {
       next(err);
     }
-
   };
+
+  // 로그인 상태 확인인
   public checkLoginStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user: number = res.locals.user; //auth 미들웨어를 통해서 받은 user의 고유id
@@ -99,6 +100,54 @@ class userControllers {
           res.status(200).json({ success: true, nickname: loginUser.nickname, user }); //status code는 200, success:true, 닉네임과 user의 고유id를 보내준다
         }
       }
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  //아이디 중복체크
+  public CheckDuplicatedId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId }: { userId: string } = await joi.duplicatedIdSchema.validateAsync(req.body); //req.body로 user의 아이디를 받는다.
+      if (await User.findOne({ where: { userId } })) {
+        //이미 DB에 존재하는 아이디일 경우
+        res.status(400).json({ success: false }); //status code는 400, success:false라는 메세지를 보내준다
+      } else {
+        //DB에 존재하지 않는 아이디일 경우
+        res.status(200).json({ success: true }); //status code는 200, success:true라는 메세지를 보내준다.
+      }
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  //닉네임 중복 체크에 대한 함수
+  public CheckDuplicatedNick = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { nickname }: { nickname: string } = await joi.duplicatedNickSchema.validateAsync(req.body); //req.body로 닉네임을 받아온다.
+      if (await User.findOne({ where: { nickname } })) {
+        //이미 DB에 존재하는 닉네임일 경우
+        res.status(400).json({ success: false }); //status code는 400, success:false라는 메세지를 보낸다.
+      } else {
+        //DB에 존재하지 않는 닉네임일 경우
+        res.status(200).json({ success: true }); //status code는 200, success:true라는 메세지를 보낸다.
+      }
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  //로그아웃 기능
+  public logout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.clearCookie('user', {
+        //user라는 이름의 쿠키를 없앤다.
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        signed: true,
+      });
+      res.status(200).json({ success: true }); //status code는 200, success: true라는 메세지를 보내준다.
     } catch (err) {
       next(err);
     }
