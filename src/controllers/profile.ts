@@ -6,12 +6,23 @@ import joi from './joi';
 import { UserModel } from '../models/users';
 const profileQuery = new ProfileQuery();
 
+interface PostAttributes {
+  eitherId?: number;
+  multiId?: number;
+  title?: string;
+  date?: string;
+  editedDate?: string | null;
+  likeCnt?: number;
+  completed?: number;
+  commentCnt?: number;
+}
+
 class profileController {
   //내가 쓴 글
   public getMyPosts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user_id: string = req.params.user_id as string; //req.params로 user의 고유id를 받아온다
-      const [either, multi]: object[][] = await Promise.all([
+      const { user_id } = req.params; //req.params로 user의 고유id를 받아온다
+      const [either, multi] = await Promise.all([
         //Promise.all로 내가 쓴 글을 병렬로 찾아와서 변수로 저장한다.
         Either.findAll({
           attributes: [
@@ -24,6 +35,7 @@ class profileController {
             'completed',
             'likeCnt',
           ],
+          raw: true,
           where: { user: user_id },
         }),
         sequelize.query(profileQuery.getMyPosts(user_id), {
@@ -31,8 +43,7 @@ class profileController {
         }),
       ]);
       const post: object[] = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
-      const posts: object[] = post.sort((b, a) => {
-        //@ts-ignore
+      const posts: object[] = post.sort((b: PostAttributes, a: PostAttributes) => {
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; //최신순 정렬
       });
       res.status(200).json({ success: true, posts }); //status code는 200, success:true, 정렬된 포스팅을 보내준다.
@@ -43,7 +54,7 @@ class profileController {
   //내가 참여한 글
   public getMyPolls = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user_id: string = req.params.user_id as string; //req.params로 해당 user의 고유 id를 받아온다
+      const { user_id } = req.params; //req.params로 해당 user의 고유 id를 받아온다
       const [either, multi]: object[][] = await Promise.all([
         //Promise.all 내가 참여한 글을 병렬로 찾아와서 변수로 저장한다.
         sequelize.query(profileQuery.getMyPollsForEither(user_id), {
@@ -54,8 +65,7 @@ class profileController {
         }),
       ]);
       const post = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
-      const posts = post.sort((b, a) => {
-        //@ts-ignore
+      const posts = post.sort((b: PostAttributes, a: PostAttributes) => {
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; //최신순 정렬
       });
       res.status(200).json({ success: true, posts }); //status code는 200, success: true, 정렬된 포스팅을 보내준다.
@@ -87,7 +97,7 @@ class profileController {
   //프로필페이지 뷰
   public getProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user_id: string = req.params.user_id as string; //req.params로 해당 user의 고유id를 받아온다
+      const { user_id } = req.params; //req.params로 해당 user의 고유id를 받아온다
       const user = await User.findOne({ where: { id: user_id } }); //고유 id로 user를 찾는다
       if (user) {
         //user가 있으면

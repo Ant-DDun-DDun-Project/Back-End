@@ -2,10 +2,10 @@ import { BuildOptions, DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface CommentLikeAttributes {
   id?: number;
-  user?: number;
-  childComment?: number;
-  comment?: number;
-  multi?: number;
+  user?: number | string;
+  childComment?: number | string;
+  comment?: number | string;
+  multi?: number | string;
 }
 export interface CommentLikeModel extends Model<CommentLikeAttributes>, CommentLikeAttributes {}
 export class CommentLike extends Model<CommentLikeModel, CommentLikeAttributes> {}
