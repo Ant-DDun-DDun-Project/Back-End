@@ -8,8 +8,8 @@ export interface CommentAttributes {
   editedData?: string;
   deleted?: boolean;
   likeCnt?: number;
-  user?: number;
-  multi?: number;
+  user?: number | string;
+  multi?: number | string;
 }
 
 export interface CommentModel extends Model<CommentAttributes>, CommentAttributes {}

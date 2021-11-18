@@ -14,7 +14,7 @@ export interface MultiAttributes {
   edited?: boolean;
   editedDate?: string;
   likeCnt?: number;
-  user?: number;
+  user?: number | string;
 }
 export interface MultiModel extends Model<MultiAttributes>, MultiAttributes {}
 export class Multi extends Model<MultiModel, MultiAttributes> {}
