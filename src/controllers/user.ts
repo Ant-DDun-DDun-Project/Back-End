@@ -3,7 +3,7 @@ import { User } from '../models';
 import { createToken } from './utils/create-token';
 import 'dotenv/config';
 import { UserModel } from '../models/users';
-import { validatePassword } from './util/password-validation';
+import { validatePassword } from './utils/password-validation';
 import * as bcrypt from 'bcrypt';
 import joi from './joi';
 import 'dotenv/config';
