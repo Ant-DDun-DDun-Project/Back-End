@@ -31,7 +31,7 @@ module.exports = {
   }),
   // 객관식 게시물 Schema
   multiSchema: Joi.object({
-    title: Joi.string().required().max(30),
+    title: Joi.string().required().min(1).max(30),
     description: Joi.string().required().min(1),
     contentA: Joi.string().required().max(30),
     contentB: Joi.string().required().max(30),
