@@ -51,17 +51,63 @@ describe('회원가입', () => {
       success: true,
     });
   });
-  test('회원가입 시 중복테스트에서 성공하지 못하면 response로 success:false와 메세지를 보낸다', async () => {
+  test('회원가입 시 아이디 중복테스트에서 성공하지 못하면 response로 success:false와 메세지를 보낸다', async () => {
     await validatePassword.mockReturnValue(true);
-    await User.findOne.mockReturnValue(
+    await User.findOne.mockReturnValueOnce(
       Promise.resolve({
         userId: 'a-sd_f',
-        nickname: '황창환',
+        nickname: '황창환1',
         pw: 'zxcv1234!@',
         confirmPw: 'zxcv1234!@',
         ageGroup: 50,
       })
-    );
+    ).mockReturnValueOnce(null);
+    await signup(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({
+      success: false,
+      msg: '중복된 아이디입니다.',
+    });
+  });
+  test('회원가입 시 닉네임 중복테스트에서 성공하지 못하면 response로 success:false와 메세지를 보낸다', async () => {
+    await validatePassword.mockReturnValue(true);
+    await User.findOne.mockReturnValueOnce(null)
+      .mockReturnValueOnce(
+        Promise.resolve({
+          userId: 'a-sd_f12',
+          nickname: '황창환',
+          pw: 'zxcv1234!@',
+          confirmPw: 'zxcv1234!@',
+          ageGroup: 50,
+        })
+      );
+    await signup(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({
+      success: false,
+      msg: '중복된 닉네임입니다.',
+    });
+  });
+  test('회원가입 시 모두 중복테스트에서 성공하지 못하면 response로 success:false와 메세지를 보낸다', async () => {
+    await validatePassword.mockReturnValue(true);
+    await User.findOne.mockReturnValueOnce(
+      Promise.resolve({
+        userId: 'a-sd_f',
+        nickname: '황창환1',
+        pw: 'zxcv1234!@',
+        confirmPw: 'zxcv1234!@',
+        ageGroup: 50,
+      })
+    )
+      .mockReturnValueOnce(
+        Promise.resolve({
+          userId: 'a-sd_f12',
+          nickname: '황창환',
+          pw: 'zxcv1234!@',
+          confirmPw: 'zxcv1234!@',
+          ageGroup: 50,
+        })
+      );
     await signup(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({
@@ -82,6 +128,21 @@ describe('회원가입', () => {
     const err = 'DB에러';
     await validatePassword.mockReturnValue(true);
     await User.findOne.mockRejectedValue(err);
+    await signup(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+  test('DB에서 에러가 날 경우 에러핸들러로 넘긴다.', async () => {
+    const err = 'DB에러';
+    await validatePassword.mockReturnValue(true);
+    await User.findOne.mockReturnValueOnce(true).mockRejectedValueOnce(err);
+    await signup(req, res, next);
+    expect(next).toBeCalledWith(err);
+  });
+  test('DB에서 에러가 날 경우 에러핸들러로 넘긴다.', async () => {
+    const err = 'DB에러';
+    await validatePassword.mockReturnValue(true);
+    await User.findOne.mockReturnValue(null);
+    await User.create.mockRejectedValue(err);
     await signup(req, res, next);
     expect(next).toBeCalledWith(err);
   });
