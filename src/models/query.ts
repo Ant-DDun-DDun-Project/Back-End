@@ -46,7 +46,7 @@ export class EitherQuery {
                    (SELECT nickname FROM users WHERE id = either.user)                              AS nickname,
                    (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId)       AS voted
             FROM either
-            ORDER BY eitherId DESC;`;
+            ORDER BY date DESC;`;
   };
   public getIngEither = (user: number) => {
     return `SELECT *,
@@ -57,7 +57,7 @@ export class EitherQuery {
                    (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId)       AS voted
             FROM either
             WHERE completed = 0
-            ORDER BY eitherId DESC;`;
+            ORDER BY date DESC;`;
   };
 
   public getCompleteEither = (user: number) => {
@@ -69,7 +69,7 @@ export class EitherQuery {
                    (SELECT vote FROM votes WHERE user = ${user} AND either = either.eitherId)       AS voted
             FROM either
             WHERE completed = 1
-            ORDER BY eitherId DESC;`;
+            ORDER BY date DESC;`;
   };
 
   public getTargetEither = (user: number, either_id: string) => {
@@ -245,7 +245,6 @@ export class SearchQuery {
                (SELECT nickname FROM users WHERE either.user = users.id) AS nickname
         FROM either
         WHERE title LIKE '%${keyword}%'
-        ORDER BY eitherId DESC
     `;
   };
 
@@ -265,7 +264,6 @@ export class SearchQuery {
         FROM multi
         WHERE title LIKE '%${keyword}%'
            OR description LIKE '%${keyword}%'
-        ORDER BY multiId DESC
     `;
   };
 }
