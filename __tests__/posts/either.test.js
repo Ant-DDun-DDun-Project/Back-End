@@ -36,7 +36,6 @@ describe('양자택일 게시글 작성 테스트', () => {
       title: '저메추',
       contentA: '김밥',
       contentB: '치킨',
-      date: '2021-10-26 10:24:23',
     },
   };
   const next = jest.fn();
@@ -64,7 +63,6 @@ describe('양자택일 게시물 수정', () => {
       title: '안녕하세요',
       contentA: '처음뵙겠습니다',
       contentB: '사실 두번째',
-      editedDate: '2021-10-27 20:27:23',
     },
   };
   const res = {

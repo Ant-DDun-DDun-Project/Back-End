@@ -22,7 +22,6 @@ describe('대댓글 등록', () => {
     },
     body: {
       comment: '안녕하세요의안녕하세요',
-      date: '2021-10-26 11:04:52',
     },
   };
   const res = {
@@ -106,7 +105,6 @@ describe('대댓글 수정', () => {
     },
     body: {
       comment: '하하하하하',
-      editedDate: '2021-10-27 22:51:22',
     },
   };
   const res = {
@@ -401,7 +399,6 @@ describe('대댓글 삭제', () => {
     },
     body: {
       comment: '안녕',
-      date: '2021-11-03 17:38:45',
     },
   };
   const res = {

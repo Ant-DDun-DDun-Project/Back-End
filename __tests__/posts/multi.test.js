@@ -34,7 +34,6 @@ describe('객관식 게시글을 작성에 대한 검사', () => {
       contentC: '예시 C',
       contentD: '예시 D',
       contentE: '예시 E',
-      date: '2021-10-26',
     },
   };
   const res = {
@@ -76,7 +75,6 @@ describe('객관식 게시물 수정', () => {
       contentC: '예제 C',
       contentD: '예제 D',
       contentE: '예제 E',
-      editedDate: '2021-10-27 22:52:00',
     },
   };
   const res = {

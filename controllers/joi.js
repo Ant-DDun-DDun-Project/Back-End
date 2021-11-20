@@ -27,7 +27,6 @@ module.exports = {
     title: Joi.string().required().max(30),
     contentA: Joi.string().required().max(30),
     contentB: Joi.string().required().max(30),
-    date: Joi.string().required(),
   }),
   // 객관식 게시물 Schema
   multiSchema: Joi.object({
@@ -38,17 +37,14 @@ module.exports = {
     contentC: Joi.string().allow(null).max(30),
     contentD: Joi.string().allow(null).max(30),
     contentE: Joi.string().allow(null).max(30),
-    date: Joi.string().required(),
   }),
   // 댓글 작성 Schema
   postCommentSchema: Joi.object({
     comment: Joi.string().required().min(1).max(1000),
-    date: Joi.string().required(),
   }),
   // 댓글 수정 Schema
   editCommentSchema: Joi.object({
     comment: Joi.string().required().max(1000),
-    editedDate: Joi.string().required(),
   }),
   // 객관식 게시물 수정 Schema
   editMultiSchema: Joi.object({
@@ -59,14 +55,12 @@ module.exports = {
     contentC: Joi.string().allow(null).max(30),
     contentD: Joi.string().allow(null).max(30),
     contentE: Joi.string().allow(null).max(30),
-    editedDate: Joi.string().allow(null),
   }),
   // 찬반투표 게시물 수정 Schema
   editEitherSchema: Joi.object({
     title: Joi.string().required().min(1).max(30),
     contentA: Joi.string().required().min(1).max(30),
     contentB: Joi.string().required().min(1).max(30),
-    editedDate: Joi.string().required(),
   }),
   // 아이디 중복 체크 Schema
   duplicatedIdSchema: Joi.object({
