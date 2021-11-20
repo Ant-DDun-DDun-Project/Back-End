@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 export const limiter = limit({
   windowMs: 1000, //이 시간동안
   max: 15, //최대횟수
-  handler(req, res) {
+  handler(req: Request, res: Response) {
     //어겼을 경우
     res.status(this.statusCode).json({
       code: this.statusCode,
