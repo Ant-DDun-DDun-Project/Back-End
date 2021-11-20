@@ -1,4 +1,5 @@
-import limit from 'express-rate-limit';
+import * as limit from 'express-rate-limit';
+import { Request, Response } from 'express';
 
 export const limiter = limit({
   windowMs: 1000, //이 시간동안
