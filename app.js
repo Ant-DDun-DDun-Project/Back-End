@@ -37,6 +37,7 @@ app.use(helmet());
 
 //routing
 const router = require('./routes/index');
+const { limiter } = require('./middlewares/rate-limit');
 
 //parser
 app.use(express.urlencoded({ extended: true })); //body parser
@@ -47,7 +48,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie parser
 app.use(compression());
 
 //routes
-app.use('/', router);
+app.use('/', limiter, router);
 
 //swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
