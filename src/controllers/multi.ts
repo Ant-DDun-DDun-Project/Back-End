@@ -8,6 +8,7 @@ import { MultiQuery } from '../models/query';
 import { MultiModel } from '../models/multi';
 import { LikeModel } from '../models/likes';
 import { VoteModel } from '../models/votes';
+import * as moment from 'moment';
 const multiQuery = new MultiQuery();
 
 export interface UnsortedMulti {
@@ -143,7 +144,6 @@ class multiControllers {
         contentC,
         contentD,
         contentE,
-        date,
       }: {
         title: string;
         description: string;
@@ -152,8 +152,8 @@ class multiControllers {
         contentC: string;
         contentD: string;
         contentE: string;
-        date: string;
-      } = await joi.multiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E, 날짜)를 받아온다.
+      } = await joi.multiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E)를 받아온다.
+      const date: string = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user: number = res.locals.user; //로그인한 유저는 user 아이디를 갖는다.
       await Multi.create({
         user,
@@ -184,7 +184,6 @@ class multiControllers {
         contentC,
         contentD,
         contentE,
-        editedDate,
       }: {
         title: string;
         description: string;
@@ -193,9 +192,8 @@ class multiControllers {
         contentC: string;
         contentD: string;
         contentE: string;
-        date: string;
-        editedDate: string;
       } = await joi.editMultiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E, 수정날짜)를 받아온다.
+      const editedDate: string = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       const user = res.locals.user;
       const [userCheck, voted]: [MultiModel, VoteModel] = await Promise.all([
         Multi.findOne({ where: { multiId: multi_id, user } }),

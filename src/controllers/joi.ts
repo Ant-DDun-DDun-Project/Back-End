@@ -26,7 +26,6 @@ class joiValidation {
     title: Joi.string().required().max(30),
     contentA: Joi.string().required().max(30),
     contentB: Joi.string().required().max(30),
-    date: Joi.string().required(),
   });
   // 객관식 게시물 Schema
   public multiSchema = Joi.object({
@@ -37,17 +36,14 @@ class joiValidation {
     contentC: Joi.string().allow(null).max(30),
     contentD: Joi.string().allow(null).max(30),
     contentE: Joi.string().allow(null).max(30),
-    date: Joi.string().required(),
   });
   // 댓글 작성 Schema
   public postCommentSchema = Joi.object({
     comment: Joi.string().required().min(1).max(1000),
-    date: Joi.string().required(),
   });
   // 댓글 수정 Schema
   public editCommentSchema = Joi.object({
     comment: Joi.string().required().max(1000),
-    editedDate: Joi.string().required(),
   });
   // 객관식 게시물 수정 Schema
   public editMultiSchema = Joi.object({
@@ -58,14 +54,12 @@ class joiValidation {
     contentC: Joi.string().allow(null).max(30),
     contentD: Joi.string().allow(null).max(30),
     contentE: Joi.string().allow(null).max(30),
-    editedDate: Joi.string().allow(null),
   });
   // 찬반투표 게시물 수정 Schema
   public editEitherSchema = Joi.object({
     title: Joi.string().required().min(1).max(30),
     contentA: Joi.string().required().min(1).max(30),
     contentB: Joi.string().required().min(1).max(30),
-    editedDate: Joi.string().required(),
   });
   // 아이디 중복 체크 Schema
   public duplicatedIdSchema = Joi.object({

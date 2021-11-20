@@ -6,6 +6,7 @@ import { EitherQuery } from '../models/query';
 import { EitherModel } from '../models/either';
 import { sortEither } from './utils/sort-posts';
 import { VoteModel } from '../models/votes';
+import * as moment from 'moment';
 
 const eitherQuery = new EitherQuery();
 
@@ -17,13 +18,12 @@ class eitherControllers {
         title,
         contentA,
         contentB,
-        date,
       }: {
         title: string;
         contentA: string;
         contentB: string;
-        date: string;
       } = await joi.eitherSchema.validateAsync(req.body); //req.body로 찬반투표 데이터들(제목, 선택지, 날짜)를 받아옴
+      const date: string = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       await Either.create({
         user,
@@ -134,13 +134,12 @@ class eitherControllers {
         title,
         contentA,
         contentB,
-        editedDate,
       }: {
         title: string;
         contentA: string;
         contentB: string;
-        editedDate: string;
       } = await joi.editEitherSchema.validateAsync(req.body); //req.body로 찬반투표 게시물 수정할 데이터(제목, 선택지, 수정날짜)를 받아온다
+      const editedDate: string = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       const { either_id } = req.params; //해당 게시물의 고유 id
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       const [userCheck, voted]: [EitherModel, VoteModel] = await Promise.all([
