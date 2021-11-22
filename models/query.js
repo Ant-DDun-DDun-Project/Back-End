@@ -205,8 +205,6 @@ class ProfileQuery {
                either.user,
                either.title,
                either.date,
-               either.edited,
-               either.editedDate,
                either.completed,
                either.likeCnt,
                (SELECT nickname FROM users WHERE users.id = either.user) AS nickname
@@ -223,8 +221,6 @@ class ProfileQuery {
                multi.user,
                multi.title,
                multi.date,
-               multi.edited,
-               multi.editedDate,
                multi.completed,
                multi.likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
