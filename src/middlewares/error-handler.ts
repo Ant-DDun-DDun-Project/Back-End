@@ -1,13 +1,7 @@
 import {logger} from '../logger';
 import { Request, Response, NextFunction } from 'express';
 import 'dotenv/config';
-
-interface Err {
-  name?: string
-  status?: number;
-  message?: string;
-  stack?: string;
-}
+import {Err} from '../interfaces/middleware'
 
 export function errorHandler(err: Err, req: Request, res: Response, next: NextFunction) {
   res.locals.message = err.message;

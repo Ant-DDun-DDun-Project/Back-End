@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { Comment, User, CommentLike } from '../models';
 import joi from './joi';
 import * as moment from 'moment';
+import { CommentModel } from '../models/comments';
+import { UserModel } from '../models/users';
+import { CommentLikeModel } from '../models/comment-likes';
 
 export class commentControllers {
   //댓글 작성
@@ -11,7 +14,7 @@ export class commentControllers {
       const { multi_id } = req.params; //req.params로 해당 댓글이 달린 게시글의 고유id를 받는다.
       const date: string = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
-      const [postComment, nickname] = await Promise.all([
+      const [postComment, nickname]: [CommentModel, UserModel] = await Promise.all([
         //Promise.all로 댓글 생성과 작성한 user의 닉네임을 찾아서 각각 변수로 지정한다.
         Comment.create({
           user,
@@ -25,7 +28,7 @@ export class commentControllers {
           raw: true,
         }),
       ]);
-      const targetComment = await Comment.findOne({
+      const targetComment: CommentModel = await Comment.findOne({
         where: {
           user,
           multi: multi_id,
@@ -61,7 +64,7 @@ export class commentControllers {
           },
           { where: { user, multi: Number(multi_id), id: Number(comment_id) } }
         ); //해당 댓글 수정
-        const [targetComment, nickname] = await Promise.all([
+        const [targetComment, nickname]: [CommentModel, UserModel] = await Promise.all([
           //Promise.all로 update된 해당 댓글과 user의 닉네임을 병렬적으로 가져와서 각각 변수로 지정
           Comment.findOne({
             where: { user, multi: multi_id, id: comment_id },
@@ -102,7 +105,7 @@ export class commentControllers {
           },
           { where: { user, multi: multi_id, id: comment_id } }
         ); //해당 댓글의 삭제상태를 true로 변경
-        const [targetComment, nickname] = await Promise.all([
+        const [targetComment, nickname]: [CommentModel, UserModel] = await Promise.all([
           //Promise.all로 삭제된 해당 댓글과 user의 닉네임을 병렬적으로 가져와서 각각 변수로 지정
           Comment.findOne({
             where: { user, multi: multi_id, id: comment_id },
@@ -133,7 +136,7 @@ export class commentControllers {
     try {
       const { multi_id, comment_id } = req.params; //req.params로 해당 댓글이 있는 게시물의 고유id와 댓글의 고유id를 받아온다.
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
-      const likeExist = await CommentLike.findOne({
+      const likeExist: CommentLikeModel | null = await CommentLike.findOne({
         where: { multi: multi_id, comment: comment_id, user },
       }); //좋아요 기록 확인
       if (likeExist) {
@@ -142,7 +145,7 @@ export class commentControllers {
       } else {
         //좋아요를 한 기록이 없으면
         await CommentLike.create({ user, comment: Number(comment_id), multi: Number(multi_id) }); //좋아요 기록 생성
-        const likeCnt = await CommentLike.count({
+        const likeCnt:number = await CommentLike.count({
           where: { comment: comment_id, multi: multi_id },
         }); //해당 댓글의 좋아요 갯수 확인
         await Comment.update(
