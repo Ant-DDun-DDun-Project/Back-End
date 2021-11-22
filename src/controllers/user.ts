@@ -132,21 +132,21 @@ class userControllers {
     }
   };
 
-  //로그아웃 기능
-  public logout = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      res.clearCookie('user', {
-        //user라는 이름의 쿠키를 없앤다.
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-        signed: true,
-      });
-      res.status(200).json({ success: true }); //status code는 200, success: true라는 메세지를 보내준다.
-    } catch (err) {
-      next(err);
-    }
-  };
+  // //로그아웃 기능
+  // public logout = async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     res.clearCookie('user', {
+  //       //user라는 이름의 쿠키를 없앤다.
+  //       httpOnly: true,
+  //       secure: true,
+  //       sameSite: 'None',
+  //       signed: true,
+  //     });
+  //     res.status(200).json({ success: true }); //status code는 200, success: true라는 메세지를 보내준다.
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // };
 }
 
 export default new userControllers();
