@@ -1,5 +1,4 @@
 const express = require('express'); // 익스프레스 참조
-const cookieParser = require('cookie-parser');
 const app = express(); // 익스프레스 쓸때는 app이라고 명시
 const compression = require('compression');
 const cors = require('cors');
@@ -18,7 +17,7 @@ app.use(morgan('dev', { stream: logger.stream }));
 //cors
 const corsOptions = {
   origin: true, // 전체 허용
-  // credentials: true,
+  credentials: true,
 };
 app.use(cors(corsOptions));
 
@@ -42,7 +41,6 @@ const { limiter } = require('./middlewares/rate-limit');
 //parser
 app.use(express.urlencoded({ extended: true })); //body parser
 app.use(express.json()); //body parser
-app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie parser
 
 //compression(데이터 압축)
 app.use(compression());

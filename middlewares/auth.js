@@ -4,7 +4,8 @@ require('dotenv').config;
 module.exports = {
   authForGuest: async (req, res, next) => {
     try {
-      const token = req.cookies.user;
+      const { authorization } = req.headers;
+      const [Bearer, token] = authorization.split(' ');
       if (!token) {
         res.locals.user = 13;
         next();
@@ -19,7 +20,8 @@ module.exports = {
   },
   auth: async (req, res, next) => {
     try {
-      const token = req.cookies.user;
+      const { authorization } = req.headers;
+      const [Bearer, token] = authorization.split(' ');
       if (!token) {
         res.status(401).json({ success: false });
       } else {
