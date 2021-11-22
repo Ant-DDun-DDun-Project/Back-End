@@ -5,7 +5,8 @@ import { Request, Response, NextFunction } from 'express';
 // 게스트 허용 인증 미들웨어
 export function authForGuest(req: Request, res: Response, next: NextFunction) {
   try {
-    const token: string = req.cookies.user;
+    const { authorization } = req.headers;
+    const [Bearer, token]: string[] = authorization.split(' ');
     if (!token) {
       res.locals.user = 13;
       next();
