@@ -237,7 +237,7 @@ class ProfileQuery {
 class SearchQuery {
   searchEither = (keyword) => {
     return `
-        SELECT eitherId, user, title, date, editedDate, completed, likeCnt,
+        SELECT eitherId, user, title, date, completed, likeCnt,
                (SELECT nickname FROM users WHERE either.user = users.id) AS nickname
         FROM either
         WHERE title LIKE '%${keyword}%'
@@ -251,7 +251,6 @@ class SearchQuery {
                user,
                title,
                date,
-               editedDate,
                completed,
                likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
