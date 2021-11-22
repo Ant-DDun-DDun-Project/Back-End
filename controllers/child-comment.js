@@ -1,12 +1,14 @@
 const { ChildComment, CommentLike, User } = require('../models');
 const { postCommentSchema, editCommentSchema } = require('./joi');
+const moment = require('moment');
 
 module.exports = {
   //대댓글 작성
   postChildComment: async (req, res, next) => {
     try {
-      const { comment, date } = await postCommentSchema.validateAsync(req.body); //req.body로 대댓글 정보(내용, 작성날짜)를 받아온다.
+      const { comment } = await postCommentSchema.validateAsync(req.body); //req.body로 대댓글 정보(내용)를 받아온다.
       const { multi_id, comment_id } = req.params; //req.params로 해당 대댓글이 달린 게시물과 댓글의 고유id를 받아온다
+      const date = moment().format('YYYY-MM-DD HH:mm:ss'); //작성 날짜
       const user = res.locals.user; //현재 로그인한 user의 고유id
       const [childMent, nickname] = await Promise.all([
         //Promise.all로 대댓글 생성, 작성자의 닉네임을 병렬적으로 수행한 후 각각 변수 지정
@@ -35,8 +37,9 @@ module.exports = {
   //대댓글 수정
   editChildComment: async (req, res, next) => {
     try {
-      const { comment, editedDate } = await editCommentSchema.validateAsync(req.body); //req.body로 대댓글 수정정보(수정내용, 수정날짜)를 받아온다.
+      const { comment } = await editCommentSchema.validateAsync(req.body); //req.body로 대댓글 수정정보(수정내용)를 받아온다.
       const { multi_id, comment_id } = req.params; //req.params로 해당 대댓글이 달린 게시물과 대댓글의 고유id를 받아온다.
+      const editedDate = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       const user = res.locals.user; //현재 로그인한 user의 고유id
       const userCheck = await ChildComment.findOne({
         where: { multi: multi_id, id: comment_id, user },

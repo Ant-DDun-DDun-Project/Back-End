@@ -3,12 +3,14 @@ const { eitherSchema, editEitherSchema, voteEitherSchema } = require('./joi');
 const { EitherQuery } = require('../models/query');
 const { sortEither } = require('./utils/sort-posts');
 const eitherQuery = new EitherQuery();
+const moment = require('moment');
 
 module.exports = {
   // 찬반투표 게시글 작성
   postEither: async (req, res, next) => {
     try {
-      const { title, contentA, contentB, date } = await eitherSchema.validateAsync(req.body); //req.body로 찬반투표 데이터들(제목, 선택지, 날짜)를 받아옴
+      const { title, contentA, contentB } = await eitherSchema.validateAsync(req.body); //req.body로 찬반투표 데이터들(제목, 선택지, 날짜)를 받아옴
+      const date = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user = res.locals.user; //현재 로그인한 user의 고유id
       await Either.create({
         user,
@@ -115,16 +117,15 @@ module.exports = {
   //찬반투표 게시글 수정
   editEither: async (req, res, next) => {
     try {
-      const { title, contentA, contentB, editDate } = await editEitherSchema.validateAsync(
-        req.body
-      ); //req.body로 찬반투표 게시물 수정할 데이터(제목, 선택지, 수정날짜)를 받아온다
+      const { title, contentA, contentB } = await editEitherSchema.validateAsync(req.body); //req.body로 찬반투표 게시물 수정할 데이터(제목, 선택지, 수정날짜)를 받아온다
+      const editedDate = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       const { either_id } = req.params; //해당 게시물의 고유 id
       const user = res.locals.user; //현재 로그인한 user의 고유id
       const userCheck = await Either.findOne({ where: { eitherId: either_id, user } }); //현재 로그인한 user가 작성한 포스팅인지
       if (userCheck) {
         //작성자가 맞으면
         await Either.update(
-          { title, contentA, contentB, editDate, edited: true },
+          { title, contentA, contentB, editedDate, edited: true },
           { where: { eitherId: either_id, user } }
         ); //게시물 수정
         return res.status(200).json({ success: true }); //status code 200, success:true를 보내준다.

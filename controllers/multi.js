@@ -4,6 +4,7 @@ const { sortMulti } = require('./utils/sort-posts');
 const { countVote } = require('./utils/vote-count');
 const { MultiQuery } = require('../models/query');
 const multiQuery = new MultiQuery();
+const moment = require('moment');
 
 module.exports = {
   //객관식 페이지 메인뷰
@@ -106,8 +107,9 @@ module.exports = {
   // 객관식 게시글 작성
   postMulti: async (req, res, next) => {
     try {
-      const { title, description, contentA, contentB, contentC, contentD, contentE, date } =
+      const { title, description, contentA, contentB, contentC, contentD, contentE } =
         await multiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E, 날짜)를 받아온다.
+      const date = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user = res.locals.user; //로그인한 유저는 user 아이디를 갖는다.
       await Multi.create({
         user,
@@ -130,8 +132,9 @@ module.exports = {
   editMulti: async (req, res, next) => {
     try {
       const { multi_id } = req.params; //req.params로 해당 게시물 고유id를 받아옴
-      const { title, description, contentA, contentB, contentC, contentD, contentE, editedDate } =
+      const { title, description, contentA, contentB, contentC, contentD, contentE } =
         await editMultiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E, 수정날짜)를 받아온다.
+      const editedDate = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       await Multi.update(
         {
           title,

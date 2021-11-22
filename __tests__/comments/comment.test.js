@@ -21,7 +21,6 @@ describe('댓글등록', () => {
     },
     body: {
       comment: '안녕하세요',
-      date: '2021-10-26-19-43-23',
     },
   };
   const res = {
@@ -42,8 +41,8 @@ describe('댓글등록', () => {
         editedDate: '2021-10-28 13:15:12',
         deleted: 0,
         user: 1,
-        multi: 1
-      }
+        multi: 1,
+      },
     });
     await User.findOne.mockReturnValue({ nickname: 'test' });
     await postComment(req, res, next);
@@ -59,8 +58,8 @@ describe('댓글등록', () => {
         editedDate: '2021-10-28 13:15:12',
         deleted: 0,
         user: 1,
-        multi: 1
-      }
+        multi: 1,
+      },
     });
   });
   test('댓글 작성시 DB에러 발생 시 next(err)를 호출한다 --> Comment.create', async () => {
@@ -86,7 +85,6 @@ describe('댓글 수정에 대한 검사', () => {
     },
     body: {
       comment: '수정되었습니다.',
-      editedDate: '2021-10-28 11:11:10',
     },
   };
   const res = {
@@ -110,8 +108,8 @@ describe('댓글 수정에 대한 검사', () => {
         editedDate: '2021-10-28 13:15:12',
         deleted: 0,
         user: 1,
-        multi: 1
-      }
+        multi: 1,
+      },
     });
     await User.findOne.mockReturnValue({ nickname: 'test' });
     await editComment(req, res, next);
@@ -127,8 +125,8 @@ describe('댓글 수정에 대한 검사', () => {
         deleted: 0,
         user: 1,
         multi: 1,
-        nickname: 'test'
-      }
+        nickname: 'test',
+      },
     });
   });
 
@@ -151,7 +149,6 @@ describe('댓글 수정에 대한 검사', () => {
     await Comment.update.mockRejectedValue(err);
     await editComment(req, res, next);
     expect(next).toBeCalledWith(err);
-
   });
 
   test('DB 수정 후 찾기 대한 에러가 발생', async () => {
@@ -203,27 +200,26 @@ describe('댓글 삭제에 대한 검사', () => {
         editedDate: '2021-10-28 13:15:12',
         deleted: 0,
         user: 1,
-        multi: 1
-      }
+        multi: 1,
+      },
     });
     await User.findOne.mockReturnValue({ nickname: 'test' });
     await deleteComment(req, res, next);
     expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith(
-      {
-        success: true,
-        newComment: {
-          id: 1,
-          comment: '살려줘',
-          date: '2021-10-27 12:10:58',
-          edited: 0,
-          editedDate: '2021-10-28 13:15:12',
-          deleted: 0,
-          user: 1,
-          multi: 1,
-          nickname: 'test'
-        }
-      });
+    expect(res.json).toBeCalledWith({
+      success: true,
+      newComment: {
+        id: 1,
+        comment: '살려줘',
+        date: '2021-10-27 12:10:58',
+        edited: 0,
+        editedDate: '2021-10-28 13:15:12',
+        deleted: 0,
+        user: 1,
+        multi: 1,
+        nickname: 'test',
+      },
+    });
   });
 
   test('DB 에 정보가 없을 경우 / success: false / 를 응답으로 보내준다.', async () => {

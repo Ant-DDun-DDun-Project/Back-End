@@ -1,12 +1,14 @@
 const { Comment, CommentLike, User } = require('../models');
 const { postCommentSchema, editCommentSchema } = require('./joi');
+const moment = require('moment');
 
 module.exports = {
   //댓글 작성
   postComment: async (req, res, next) => {
     try {
-      const { comment, date } = await postCommentSchema.validateAsync(req.body); //req.body로 댓글 정보(내용,작성날짜)를 받는다.
+      const { comment } = await postCommentSchema.validateAsync(req.body); //req.body로 댓글 정보(내용)를 받는다.
       const { multi_id } = req.params; //req.params로 해당 댓글이 달린 게시글의 고유id를 받는다.
+      const date = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user = res.locals.user; //현재 로그인한 user의 고유id
       const [targetComment, nickname] = await Promise.all([
         //Promise.all로 댓글 생성과 작성한 user의 닉네임을 찾아서 각각 변수로 지정한다.
@@ -34,8 +36,9 @@ module.exports = {
   // 댓글 수정
   editComment: async (req, res, next) => {
     try {
-      const { comment, editedDate } = await editCommentSchema.validateAsync(req.body); //req.body로 수정할 댓글 정보(내용, 수정날짜)를 받는다.
+      const { comment } = await editCommentSchema.validateAsync(req.body); //req.body로 수정할 댓글 정보(내용)를 받는다.
       const { multi_id, comment_id } = req.params; //req.params로 해당 댓글이 달린 게시물의 고유id와 댓글의 고유id을 받는다.
+      const editedDate = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       const user = res.locals.user; //현재 로그인한 user의 고유id
       if (await Comment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         //해당 댓글의 작성자가 로그인 한 user가 맞으면
