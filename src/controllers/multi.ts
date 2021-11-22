@@ -8,6 +8,7 @@ import { MultiQuery } from '../models/query';
 import { MultiModel } from '../models/multi';
 import { LikeModel } from '../models/likes';
 import { VoteModel } from '../models/votes';
+import * as moment from 'moment';
 const multiQuery = new MultiQuery();
 
 export interface UnsortedMulti {
@@ -143,7 +144,6 @@ class multiControllers {
         contentC,
         contentD,
         contentE,
-        date,
       }: {
         title: string;
         description: string;
@@ -152,8 +152,8 @@ class multiControllers {
         contentC: string;
         contentD: string;
         contentE: string;
-        date: string;
-      } = await joi.multiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E, 날짜)를 받아온다.
+      } = await joi.multiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E)를 받아온다.
+      const date: string = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user: number = res.locals.user; //로그인한 유저는 user 아이디를 갖는다.
       await Multi.create({
         user,
@@ -184,7 +184,6 @@ class multiControllers {
         contentC,
         contentD,
         contentE,
-        editedDate,
       }: {
         title: string;
         description: string;
@@ -193,26 +192,35 @@ class multiControllers {
         contentC: string;
         contentD: string;
         contentE: string;
-        date: string;
-        editedDate: string;
       } = await joi.editMultiSchema.validateAsync(req.body); //req.body로 객관식 데이터(제목,내용, 선택지 A,B,C,D,E, 수정날짜)를 받아온다.
-      await Multi.update(
-        {
-          title,
-          description,
-          contentA,
-          contentB,
-          contentC,
-          contentD,
-          contentE,
-          editedDate,
-          edited: true,
-        },
-        {
-          where: { multiId: multi_id },
-        }
-      ); //받아온 데이터로 업데이트를 해준다
-      res.status(200).json({ success: true }); // status code 200, success:true를 보내준다
+      const editedDate: string = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
+      const user = res.locals.user;
+      const [userCheck, voted]: [MultiModel, VoteModel] = await Promise.all([
+        Multi.findOne({ where: { multiId: multi_id, user } }),
+        Vote.findOne({ where: { multi: multi_id } }),
+      ]);
+      if (userCheck && !voted) {
+        //작성자가 맞고 투표를 안했으면
+        await Multi.update(
+          {
+            title,
+            description,
+            contentA,
+            contentB,
+            contentC,
+            contentD,
+            contentE,
+            editedDate,
+            edited: true,
+          },
+          {
+            where: { multiId: multi_id },
+          }
+        ); //받아온 데이터로 업데이트를 해준다
+        res.status(200).json({ success: true }); // status code 200, success:true를 보내준다
+      } else {
+        res.status(400).json({ success: false });
+      }
     } catch (err) {
       next(err);
     }
@@ -224,7 +232,7 @@ class multiControllers {
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       const userCheck: MultiModel = await Multi.findOne({ where: { multiId: multi_id, user } }); //user가 해당 게시물을 작성했는지 확인
       if (userCheck) {
-        //작성자가 맞으면
+        //작성자가 맞고
         await Multi.destroy({ where: { multiId: multi_id, user } }); //해당 게시물 삭제
         res.status(200).json({ success: true }); //status code 200, success:true를 보내준다.
       } else {

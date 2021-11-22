@@ -16,56 +16,50 @@ class joiValidation {
     confirmPw: Joi.ref('pw'),
     ageGroup: Joi.number().required(),
   });
-// 로그인 Schema
+  // 로그인 Schema
   public loginSchema = Joi.object({
     userId: Joi.string().required(),
     pw: Joi.string().required(),
   });
   // 찬반투표 게시물 Schema
   public eitherSchema = Joi.object({
-    title: Joi.string().required(),
-    contentA: Joi.string().required(),
-    contentB: Joi.string().required(),
-    date: Joi.string().required(),
+    title: Joi.string().required().max(30),
+    contentA: Joi.string().required().max(30),
+    contentB: Joi.string().required().max(30),
   });
   // 객관식 게시물 Schema
   public multiSchema = Joi.object({
-    title: Joi.string().required().min(1),
+    title: Joi.string().required().min(1).max(30),
     description: Joi.string().required().min(1),
-    contentA: Joi.string().required(),
-    contentB: Joi.string().required(),
-    contentC: Joi.string().allow(null),
-    contentD: Joi.string().allow(null),
-    contentE: Joi.string().allow(null),
-    date: Joi.string().required(),
+    contentA: Joi.string().required().max(30),
+    contentB: Joi.string().required().max(30),
+    contentC: Joi.string().allow(null).max(30),
+    contentD: Joi.string().allow(null).max(30),
+    contentE: Joi.string().allow(null).max(30),
   });
   // 댓글 작성 Schema
   public postCommentSchema = Joi.object({
-    comment: Joi.string().required().min(1),
-    date: Joi.string().required(),
+    comment: Joi.string().required().min(1).max(1000),
   });
   // 댓글 수정 Schema
   public editCommentSchema = Joi.object({
-    comment: Joi.string().required(),
-    editedDate: Joi.string().required(),
+    comment: Joi.string().required().max(1000),
   });
   // 객관식 게시물 수정 Schema
   public editMultiSchema = Joi.object({
-    title: Joi.string().required().min(1),
+    title: Joi.string().required().min(1).max(30),
     description: Joi.string().required().min(1),
-    contentA: Joi.string().required(),
-    contentB: Joi.string().required(),
-    contentC: Joi.string().allow(null),
-    contentD: Joi.string().allow(null),
-    contentE: Joi.string().allow(null),
-    editedDate: Joi.string().allow(null),
+    contentA: Joi.string().required().max(30),
+    contentB: Joi.string().required().max(30),
+    contentC: Joi.string().allow(null).max(30),
+    contentD: Joi.string().allow(null).max(30),
+    contentE: Joi.string().allow(null).max(30),
   });
   // 찬반투표 게시물 수정 Schema
   public editEitherSchema = Joi.object({
-    title: Joi.string().required().min(1),
-    contentA: Joi.string().required().min(1),
-    contentB: Joi.string().required().min(1),
-    editedDate: Joi.string().required(),
+    title: Joi.string().required().min(1).max(30),
+    contentA: Joi.string().required().min(1).max(30),
+    contentB: Joi.string().required().min(1).max(30),
   });
   // 아이디 중복 체크 Schema
   public duplicatedIdSchema = Joi.object({

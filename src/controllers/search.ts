@@ -29,7 +29,7 @@ class searchControllers {
         ]);
         searchedPosts.push([...searchedEither, ...searchedMulti]); //searchedPosts에 담음
       }
-      const posts :object[] = searchedPosts.flat().sort((b, a) => {
+      const posts: object[] = searchedPosts.flat().sort((b, a) => {
         // @ts-ignore
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
       }); //다차원 배열을 1차원 배열로 만든 후 날짜순으로 정렬

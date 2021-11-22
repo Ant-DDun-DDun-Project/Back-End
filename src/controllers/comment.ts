@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { Comment, User, CommentLike } from '../models';
 import joi from './joi';
+import * as moment from 'moment';
 
 export class commentControllers {
   //댓글 작성
   public async postComment(req: Request, res: Response, next: NextFunction) {
     try {
-      const { comment, date }: { comment: string, date: string } = await joi.postCommentSchema.validateAsync(req.body); //req.body로 댓글 정보(내용,작성날짜)를 받는다.
+      const { comment }: { comment: string } = await joi.postCommentSchema.validateAsync(req.body); //req.body로 댓글 정보(내용,작성날짜)를 받는다.
       const { multi_id } = req.params; //req.params로 해당 댓글이 달린 게시글의 고유id를 받는다.
+      const date: string = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       const [postComment, nickname] = await Promise.all([
         //Promise.all로 댓글 생성과 작성한 user의 닉네임을 찾아서 각각 변수로 지정한다.
@@ -28,9 +30,9 @@ export class commentControllers {
           user,
           multi: multi_id,
           comment,
-          date
+          date,
         },
-        raw: true
+        raw: true,
       });
       const newComment = Object.assign(nickname, targetComment); //두 객체를 하나로 합친다(닉네임과 댓글생성이 각각 객체로 나옴)
       res.status(200).json({
@@ -45,8 +47,9 @@ export class commentControllers {
   // 댓글 수정
   public async editComment(req: Request, res: Response, next: NextFunction) {
     try {
-      const { comment, editedDate }: {comment: string, editedDate: string} = await joi.editCommentSchema.validateAsync(req.body); //req.body로 수정할 댓글 정보(내용, 수정날짜)를 받는다.
+      const { comment }: { comment: string } = await joi.editCommentSchema.validateAsync(req.body); //req.body로 수정할 댓글 정보(내용, 수정날짜)를 받는다.
       const { multi_id, comment_id } = req.params; //req.params로 해당 댓글이 달린 게시물의 고유id와 댓글의 고유id을 받는다.
+      const editedDate: string = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       if (await Comment.findOne({ where: { user, multi: multi_id, id: comment_id } })) {
         //해당 댓글의 작성자가 로그인 한 user가 맞으면
@@ -62,7 +65,7 @@ export class commentControllers {
           //Promise.all로 update된 해당 댓글과 user의 닉네임을 병렬적으로 가져와서 각각 변수로 지정
           Comment.findOne({
             where: { user, multi: multi_id, id: comment_id },
-            raw: true
+            raw: true,
           }),
           User.findOne({
             attributes: ['nickname'],
@@ -103,7 +106,7 @@ export class commentControllers {
           //Promise.all로 삭제된 해당 댓글과 user의 닉네임을 병렬적으로 가져와서 각각 변수로 지정
           Comment.findOne({
             where: { user, multi: multi_id, id: comment_id },
-            raw: true
+            raw: true,
           }),
           User.findOne({
             attributes: ['nickname'],
