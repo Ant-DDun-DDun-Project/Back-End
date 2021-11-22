@@ -4,6 +4,7 @@ import { sequelize } from '../models';
 import { MainQuery } from '../models/query';
 import { countPosting } from './utils/posting-count';
 import { countAttend } from './utils/attend-count';
+import { MainEither, MainMulti } from '../interfaces/main';
 
 const mainQuery = new MainQuery();
 
@@ -11,8 +12,8 @@ class mainControllers {
   public getMain = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const [either, multi, [eitherNum, multiNum], attendNum]: [
-        object[],
-        object[],
+        MainEither[],
+        MainMulti[],
         number[],
         number
       ] = await Promise.all([

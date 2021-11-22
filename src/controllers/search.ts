@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { sequelize } from '../models';
 import { SearchQuery } from '../models/query';
 import { QueryTypes } from 'sequelize';
+import { EitherList, MultiList } from '../interfaces/profile';
 
 const searchQuery = new SearchQuery();
 
@@ -15,10 +16,10 @@ class searchControllers {
         //keyword가 없으면
         res.status(400).json({ success: false }); //status code는 400, success:false를 보내준다.
       }
-      const searchedPosts: object[] = []; //검색된 포스트들을 담을 배열
+      const searchedPosts: (EitherList | MultiList)[][] = []; //검색된 포스트들을 담을 배열
       for (let word of keywords) {
         //공백으로 나눈 keyword들을 각각 word라는 변수로 지정하여 반복문
-        const [searchedEither, searchedMulti]: [object[], object[]] = await Promise.all([
+        const [searchedEither, searchedMulti]: [EitherList[], MultiList[]] = await Promise.all([
           //Promise.all로 DB에서 검색어가 포함된 찬반투표, 객관식 포스팅을 병렬적으로 찾음
           sequelize.query(searchQuery.searchEither(word), {
             type: QueryTypes.SELECT,
@@ -29,8 +30,7 @@ class searchControllers {
         ]);
         searchedPosts.push([...searchedEither, ...searchedMulti]); //searchedPosts에 담음
       }
-      const posts: object[] = searchedPosts.flat().sort((b, a) => {
-        // @ts-ignore
+      const posts: (EitherList | MultiList)[] = searchedPosts.flat().sort((b, a) => {
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
       }); //다차원 배열을 1차원 배열로 만든 후 날짜순으로 정렬
       res.status(200).json({ success: true, posts }); //status code는 200, success: true, 검색된 포스트들을 보내준다.

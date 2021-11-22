@@ -74,16 +74,7 @@ export class EitherQuery {
 
   public getTargetEither = (user: number, either_id: string) => {
     return `
-        SELECT eitherId,
-               either.user,
-               title,
-               contentA,
-               contentB,
-               date,
-               edited,
-               editedDate,
-               likeCnt,
-               completed,
+        SELECT *,
                (SELECT nickname FROM users WHERE id = either.user)                                 AS nickname,
                (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'A' AND either = either.eitherId)) AS voteCntA,
                (SELECT (SELECT COUNT(*) FROM votes WHERE vote = 'B' AND either = either.eitherId)) AS voteCntB,
@@ -158,7 +149,6 @@ export class MultiQuery {
   public getComment = (user: number, multi_id: string) => {
     return `
         SELECT *,
-               (SELECT COUNT(*) FROM commentlikes WHERE commentlikes.comment = comments.id)                AS CommentLikeCnt,
                (SELECT user FROM commentlikes WHERE user = ${user} AND commentlikes.comment = comments.id) AS liked,
                (SELECT nickname FROM users WHERE id = comments.user)                                       AS nickname
         FROM comments
@@ -170,7 +160,6 @@ export class MultiQuery {
   public getChildComment = (user: number, multi_id: string) => {
     return `
         SELECT *,
-               (SELECT COUNT(*) FROM commentlikes WHERE commentlikes.childComment = childcomments.id) AS commentLikeCnt,
                (SELECT nickname FROM users WHERE id = childcomments.user)                             AS nickname,
                (SELECT user
                 FROM commentlikes
@@ -205,8 +194,6 @@ export class ProfileQuery {
                either.user,
                either.title,
                either.date,
-               either.edited,
-               either.editedDate,
                either.completed,
                either.likeCnt,
                (SELECT nickname FROM users WHERE users.id = either.user) AS nickname
@@ -223,8 +210,6 @@ export class ProfileQuery {
                multi.user,
                multi.title,
                multi.date,
-               multi.edited,
-               multi.editedDate,
                multi.completed,
                multi.likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +
@@ -241,7 +226,7 @@ export class ProfileQuery {
 export class SearchQuery {
   public searchEither = (keyword: string) => {
     return `
-        SELECT eitherId, user, title, date, editedDate, completed, likeCnt,
+        SELECT eitherId, user, title, date, completed, likeCnt,
                (SELECT nickname FROM users WHERE either.user = users.id) AS nickname
         FROM either
         WHERE title LIKE '%${keyword}%'
@@ -254,7 +239,6 @@ export class SearchQuery {
                user,
                title,
                date,
-               editedDate,
                completed,
                likeCnt,
                (SELECT (SELECT COUNT(*) FROM comments WHERE multi = multi.multiId) +

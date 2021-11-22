@@ -4,25 +4,18 @@ import { QueryTypes } from 'sequelize';
 import { sequelize, Either, User } from '../models';
 import joi from './joi';
 import { UserModel } from '../models/users';
+import { EitherModel } from '../models/either';
+import { EitherList, MultiList, ProfileMulti } from '../interfaces/profile';
+
 const profileQuery = new ProfileQuery();
 
-interface PostAttributes {
-  eitherId?: number;
-  multiId?: number;
-  title?: string;
-  date?: string;
-  editedDate?: string | null;
-  likeCnt?: number;
-  completed?: number;
-  commentCnt?: number;
-}
 
 class profileController {
   //내가 쓴 글
   public getMyPosts = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { user_id } = req.params; //req.params로 user의 고유id를 받아온다
-      const [either, multi] = await Promise.all([
+      const [either, multi]: [EitherModel[], ProfileMulti[]] = await Promise.all([
         //Promise.all로 내가 쓴 글을 병렬로 찾아와서 변수로 저장한다.
         Either.findAll({
           attributes: [
@@ -42,8 +35,8 @@ class profileController {
           type: QueryTypes.SELECT,
         }),
       ]);
-      const post: object[] = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
-      const posts: object[] = post.sort((b: PostAttributes, a: PostAttributes) => {
+      const post: (EitherModel | ProfileMulti)[] = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
+      const posts: (EitherModel | ProfileMulti)[] = post.sort((b, a) => {
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; //최신순 정렬
       });
       res.status(200).json({ success: true, posts }); //status code는 200, success:true, 정렬된 포스팅을 보내준다.
@@ -55,7 +48,7 @@ class profileController {
   public getMyPolls = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { user_id } = req.params; //req.params로 해당 user의 고유 id를 받아온다
-      const [either, multi]: object[][] = await Promise.all([
+      const [either, multi]: [EitherList[], MultiList[]] = await Promise.all([
         //Promise.all 내가 참여한 글을 병렬로 찾아와서 변수로 저장한다.
         sequelize.query(profileQuery.getMyPollsForEither(user_id), {
           type: QueryTypes.SELECT,
@@ -64,8 +57,8 @@ class profileController {
           type: QueryTypes.SELECT,
         }),
       ]);
-      const post = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
-      const posts = post.sort((b: PostAttributes, a: PostAttributes) => {
+      const post: (EitherList | MultiList)[] = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
+      const posts: (EitherList | MultiList)[] = post.sort((b, a) => {
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; //최신순 정렬
       });
       res.status(200).json({ success: true, posts }); //status code는 200, success: true, 정렬된 포스팅을 보내준다.
@@ -78,7 +71,7 @@ class profileController {
     try {
       const { nickname }: { nickname: string } = await joi.editNickSchema.validateAsync(req.body); //req.body로 바꿀 닉네임을 받는다
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
-      const NickExist: UserModel = await User.findOne({ where: { id: user } }); //DB에서 해당 고유 id를 가진 user를 찾는다
+      const NickExist: UserModel | null = await User.findOne({ where: { id: user } }); //DB에서 해당 고유 id를 가진 user를 찾는다
       if (NickExist) {
         //user가 있으면
         await User.update({ nickname }, { where: { id: user } }); //닉네임을 변경한다
@@ -98,7 +91,7 @@ class profileController {
   public getProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { user_id } = req.params; //req.params로 해당 user의 고유id를 받아온다
-      const user = await User.findOne({ where: { id: user_id } }); //고유 id로 user를 찾는다
+      const user: UserModel | null = await User.findOne({ where: { id: user_id } }); //고유 id로 user를 찾는다
       if (user) {
         //user가 있으면
         const nickname: string = user.nickname; //해당 user의 닉네임

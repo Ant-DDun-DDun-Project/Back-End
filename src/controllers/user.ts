@@ -7,6 +7,7 @@ import { validatePassword } from './utils/password-validation';
 import * as bcrypt from 'bcrypt';
 import joi from './joi';
 import 'dotenv/config';
+import { SignUp, UserInfo } from '../interfaces/user';
 
 const salt = Number(process.env.SALT);
 
@@ -20,11 +21,10 @@ class userControllers {
         pw,
         confirmPw,
         ageGroup,
-      }: { userId: string; nickname: string; pw: string; confirmPw: string; ageGroup: number } =
-        await joi.signUpSchema.validateAsync(req.body); //req.body로 user정보(아이디, 닉네임, 비밀번호, 비밀번호확인, 연령대)를 받는다.
+      }: SignUp = await joi.signUpSchema.validateAsync(req.body); //req.body로 user정보(아이디, 닉네임, 비밀번호, 비밀번호확인, 연령대)를 받는다.
       if (validatePassword(pw, confirmPw)) {
         //비밀번호와 비밀번호 확인이 일치하면 true, 불일치하면 false를 return한다.
-        const [encryptedPw, userExist] = await Promise.all([
+        const [encryptedPw, userExist]: [string, UserModel | null] = await Promise.all([
           //Promise.all로 비밀번호를 암호화하고 user의 아이디로 user 유무를 찾는다.
           bcrypt.hash(pw, salt),
           User.findOne({ where: { userId } }),
@@ -55,10 +55,8 @@ class userControllers {
   // 로그인
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userId, pw }: { userId: string; pw: string } = await joi.loginSchema.validateAsync(
-        req.body
-      ); //req.body로 user정보(아이디,비밀번호)를 받는다
-      const userData: UserModel = await User.findOne({ where: { userId } }); //user의 아이디로 user 유무를 찾는다.
+      const { userId, pw }: UserInfo = await joi.loginSchema.validateAsync(req.body); //req.body로 user정보(아이디,비밀번호)를 받는다
+      const userData: UserModel | null = await User.findOne({ where: { userId } }); //user의 아이디로 user 유무를 찾는다.
       const pwCheck: boolean = await bcrypt.compare(pw, userData.pw); //비밀번호를 db에 있는 비밀번호와 일치하는지 체크한다
       if (!userData || !pwCheck) {
         //user가 없거나, 비밀번호가 일치하지 않으면

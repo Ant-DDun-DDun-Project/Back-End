@@ -1,10 +1,11 @@
 import { Vote } from '../../models'
 import * as sequelize from 'sequelize'
+import { VoteModel } from '../../models/votes';
 
 export async function countAttend(): Promise<number> {
   //투표에 참여한 user을 뽑아옴(중복제거)
   try {
-    const votes = await Vote.findAll({
+    const votes: VoteModel[] = await Vote.findAll({
       attributes: [[sequelize.fn('DISTINCT', sequelize.col('user')), 'vote']],
     });
     //투표에 참여한 user
@@ -12,4 +13,4 @@ export async function countAttend(): Promise<number> {
   } catch (err) {
     console.error(err);
   }
-};
+}
