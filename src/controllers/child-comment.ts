@@ -6,7 +6,7 @@ import { ChildCommentModel } from '../models/child-comments';
 import { UserModel } from '../models/users';
 import { CommentLikeModel } from '../models/comment-likes';
 
-export class childCommentControllers {
+class childCommentControllers {
   //대댓글 작성
   public async postChildComment(req: Request, res: Response, next: NextFunction) {
     try {

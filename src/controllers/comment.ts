@@ -6,7 +6,7 @@ import { CommentModel } from '../models/comments';
 import { UserModel } from '../models/users';
 import { CommentLikeModel } from '../models/comment-likes';
 
-export class commentControllers {
+class commentControllers {
   //댓글 작성
   public async postComment(req: Request, res: Response, next: NextFunction) {
     try {
@@ -145,7 +145,7 @@ export class commentControllers {
       } else {
         //좋아요를 한 기록이 없으면
         await CommentLike.create({ user, comment: Number(comment_id), multi: Number(multi_id) }); //좋아요 기록 생성
-        const likeCnt:number = await CommentLike.count({
+        const likeCnt: number = await CommentLike.count({
           where: { comment: comment_id, multi: multi_id },
         }); //해당 댓글의 좋아요 갯수 확인
         await Comment.update(
