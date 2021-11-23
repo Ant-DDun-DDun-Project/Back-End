@@ -15,11 +15,9 @@ class eitherControllers {
   // 찬반투표 게시글 작성
   public postEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {
-        title,
-        contentA,
-        contentB,
-      }: PostInfo = await joi.eitherSchema.validateAsync(req.body); //req.body로 찬반투표 데이터들(제목, 선택지, 날짜)를 받아옴
+      const { title, contentA, contentB }: PostInfo = await joi.eitherSchema.validateAsync(
+        req.body
+      ); //req.body로 찬반투표 데이터들(제목, 선택지, 날짜)를 받아옴
       const date: string = moment().format('YYYY-MM-DD HH:mm:ss'); //작성날짜
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
       await Either.create({
@@ -127,7 +125,9 @@ class eitherControllers {
   //찬반투표 게시글 수정
   public editEither = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { title, contentA, contentB }: PostInfo = await joi.editEitherSchema.validateAsync(req.body); //req.body로 찬반투표 게시물 수정할 데이터(제목, 선택지, 수정날짜)를 받아온다
+      const { title, contentA, contentB }: PostInfo = await joi.editEitherSchema.validateAsync(
+        req.body
+      ); //req.body로 찬반투표 게시물 수정할 데이터(제목, 선택지, 수정날짜)를 받아온다
       const { either_id } = req.params; //해당 게시물의 고유 id
       const editedDate: string = moment().format('YYYY-MM-DD HH:mm:ss'); //수정날짜
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
@@ -143,7 +143,7 @@ class eitherControllers {
         ); //게시물 수정
         return res.status(200).json({ success: true }); //status code 200, success:true를 보내준다.
       } else {
-        //투표를 하지 않았으면
+        //투표를 했으면
         res.status(400).json({ success: false }); //status code 400, success:false를 보내준다.
       }
     } catch (err) {
@@ -155,7 +155,9 @@ class eitherControllers {
     try {
       const { either_id } = req.params; //해당 게시물의 고유id
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
-      const userCheck: EitherModel | null = await Either.findOne({ where: { eitherId: either_id, user } }); //현재 로그인한 user가 작성한 포스팅인지
+      const userCheck: EitherModel | null = await Either.findOne({
+        where: { eitherId: either_id, user },
+      }); //현재 로그인한 user가 작성한 포스팅인지
       if (userCheck) {
         //작성자가 맞으면
         await Either.destroy({ where: { eitherId: either_id, user } }); //해당 게시물 삭제

@@ -23,7 +23,8 @@ export function authForGuest(req: Request, res: Response, next: NextFunction) {
 // 사용자 인증 미들웨어
 export function auth(req: Request, res: Response, next: NextFunction) {
   try {
-    const token: string = req.cookies.user;
+    const { authorization } = req.headers;
+    const [Bearer, token]: string[] = authorization.split(' ');
     if (!token) {
       res.status(401).json({ success: false });
     } else {

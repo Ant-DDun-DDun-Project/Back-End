@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "ES2021",
     "skipLibCheck": true,
-    "sourceMap": true,
     "module": "commonjs",
     "strict":true,
     "strictNullChecks": false,
