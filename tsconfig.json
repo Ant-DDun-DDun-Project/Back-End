@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "skipLibCheck": true,
+    "module": "commonjs",
+    "strict":true,
+    "strictNullChecks": false,
+    "esModuleInterop": false,
+    "resolveJsonModule": true,
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

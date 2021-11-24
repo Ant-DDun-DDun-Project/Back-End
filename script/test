@@ -1,2 +1,3 @@
 #!/bin/sh
+tsc
 npx jest --detectOpenHandles --forceExit

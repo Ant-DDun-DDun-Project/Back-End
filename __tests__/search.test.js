@@ -1,14 +1,6 @@
-jest.mock('../models/either');
-jest.mock('../models/votes');
-jest.mock('../models/users');
-jest.mock('../models/multi');
-jest.mock('../models/likes');
-jest.mock('../models/comments');
-jest.mock('../models/child-comments');
-jest.mock('../models/comment-likes');
-jest.mock('sequelize');
-const { Either, Multi, sequelize, Like, Vote } = require('../models');
-const { searchPosts } = require('../controllers/search');
+jest.mock('../dist/models');
+const { sequelize } = require('../dist/models');
+const { default: searchControllers } = require('../dist/controllers/search');
 
 describe('검색하기', () => {
   const res = {
@@ -44,7 +36,7 @@ describe('검색하기', () => {
           commentCnt: 0,
         },
       ]);
-    await searchPosts(req, res, next);
+    await searchControllers.searchPosts(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -77,7 +69,7 @@ describe('검색하기', () => {
     };
     const err = 'DB 에러';
     await sequelize.query.mockRejectedValue(err);
-    await searchPosts(req, res, next);
+    await searchControllers.searchPosts(req, res, next);
     expect(next).toBeCalledWith(err);
   });
   test('DB 쿼리 에러시 next(err) 호출', async () => {
@@ -89,7 +81,7 @@ describe('검색하기', () => {
     const err = 'DB 에러';
     await sequelize.query.mockReturnValueOnce(true);
     await sequelize.query.mockRejectedValueOnce(err);
-    await searchPosts(req, res, next);
+    await searchControllers.searchPosts(req, res, next);
     expect(next).toBeCalledWith(err);
   });
   test('DB 쿼리 에러시 next(err) 호출', async () => {
@@ -98,7 +90,7 @@ describe('검색하기', () => {
         keyword: '',
       },
     };
-    await searchPosts(req, res, next);
+    await searchControllers.searchPosts(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });

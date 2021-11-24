@@ -1,18 +1,10 @@
-jest.mock('../../models/either');
-jest.mock('../../models/votes');
-jest.mock('../../models/users');
-jest.mock('../../models/multi');
-jest.mock('../../models/likes');
-jest.mock('../../models/comments');
-jest.mock('../../models/child-comments');
-jest.mock('../../models/comment-likes');
-jest.mock('../../controllers/utils/attend-count');
-jest.mock('../../controllers/utils/posting-count');
-jest.mock('sequelize');
-const { sequelize } = require('../../models');
-const { getMain } = require('../../controllers/main');
-const { countPosting } = require('../../controllers/utils/posting-count');
-const { countAttend } = require('../../controllers/utils/attend-count');
+jest.mock('../../dist/models');
+jest.mock('../../dist/controllers/utils/posting-count');
+jest.mock('../../dist/controllers/utils/attend-count');
+const { sequelize } = require('../../dist/models');
+const { default: mainControllers } = require('../../dist/controllers/main');
+const { countPosting } = require('../../dist/controllers/utils/posting-count');
+const { countAttend } = require('../../dist/controllers/utils/attend-count');
 
 describe('메인페이지 뷰', () => {
   const req = {};
@@ -67,7 +59,7 @@ describe('메인페이지 뷰', () => {
       );
     await countPosting.mockReturnValue([200, 250]);
     await countAttend.mockReturnValue(12312);
-    await getMain(req, res, next);
+    await mainControllers.getMain(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -118,7 +110,7 @@ describe('메인페이지 뷰', () => {
   test('DB 에러시 next(err)', async () => {
     const err = 'DB에러';
     await sequelize.query.mockRejectedValueOnce(err);
-    await getMain(req, res, next);
+    await mainControllers.getMain(req, res, next);
     expect(next).toBeCalledWith(err);
   });
   test('DB 에러시 next(err)', async () => {
@@ -145,7 +137,7 @@ describe('메인페이지 뷰', () => {
         })
       )
       .mockRejectedValueOnce(err);
-    await getMain(req, res, next);
+    await mainControllers.getMain(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

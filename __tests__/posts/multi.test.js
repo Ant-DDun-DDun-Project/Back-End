@@ -1,28 +1,8 @@
-jest.mock('../../models/either');
-jest.mock('../../models/votes');
-jest.mock('../../models/users');
-jest.mock('../../models/multi');
-jest.mock('../../models/likes');
-jest.mock('../../models/comments');
-jest.mock('../../models/child-comments');
-jest.mock('../../models/comment-likes');
-jest.mock('../../controllers/utils/sort-posts');
-jest.mock('sequelize');
-
-const { Multi, sequelize, Like, Vote } = require('../../models');
-const {
-  postMulti,
-  editMulti,
-  getMulti,
-  getIngMulti,
-  getCompleteMulti,
-  deleteMulti,
-  likeMulti,
-  voteMulti,
-  completeMulti,
-  getTargetMulti,
-} = require('../../controllers/multi');
-const { sortMulti } = require('../../controllers/utils/sort-posts');
+jest.mock('../../dist/models');
+jest.mock('../../dist/controllers/utils/sort-posts');
+const { Multi, sequelize, Like, Vote } = require('../../dist/models');
+const { default: multiControllers } = require('../../dist/controllers/multi');
+const { sortMulti } = require('../../dist/controllers/utils/sort-posts');
 
 describe('객관식 게시글을 작성에 대한 검사', () => {
   const req = {
@@ -48,7 +28,7 @@ describe('객관식 게시글을 작성에 대한 검사', () => {
   // 객관식 게시글 DB 작성 성공.
   test('객관식 게시글을 성공적으로 작성하면 /success: true/ 를 응답으로 보낸다.', async () => {
     await Multi.create.mockReturnValue(true);
-    await postMulti(req, res, next);
+    await multiControllers.postMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
@@ -57,7 +37,7 @@ describe('객관식 게시글을 작성에 대한 검사', () => {
   test('객관식 게시글 작성 시 DB 에러 발생', async () => {
     const err = 'DB Error';
     Multi.create.mockReturnValue(Promise.reject(err));
-    await postMulti(req, res, next);
+    await multiControllers.postMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -86,7 +66,7 @@ describe('객관식 게시물 수정', () => {
   };
   const next = jest.fn();
   test('객관식 게시물 수정이 성공하면 success:true를 보내준다', async () => {
-    await Multi.findOne.mockReturnValue(
+    await Multi.findOne.mockReturnValueOnce(
       Promise.resolve({
         title: '제목',
         description: '내용',
@@ -99,6 +79,7 @@ describe('객관식 게시물 수정', () => {
         editedDate: null,
       })
     );
+    await Vote.findOne.mockReturnValue(null);
     await Multi.update.mockReturnValue(
       Promise.resolve({
         title: '제목',
@@ -112,15 +93,55 @@ describe('객관식 게시물 수정', () => {
         editedDate: null,
       })
     );
-    await editMulti(req, res, next);
+    await multiControllers.editMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
+  });
+  test('이미 투표 이력이 존재하면 수정에 실패하고 success:false를 보내준다.', async () => {
+    await Multi.findOne.mockReturnValueOnce(
+      Promise.resolve({
+        multiId: 1,
+        title: '제목',
+        description: '내용',
+        contentA: '예제 A',
+        contentB: '예제 B',
+        contentC: '예제 C',
+        contentD: '예제 D',
+        contentE: '예제 E',
+        edited: false,
+        editedDate: null,
+      })
+    );
+    await Vote.findOne.mockReturnValueOnce({
+      id: 1,
+      vote: 'A',
+      user: 1,
+      either: null,
+      multi: 1,
+    });
+    await Multi.update.mockReturnValue(
+      Promise.resolve({
+        multiId: 1,
+        title: '제목',
+        description: '내용',
+        contentA: '예제 A',
+        contentB: '예제 B',
+        contentC: '예제 C',
+        contentD: '예제 D',
+        contentE: '예제 E',
+        edited: false,
+        editedDate: null,
+      })
+    );
+    await multiControllers.editMulti(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({ success: false });
   });
   test('객관식 게시글 수정 DB 에러 발생', async () => {
     const err = 'DB에러';
     await Multi.findOne.mockRejectedValue(err);
     await Multi.update.mockRejectedValue(err);
-    await editMulti(req, res, next);
+    await multiControllers.editMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -168,7 +189,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         ],
       })
     );
-    await getMulti(req, res, next);
+    await multiControllers.getMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -328,7 +349,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
         nickname: 'BadBoy',
       },
     ]);
-    await getMulti(req, res, next);
+    await multiControllers.getMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -404,7 +425,7 @@ describe('객관식 페이지에서 게시물 리스트 전송에 대한 검사'
     };
     const err = 'DB Err';
     sequelize.query.mockReturnValue(Promise.reject(err));
-    await getMulti(req, res, next);
+    await multiControllers.getMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -452,7 +473,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         ],
       })
     );
-    await getIngMulti(req, res, next);
+    await multiControllers.getIngMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -612,7 +633,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
         nickname: '황창환 ',
       },
     ]);
-    await getIngMulti(req, res, next);
+    await multiControllers.getIngMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -688,7 +709,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
     };
     const err = 'DB Err';
     sequelize.query.mockReturnValue(Promise.reject(err));
-    await getIngMulti(req, res, next);
+    await multiControllers.getIngMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -732,7 +753,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           ],
         })
       );
-      await getCompleteMulti(req, res, next);
+      await multiControllers.getCompleteMulti(req, res, next);
       expect(res.status).toBeCalledWith(200);
       expect(res.json).toBeCalledWith({
         success: true,
@@ -852,7 +873,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
           nickname: '황창환 ',
         },
       ]);
-      await getCompleteMulti(req, res, next);
+      await multiControllers.getCompleteMulti(req, res, next);
       expect(res.status).toBeCalledWith(200);
       expect(res.json).toBeCalledWith({
         success: true,
@@ -908,7 +929,7 @@ describe('객관식 진행중 페이지에서 게시물 리스트 전송에 대�
       };
       const err = 'DB Err';
       sequelize.query.mockReturnValue(Promise.reject(err));
-      await getCompleteMulti(req, res, next);
+      await multiControllers.getCompleteMulti(req, res, next);
       expect(next).toBeCalledWith(err);
     });
   });
@@ -943,13 +964,13 @@ describe('객관식 삭제', () => {
       })
     );
     await Multi.destroy.mockResolvedValue();
-    await deleteMulti(req, res, next);
+    await multiControllers.deleteMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
   test('삭제시 존재하는 객관식을 찾지 못하면 success:false를 보내준다.', async () => {
     await Multi.findOne.mockReturnValue(null);
-    await deleteMulti(req, res, next);
+    await multiControllers.deleteMulti(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
@@ -957,7 +978,7 @@ describe('객관식 삭제', () => {
     const err = 'DB에러';
     await Multi.findOne.mockRejectedValue(err);
     await Multi.update.mockRejectedValue(err);
-    await deleteMulti(req, res, next);
+    await multiControllers.deleteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -983,14 +1004,14 @@ describe('객관식 게시글을 좋아요에 대한 검사', () => {
     await Like.create.mockReturnValue(true);
     await Like.count.mockReturnValue(3);
     await Multi.update.mockReturnValue(true);
-    await likeMulti(req, res, next);
+    await multiControllers.likeMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true, likeCnt: 3 });
   });
 
   test('이미 likes 테이블에 있는 경우 success:false를 내려준다.', async () => {
     await Like.findOne.mockReturnValue(true);
-    await likeMulti(req, res, next);
+    await multiControllers.likeMulti(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
@@ -998,7 +1019,7 @@ describe('객관식 게시글을 좋아요에 대한 검사', () => {
   test('like테이블 조회 시 에러가 난 경우 success: false를 내려준다.', async () => {
     const err = 'db에러';
     await Like.findOne.mockRejectedValue(err);
-    await likeMulti(req, res, next);
+    await multiControllers.likeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1006,7 +1027,7 @@ describe('객관식 게시글을 좋아요에 대한 검사', () => {
     const err = 'db에러';
     await Like.findOne.mockReturnValue(null);
     await Like.create.mockRejectedValue(err);
-    await likeMulti(req, res, next);
+    await multiControllers.likeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1015,7 +1036,7 @@ describe('객관식 게시글을 좋아요에 대한 검사', () => {
     await Like.findOne.mockReturnValue(null);
     await Like.create.mockReturnValue(true);
     await Like.count.mockRejectedValue(err);
-    await likeMulti(req, res, next);
+    await multiControllers.likeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1025,7 +1046,7 @@ describe('객관식 게시글을 좋아요에 대한 검사', () => {
     await Like.create.mockReturnValue(true);
     await Like.count.mockReturnValue(3);
     await Multi.update.mockRejectedValue(err);
-    await likeMulti(req, res, next);
+    await multiControllers.likeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -1068,7 +1089,7 @@ describe('객관식 투표에 대한 검사', () => {
     await Vote.create.mockReturnValue(true);
     await Vote.findAll.mockReturnValue(mockdb);
     await countVote.mockReturnValue([2, 2, 1, 2, 3]);
-    await voteMulti(req, res, next);
+    await multiControllers.voteMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -1082,7 +1103,7 @@ describe('객관식 투표에 대한 검사', () => {
 
   test('이미 투표한 게시글이라면 success: false 를 내려준다', async () => {
     await Vote.findOne.mockReturnValue(true);
-    await voteMulti(req, res, next);
+    await multiControllers.voteMulti(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({
       success: false,
@@ -1091,14 +1112,14 @@ describe('객관식 투표에 대한 검사', () => {
 
   test('DB Error 발생 --> Vote.findOne', async () => {
     await Vote.findOne.mockRejectedValue(err);
-    await voteMulti(req, res, next);
+    await multiControllers.voteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
   test('DB Error 발생 --> Vote.create', async () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockRejectedValue(err);
-    await voteMulti(req, res, next);
+    await multiControllers.voteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1106,7 +1127,7 @@ describe('객관식 투표에 대한 검사', () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockReturnValue(true);
     await Vote.findAll.mockRejectedValue(err);
-    await voteMulti(req, res, next);
+    await multiControllers.voteMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -1130,28 +1151,28 @@ describe('객관식 투표 종료하기 검사', () => {
   test('객관식 투표를 종료에 성공하면 success: true 를 내려준다.', async () => {
     await Multi.findOne.mockReturnValue(true);
     await Multi.update.mockReturnValue(true);
-    await completeMulti(req, res, next);
+    await multiControllers.completeMulti(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
 
   test('이미 종료된 투표인 경우 success: false 를 내려준다.', async () => {
     await Multi.findOne.mockReturnValue(null);
-    await completeMulti(req, res, next);
+    await multiControllers.completeMulti(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
 
   test('DB Error 발생 --> Multi.findOne', async () => {
     await Multi.findOne.mockRejectedValue(err);
-    await completeMulti(req, res, next);
+    await multiControllers.completeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
   test('DB Error 발생 --> Multi.update', async () => {
     await Multi.findOne.mockReturnValue(true);
     await Multi.update.mockReturnValue(Promise.reject(err));
-    await completeMulti(req, res, next);
+    await multiControllers.completeMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -1231,7 +1252,7 @@ describe('객관식 게시글 상세 페이지 검사', () => {
           liked: null,
         },
       ]);
-    await getTargetMulti(req, res, next);
+    await multiControllers.getTargetMulti(req, res, next);
     expect(res.json).toBeCalledWith({
       success: true,
       multi: {
@@ -1294,20 +1315,20 @@ describe('객관식 게시글 상세 페이지 검사', () => {
 
   test('객관식 게시물이 DB에 존재하지 않는 경우 / success: false / 를 응답으로 보내준다.', async () => {
     await sequelize.query.mockReturnValueOnce([]);
-    await getTargetMulti(req, res, next);
+    await multiControllers.getTargetMulti(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
 
   test('DB Error --> multi DB 에러', async () => {
     await sequelize.query.mockReturnValueOnce(Promise.reject(err));
-    await getTargetMulti(req, res, next);
+    await multiControllers.getTargetMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
   test('DB Error --> comment DB 에러', async () => {
     await sequelize.query.mockReturnValueOnce(true).mockReturnValueOnce(Promise.reject(err));
-    await getTargetMulti(req, res, next);
+    await multiControllers.getTargetMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1316,7 +1337,7 @@ describe('객관식 게시글 상세 페이지 검사', () => {
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(Promise.reject(err));
-    await getTargetMulti(req, res, next);
+    await multiControllers.getTargetMulti(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

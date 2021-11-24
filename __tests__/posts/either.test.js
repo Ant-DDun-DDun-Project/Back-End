@@ -1,28 +1,9 @@
-jest.mock('../../models/either');
-jest.mock('../../models/votes');
-jest.mock('../../models/users');
-jest.mock('../../models/multi');
-jest.mock('../../models/likes');
-jest.mock('../../models/comments');
-jest.mock('../../models/child-comments');
-jest.mock('../../models/comment-likes');
-jest.mock('../../controllers/utils/sort-posts');
-jest.mock('sequelize');
+jest.mock('../../dist/models');
+jest.mock('../../dist/controllers/utils/sort-posts');
+const { default: eitherControllers } = require('../../dist/controllers/either');
+const { sortEither } = require('../../dist/controllers/utils/sort-posts');
+const { Either, sequelize, Like, Vote } = require('../../dist/models');
 
-const {
-  postEither,
-  editEither,
-  getEither,
-  getIngEither,
-  getCompleteEither,
-  deleteEither,
-  likeEither,
-  voteEither,
-  completeEither,
-  getTargetEither,
-} = require('../../controllers/either');
-const { sortEither } = require('../../controllers/utils/sort-posts');
-const { Either, sequelize, Like, Vote } = require('../../models');
 describe('양자택일 게시글 작성 테스트', () => {
   const res = {
     status: jest.fn(() => res),
@@ -42,14 +23,14 @@ describe('양자택일 게시글 작성 테스트', () => {
 
   test('양자택일 게시글 작성에 성공하면 response로 success:true를 보낸다.', async () => {
     await Either.create.mockReturnValue(true);
-    await postEither(req, res, next);
+    await eitherControllers.postEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
   test('객관식 게시글 작성 시 DB 에러 발생', async () => {
     const err = 'DB에러';
     await Either.create.mockRejectedValue(err);
-    await postEither(req, res, next);
+    await eitherControllers.postEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -74,7 +55,7 @@ describe('양자택일 게시물 수정', () => {
   };
   const next = jest.fn();
   test('양자택일 게시물 수정에 성공하면 response로 success:true를 보내준다', async () => {
-    await Either.findOne.mockReturnValue(
+    await Either.findOne.mockReturnValueOnce(
       Promise.resolve({
         eitherId: '1',
         title: '하이',
@@ -85,6 +66,7 @@ describe('양자택일 게시물 수정', () => {
         editedDate: null,
       })
     );
+    await Vote.findOne.mockReturnValueOnce(null);
     await Either.update.mockReturnValue(
       Promise.resolve({
         eitherId: '1',
@@ -95,26 +77,61 @@ describe('양자택일 게시물 수정', () => {
         editedDate: '2021-10-27 20:27:23',
       })
     );
-    await editEither(req, res, next);
+    await eitherControllers.editEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
+  test('이미 투표를 했으면 수정에 실패하고 response로 success:false를 보내준다.', async () => {
+    await Either.findOne.mockReturnValueOnce(
+      Promise.resolve({
+        eitherId: '1',
+        title: '하이',
+        contentA: '삼전',
+        contentB: '애플',
+        date: '2021-10-26 20:27:23',
+        edited: false,
+        editedDate: null,
+        user: 1,
+      })
+    );
+    await Vote.findOne.mockReturnValueOnce({
+      id: 1,
+      vote: 'A',
+      user: 1,
+      either: 1,
+      multi: null,
+    });
+    await Either.update.mockReturnValue(
+      Promise.resolve({
+        eitherId: '1',
+        title: '안녕하세요',
+        contentA: '처음뵙겠습니다',
+        contentB: '사실 두번째',
+        date: '2021-10-26 20:27:23',
+        editedDate: '2021-10-27 20:27:23',
+        user: 1,
+      })
+    );
+    await eitherControllers.editEither(req, res, next);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledWith({ success: false });
+  });
   test('양자택일 게시물이 없으면 response로 success:false를 보내준다', async () => {
     await Either.findOne.mockReturnValue(null);
-    await editEither(req, res, next);
+    await eitherControllers.editEither(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
   test('DB 에러(findOne) 시 next(err)', async () => {
     const err = 'DB에러';
     await Either.findOne.mockRejectedValue(err);
-    await editEither(req, res, next);
+    await eitherControllers.editEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
   test('DB 에러(update) 시 next(err)', async () => {
     const err = 'DB에러';
     await Either.update.mockRejectedValue(err);
-    await editEither(req, res, next);
+    await eitherControllers.editEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -172,7 +189,7 @@ describe('양자택일 투표 모두보기', () => {
         ],
       })
     );
-    await getEither(req, res, next);
+    await eitherControllers.getEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -326,7 +343,7 @@ describe('양자택일 투표 모두보기', () => {
         voted: null,
       },
     ]);
-    await getEither(req, res, next);
+    await eitherControllers.getEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -393,7 +410,7 @@ describe('양자택일 투표 모두보기', () => {
     };
     const err = 'DB에러';
     await sequelize.query.mockRejectedValue(err);
-    await getEither(req, res, next);
+    await eitherControllers.getEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -451,7 +468,7 @@ describe('진행중인 양자택일 투표 보기', () => {
         ],
       })
     );
-    await getIngEither(req, res, next);
+    await eitherControllers.getIngEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -571,7 +588,7 @@ describe('진행중인 양자택일 투표 보기', () => {
         voted: null,
       },
     ]);
-    await getIngEither(req, res, next);
+    await eitherControllers.getIngEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -621,7 +638,7 @@ describe('진행중인 양자택일 투표 보기', () => {
     };
     const err = 'DB에러';
     await sequelize.query.mockRejectedValue(err);
-    await getIngEither(req, res, next);
+    await eitherControllers.getIngEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -679,7 +696,7 @@ describe('종료된 양자택일 투표 보기', () => {
         ],
       })
     );
-    await getCompleteEither(req, res, next);
+    await eitherControllers.getCompleteEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -833,7 +850,7 @@ describe('종료된 양자택일 투표 보기', () => {
         voted: null,
       },
     ]);
-    await getCompleteEither(req, res, next);
+    await eitherControllers.getCompleteEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -900,7 +917,7 @@ describe('종료된 양자택일 투표 보기', () => {
     };
     const err = 'DB에러';
     await sequelize.query.mockRejectedValue(err);
-    await getCompleteEither(req, res, next);
+    await eitherControllers.getCompleteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -932,13 +949,13 @@ describe('양자택일 삭제', () => {
       })
     );
     await Either.destroy.mockResolvedValue();
-    await deleteEither(req, res, next);
+    await eitherControllers.deleteEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
   test('삭제 시 Either를 찾지 못하면 response로 success:false를 보내준다.', async () => {
     await Either.findOne.mockReturnValue(null);
-    await deleteEither(req, res, next);
+    await eitherControllers.deleteEither(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
@@ -946,7 +963,7 @@ describe('양자택일 삭제', () => {
     const err = 'DB에러';
     await Either.findOne.mockRejectedValue(err);
     await Either.destroy.mockRejectedValue(err);
-    await deleteEither(req, res, next);
+    await eitherControllers.deleteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -972,7 +989,7 @@ describe('찬반 투표 좋아요에 대한 검사', () => {
     await Like.create.mockReturnValue(true); // 해당 게시물에 투표 이력을 추가 한다.
     await Like.count.mockReturnValue(1); // 해당 게시물의 좋아요 갯수를 구한다.
     await Either.update.mockReturnValue(true); // 찬반 투표 해당 게시물의 likeCnt 수정 작업
-    await likeEither(req, res, next);
+    await eitherControllers.likeEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -981,7 +998,7 @@ describe('찬반 투표 좋아요에 대한 검사', () => {
   });
   test('찬반 투표 좋아요를 수행한 이력이 존재하면 / success: false / 를 응답으로 보낸다', async () => {
     await Like.findOne.mockReturnValue(true);
-    await likeEither(req, res, next);
+    await eitherControllers.likeEither(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({
       success: false,
@@ -990,14 +1007,14 @@ describe('찬반 투표 좋아요에 대한 검사', () => {
 
   test('DB Error 동작 -> Like.findOne', async () => {
     Like.findOne.mockReturnValue(Promise.reject(err));
-    await likeEither(req, res, next);
+    await eitherControllers.likeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
   test('DB Error 동작 -> Like.create', async () => {
     await Like.findOne.mockReturnValue(false);
     Like.create.mockReturnValue(Promise.reject(err));
-    await likeEither(req, res, next);
+    await eitherControllers.likeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1005,7 +1022,7 @@ describe('찬반 투표 좋아요에 대한 검사', () => {
     await Like.findOne.mockReturnValue(false);
     await Like.create.mockReturnValue(true);
     Like.count.mockReturnValue(Promise.reject(err));
-    await likeEither(req, res, next);
+    await eitherControllers.likeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1014,7 +1031,7 @@ describe('찬반 투표 좋아요에 대한 검사', () => {
     await Like.create.mockReturnValue(true);
     await Like.count.mockReturnValue(1);
     Either.update.mockReturnValue(Promise.resolve(err));
-    await likeEither(req, res, next);
+    await eitherControllers.likeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -1042,7 +1059,7 @@ describe('찬반 투표에 대한 검사', () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockReturnValue(true);
     await Vote.count.mockReturnValueOnce(4).mockReturnValueOnce(10);
-    await voteEither(req, res, next);
+    await eitherControllers.voteEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -1057,7 +1074,7 @@ describe('찬반 투표에 대한 검사', () => {
     await Vote.findOne.mockReturnValue(true);
     await Vote.update.mockReturnValue(true);
     await Vote.count.mockReturnValueOnce(4).mockReturnValueOnce(10);
-    await voteEither(req, res, next);
+    await eitherControllers.voteEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -1070,14 +1087,14 @@ describe('찬반 투표에 대한 검사', () => {
 
   test('DB Error 동작 --> Vote.findOne', async () => {
     Vote.findOne.mockReturnValue(Promise.reject(err));
-    await voteEither(req, res, next);
+    await eitherControllers.voteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
   test('DB Error 동작 --> Vote.create', async () => {
     await Vote.findOne.mockReturnValue(null);
     Vote.create.mockReturnValue(Promise.reject(err));
-    await voteEither(req, res, next);
+    await eitherControllers.voteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1085,7 +1102,7 @@ describe('찬반 투표에 대한 검사', () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockReturnValue(true);
     Vote.count.mockReturnValue(err);
-    await voteEither(req, res, next);
+    await eitherControllers.voteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
@@ -1093,7 +1110,7 @@ describe('찬반 투표에 대한 검사', () => {
     await Vote.findOne.mockReturnValue(null);
     await Vote.create.mockReturnValue(true);
     Vote.count.mockReturnValueOnce(Promise.resolve(true)).mockReturnValueOnce(Promise.reject(err));
-    await voteEither(req, res, next);
+    await eitherControllers.voteEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -1117,88 +1134,28 @@ describe('찬반 게시물 종료하기 검사', () => {
   test('작성자가 성공적으로 찬반투표 게시물을 투표를 종료하였을 경우 / success: true / 를 응답으로 보내준다.', async () => {
     await Either.findOne.mockReturnValue(true);
     await Either.update.mockReturnValue(true);
-    await completeEither(req, res, next);
+    await eitherControllers.completeEither(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({ success: true });
   });
 
   test('작성자가 이미 투표 종료를 했을 경우 / success: false/ 를 응답으로 보내준다.', async () => {
     await Either.findOne.mockReturnValue(null);
-    await completeEither(req, res, next);
+    await eitherControllers.completeEither(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({ success: false });
   });
 
   test('DB Error 발생 --> Either.findOne', async () => {
     Either.findOne.mockReturnValue(Promise.reject(err));
-    await completeEither(req, res, next);
+    await eitherControllers.completeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 
   test('DB Error 발생 --> Either.update', async () => {
     await Either.findOne.mockReturnValue(true);
     Either.update.mockReturnValue(Promise.reject(err));
-    await completeEither(req, res, next);
-    expect(next).toBeCalledWith(err);
-  });
-});
-
-describe('찬반투표 게시글 특정페이지', () => {
-  const req = {
-    params: {
-      either_id: '1',
-    },
-  };
-  const res = {
-    locals: { user: '1' },
-    status: jest.fn(() => res),
-    json: jest.fn(),
-  };
-  const next = jest.fn();
-  const err = 'DB 에러';
-
-  test('찬반투표 게시글을 누르면 특정페이지를 보여주며 response로 success:true 와 데이터를 보내준다', async () => {
-    await sequelize.query.mockReturnValue(
-      Promise.resolve({
-        eitherId: 1,
-        user: 1,
-        title: 'hi',
-        contentA: 'hi',
-        contentB: 'bye',
-        date: '2021-10-29 14:38:54',
-        edited: false,
-        editedDate: null,
-        likeCnt: 1,
-        voteCntA: 2,
-        voteCntB: 3,
-        voted: true,
-        liked: true,
-      })
-    );
-    await getTargetEither(req, res, next);
-    expect(res.status).toBeCalledWith(200);
-    expect(res.json).toBeCalledWith({
-      either: {
-        eitherId: 1,
-        user: 1,
-        title: 'hi',
-        contentA: 'hi',
-        contentB: 'bye',
-        date: '2021-10-29 14:38:54',
-        edited: false,
-        editedDate: null,
-        likeCnt: 1,
-        voteCntA: 2,
-        voteCntB: 3,
-        voted: true,
-        liked: true,
-      },
-      success: true,
-    });
-  });
-  test('DB 에러 발생시 next(err)를 호출한다', async () => {
-    await sequelize.query.mockRejectedValue(err);
-    await getTargetEither(req, res, next);
+    await eitherControllers.completeEither(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

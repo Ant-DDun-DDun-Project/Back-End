@@ -1,4 +1,4 @@
-const { validatePassword } = require('../../controllers/utils/password-validation');
+const { validatePassword } = require('../../dist/controllers/utils/password-validation');
 
 test(`비밀번호를 입력했을때 
         password와 passwordCheck가 일치할 때,

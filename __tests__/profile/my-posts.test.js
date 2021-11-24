@@ -1,14 +1,6 @@
-jest.mock('../../models/either');
-jest.mock('../../models/votes');
-jest.mock('../../models/users');
-jest.mock('../../models/multi');
-jest.mock('../../models/likes');
-jest.mock('../../models/comments');
-jest.mock('../../models/child-comments');
-jest.mock('../../models/comment-likes');
-jest.mock('sequelize');
-const { Either, sequelize, User } = require('../../models');
-const { getMyPosts, getMyPolls, editNickname, getProfile } = require('../../controllers/profile');
+jest.mock('../../dist/models');
+const { Either, sequelize, User } = require('../../dist/models');
+const { default: profileControllers } = require('../../dist/controllers/profile');
 
 describe('내가 쓴 글', () => {
   const req = {
@@ -52,7 +44,7 @@ describe('내가 쓴 글', () => {
         commentCnt: 0,
       },
     ]);
-    await getMyPosts(req, res, next);
+    await profileControllers.getMyPosts(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -89,7 +81,7 @@ describe('내가 쓴 글', () => {
   test('DB 에러(findAll에서 에러)시 next(err) 호출', async () => {
     const err = 'DB 에러';
     await Either.findAll.mockRejectedValue(err);
-    await getMyPosts(req, res, next);
+    await profileControllers.getMyPosts(req, res, next);
     expect(next).toBeCalledWith(err);
   });
   test('DB 에러(sequelize.query에서 에러)시 next(err) 호출', async () => {
@@ -105,7 +97,7 @@ describe('내가 쓴 글', () => {
       },
     ]);
     await sequelize.query.mockRejectedValue(err);
-    await getMyPosts(req, res, next);
+    await profileControllers.getMyPosts(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -148,7 +140,7 @@ describe('내가 참여한 글', () => {
           },
         ])
       );
-    await getMyPolls(req, res, next);
+    await profileControllers.getMyPolls(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -176,7 +168,7 @@ describe('내가 참여한 글', () => {
   test('DB 에러시 next(err)', async () => {
     const err = 'DB에러';
     await sequelize.query.mockRejectedValueOnce(err);
-    await getMyPolls(req, res, next);
+    await profileControllers.getMyPolls(req, res, next);
     expect(next).toBeCalledWith(err);
   });
   test('DB 에러시 next(err)', async () => {
@@ -195,7 +187,7 @@ describe('내가 참여한 글', () => {
         ])
       )
       .mockRejectedValueOnce(err);
-    await getMyPolls(req, res, next);
+    await profileControllers.getMyPolls(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -234,7 +226,7 @@ describe('닉네임 변경', () => {
         ageGroup: 40,
       })
     );
-    await editNickname(req, res, next);
+    await profileControllers.editNickname(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -243,7 +235,7 @@ describe('닉네임 변경', () => {
   });
   test('닉네임을 찾지 못하면 response로 success:false로 보내준다', async () => {
     await User.findOne.mockReturnValue(null);
-    await editNickname(req, res, next);
+    await profileControllers.editNickname(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({
       success: false,
@@ -251,7 +243,7 @@ describe('닉네임 변경', () => {
   });
   test('DB 에러시(findOne 에러) next(err)를 호출한다', async () => {
     await User.findOne.mockRejectedValue(err);
-    await editNickname(req, res, next);
+    await profileControllers.editNickname(req, res, next);
     expect(next).toBeCalledWith(err);
   });
   test('DB 에러시(findOne 에러) next(err)를 호출한다', async () => {
@@ -264,7 +256,7 @@ describe('닉네임 변경', () => {
       })
     );
     await User.update.mockRejectedValue(err);
-    await editNickname(req, res, next);
+    await profileControllers.editNickname(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });
@@ -285,7 +277,7 @@ describe('프로필 페이지 뷰', () => {
     await User.findOne.mockReturnValue({
       nickname: '황창환',
     });
-    await getProfile(req, res, next);
+    await profileControllers.getProfile(req, res, next);
     expect(res.status).toBeCalledWith(200);
     expect(res.json).toBeCalledWith({
       success: true,
@@ -294,7 +286,7 @@ describe('프로필 페이지 뷰', () => {
   });
   test('프로필 페이지 접근 실패 시 response로 success:false를 보내준다', async () => {
     await User.findOne.mockReturnValue(null);
-    await getProfile(req, res, next);
+    await profileControllers.getProfile(req, res, next);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledWith({
       success: false,
@@ -302,7 +294,7 @@ describe('프로필 페이지 뷰', () => {
   });
   test('DB 에러', async () => {
     await User.findOne.mockRejectedValue(err);
-    await getProfile(req, res, next);
+    await profileControllers.getProfile(req, res, next);
     expect(next).toBeCalledWith(err);
   });
 });

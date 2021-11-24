@@ -1,4 +1,4 @@
-const schema = require('../../controllers/joi');
+const { default: schema } = require('../../dist/controllers/joi');
 const clearData = {
   userId: 'a_aa-aa_a',
   nickname: '황창환',
