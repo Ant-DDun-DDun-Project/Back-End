@@ -1,7 +1,7 @@
 #!/bin/sh
 ssh ubuntu@13.125.98.1 <<EOF
   cd ~/Back-End
-  sudo rm
+  sudo rm ~/Back-End/package-lock.json
   git pull origin master
   npm install
   sudo pm2 start ~/Back-End/dist/server1.js
