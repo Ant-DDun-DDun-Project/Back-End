@@ -8,6 +8,7 @@ import { CommentLikeFactory } from './comment-likes';
 import { CommentFactory } from './comments';
 import { VoteFactory } from './votes';
 import { LikeFactory } from './likes';
+import { VisitorFactory } from './visitors';
 
 export const sequelize = new Sequelize.Sequelize(
   config.development.database,
@@ -31,6 +32,7 @@ export const CommentLike = CommentLikeFactory(sequelize);
 export const Comment = CommentFactory(sequelize);
 export const Vote = VoteFactory(sequelize);
 export const Like = LikeFactory(sequelize);
+export const Visitor = VisitorFactory(sequelize);
 
 // User relationship
 User.hasMany(Either, {
