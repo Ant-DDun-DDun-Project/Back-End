@@ -6,5 +6,3 @@ coverage
 *.DS_Store
 .env
 dist
-
-
