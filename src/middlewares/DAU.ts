@@ -5,6 +5,7 @@ import { Visitor } from '../models';
 import * as moment from 'moment';
 import { client } from './redis';
 
+// 메인 페이지 방문자 카운팅
 export const mainVisitor = async (req: Request, res: Response, next: NextFunction) => {
   const clientIp: string = requestIp.getClientIp(req);  // client의 IP 주소 가져오기
   const now = moment();
@@ -17,11 +18,11 @@ export const mainVisitor = async (req: Request, res: Response, next: NextFunctio
 };
 
 // Schedule DAU 저장
-export const dauSchedule = scheduler.scheduleJob('58 59 23 * * *', async () => {
+export const dauSchedule = scheduler.scheduleJob('58 59 23 * * *', async (): Promise<void> => {
   console.log(`start counting visitor...`);
 
-  const visitorCnt = await client.pfcount('main');  // 오늘 하루 방문자 count
-  const date = moment().format('YYYY-MM-DD'); // 오늘 날짜
+  const visitorCnt: number = await client.pfcount('main');  // 오늘 하루 방문자 count
+  const date: string = moment().format('YYYY-MM-DD'); // 오늘 날짜
   console.log(`오늘 방문자: ${visitorCnt}`);
   await Visitor.create({  // 오늘 하루 방문자 Mysql DB 저장
     date,
