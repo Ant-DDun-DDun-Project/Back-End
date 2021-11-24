@@ -1,6 +1,5 @@
 import * as express from 'express';
 import * as cookieParser from 'cookie-parser';
-const app: express.Application = express();
 import * as compression from 'compression';
 import * as cors from 'cors';
 import 'dotenv/config';
@@ -10,6 +9,9 @@ import * as swaggerFile from './swagger_output.json';
 import * as helmet from 'helmet';
 import { sequelize } from './models';
 import { stream } from './logger';
+import { dauSchedule } from './middlewares/DAU';
+
+const app: express.Application = express();
 
 //morgan(로그)
 app.use(morgan('dev', { stream }));
@@ -17,7 +19,7 @@ app.use(morgan('dev', { stream }));
 //cors
 const corsOptions = {
   origin: true, // 전체 허용
-  // credentials: true,
+  credentials: true,
 };
 app.use(cors(corsOptions));
 
@@ -31,12 +33,17 @@ sequelize
     console.error(err);
   });
 
+// DAU
+dauSchedule;
+
 //helmet(보안)
 app.use(helmet());
 
 //routing
 import router from './routes/index';
 import { limiter } from './middlewares/rate-limit';
+import { routerError } from './middlewares/error-handler';
+import { errorHandler } from './middlewares/error-handler';
 
 //parser
 app.use(express.urlencoded({ extended: true })); //body parser
@@ -53,7 +60,7 @@ app.use('/', limiter, router);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 //errorHandler
-// app.use(routerError);
-// app.use(errorHandler);
+app.use(routerError);
+app.use(errorHandler);
 
 export default app;
