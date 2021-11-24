@@ -1,0 +1,10 @@
+#!/bin/sh
+ssh ubuntu@13.125.98.1 <<EOF
+  cd ~/Back-End
+  sudo rm
+  git pull origin master
+  npm install
+  sudo pm2 start ~/Back-End/dist/server1.js
+  sudo pm2 start ~/Back-End/dist/server2.js
+  exit
+EOF
