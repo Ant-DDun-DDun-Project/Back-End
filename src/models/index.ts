@@ -11,12 +11,12 @@ import { LikeFactory } from './likes';
 import { VisitorFactory } from './visitors';
 
 export const sequelize = new Sequelize.Sequelize(
-  config.development.database,
-  config.development.username,
-  config.development.password,
+  config.production.database,
+  config.production.username,
+  config.production.password,
   {
-    host: config.development.host,
-    port: Number(config.development.port),
+    host: config.production.host,
+    port: Number(config.production.port),
     dialect: 'mysql',
   }
 );
