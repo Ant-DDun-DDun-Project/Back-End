@@ -11,7 +11,6 @@ const mainQuery = new MainQuery();
 class mainControllers {
   public getMain = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.time('start')
       const [either, multi, [eitherNum, multiNum], attendNum]: [
         MainEither[],
         MainMulti[],
@@ -34,7 +33,6 @@ class mainControllers {
         eitherNum,
         attendNum,
       }); //status code 200, success:true, 각각의 데이터들(찬반투표 포스팅, 객관식 포스팅, 전체 포스팅 갯수, 찬반투표 포스팅갯수, 객관식 포스팅갯수, 참여자수)
-      console.timeEnd();
     } catch (err) {
       next(err);
     }
