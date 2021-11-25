@@ -24,8 +24,8 @@ class joiValidation {
   // 찬반투표 게시물 Schema
   public eitherSchema = Joi.object({
     title: Joi.string().required().max(30),
-    contentA: Joi.string().required().max(30),
-    contentB: Joi.string().required().max(30),
+    contentA: Joi.string().required().max(10),
+    contentB: Joi.string().required().max(10),
   });
   // 객관식 게시물 Schema
   public multiSchema = Joi.object({
@@ -58,8 +58,8 @@ class joiValidation {
   // 찬반투표 게시물 수정 Schema
   public editEitherSchema = Joi.object({
     title: Joi.string().required().min(1).max(30),
-    contentA: Joi.string().required().min(1).max(30),
-    contentB: Joi.string().required().min(1).max(30),
+    contentA: Joi.string().required().min(1).max(10),
+    contentB: Joi.string().required().min(1).max(10),
   });
   // 아이디 중복 체크 Schema
   public duplicatedIdSchema = Joi.object({
