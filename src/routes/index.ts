@@ -9,7 +9,7 @@ import multiRouter from './multi';
 
 router.use('/', mainRouter);
 router.use('/users', userRouter);
-router.use('/profile', profileRouter);
+router.use('/profiles', profileRouter);
 router.use('/search', searchRouter);
 router.use('/posts/multi', multiRouter);
 router.use('/posts/either', eitherRouter);
