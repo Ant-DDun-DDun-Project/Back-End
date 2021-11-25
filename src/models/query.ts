@@ -8,8 +8,8 @@ export class MainQuery {
                completed,
                (SELECT nickname FROM users WHERE users.id = either.user) AS nickname
         FROM either
-        WHERE completed = 0
-        ORDER BY likeCnt DESC
+        WHERE completed = 0 AND likeCnt > 2
+        ORDER BY date DESC
         LIMIT 10;
     `;
   };
@@ -30,8 +30,8 @@ export class MainQuery {
                         FROM childcomments
                         WHERE multi = multi.multiId))                   AS commentCnt
         FROM multi
-        WHERE completed = 0
-        ORDER BY likeCnt DESC
+        WHERE completed = 0 AND likeCnt > 2
+        ORDER BY date DESC
         LIMIT 10;
     `;
   };
