@@ -9,7 +9,6 @@ import * as swaggerFile from './swagger_output.json';
 import * as helmet from 'helmet';
 import { sequelize } from './models';
 import { stream } from './logger';
-import { dauSchedule } from './middlewares/DAU';
 
 const app: express.Application = express();
 
@@ -33,8 +32,6 @@ sequelize
     console.error(err);
   });
 
-// DAU
-dauSchedule;
 
 //helmet(보안)
 app.use(helmet());
