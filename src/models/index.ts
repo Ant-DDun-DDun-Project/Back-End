@@ -18,6 +18,7 @@ export const sequelize = new Sequelize.Sequelize(
     host: config.production.host,
     port: Number(config.production.port),
     dialect: 'mysql',
+    logging: config.production.logging
   }
 );
 
