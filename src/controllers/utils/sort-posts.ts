@@ -1,6 +1,4 @@
-
 import { EitherInfo, MultiInfo } from '../../interfaces/post';
-
 
 //정렬되지 않은 객관식 게시물을 특정 게시물 기준으로 정렬하는 함수
 export const sortMulti = (unsortedPosts: MultiInfo[], posts_id: number | string): MultiInfo[] => {
