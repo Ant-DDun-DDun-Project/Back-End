@@ -20,7 +20,7 @@ export const mainVisitor = async (req: Request, res: Response, next: NextFunctio
 
 // Schedule DAU 저장
 export function dauSchedule() {
-  scheduler.scheduleJob('*/5 * * * * *', async (): Promise<void> => {
+  scheduler.scheduleJob('58 59 23 * * *', async (): Promise<void> => {
     console.log(`start counting visitor...`);
 
     const visitorCnt: number = await client.pfcount('main');  // 오늘 하루 방문자 count
