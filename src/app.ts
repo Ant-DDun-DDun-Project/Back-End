@@ -32,7 +32,6 @@ sequelize
     console.error(err);
   });
 
-
 //helmet(보안)
 app.use(helmet());
 
