@@ -6,6 +6,6 @@ ssh ubuntu@13.125.98.1 <<EOF
   npm install
   npx tsc
   sudo pm2 kill
-  sudo pm2 start ~/Back-End/dist/server1.js -i max
+  sudo pm2 start ~/Back-End/dist/server1.js
   exit
 EOF
