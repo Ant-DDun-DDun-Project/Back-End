@@ -17,7 +17,7 @@ app.use(morgan('dev', { stream }));
 
 //cors
 const corsOptions = {
-  origin: ['https://stockscreener.shop'], // 전체 허용
+  origin: ['https://antsori.com', 'https://www.antsori.com'], // 전체 허용
   credentials: true,
 };
 app.use(cors(corsOptions));
