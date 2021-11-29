@@ -51,7 +51,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie parser
 app.use(compression());
 
 //routes
-app.use('/', limiter, router);
+app.use('/', router);
 
 //swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
