@@ -3,12 +3,9 @@
       {
           "name": "ant",
           "script": "./dist/server1.js",
-          "merge_logs": true,
           "exec_mode": "fork",
-          "instances": 1,
           "env": {
-              "PORT": 3000,
-              "NODE_ENV": "production"
+              "PORT": 3000
           },
           "log_date_format": "YY-MM-DD HH:mm:ss",
           "error_file": "~/.pm2/logs/err.log",
