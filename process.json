@@ -4,9 +4,6 @@
           "name": "ant",
           "script": "./dist/server1.js",
           "exec_mode": "fork",
-          "env": {
-              "PORT": 3000
-          },
           "log_date_format": "YY-MM-DD HH:mm:ss",
           "error_file": "~/.pm2/logs/err.log",
           "out_file": "~/.pm2/logs/out.log"
