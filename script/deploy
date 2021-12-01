@@ -1,11 +1,8 @@
 #!/bin/sh
-ssh ubuntu@3.34.182.124 <<EOF
-  cd ~/Back-End
-  sudo rm ~/Back-End/package-lock.json
-  git pull origin master
-  npm install
-  npx tsc
-  sudo pm2 kill
-  sudo pm2 start ~/Back-End/dist/server1.js
+ssh ubuntu@13.124.150.142 <<EOF
+  sudo docker pull hch950627/chang:2.0
+  sudo docker kill antsori
+  sudo docker rm `docker ps -a -q`
+  sudo docker run -p 3000:3000 --name antsori -it -d hch950627/chang:2.0
   exit
 EOF

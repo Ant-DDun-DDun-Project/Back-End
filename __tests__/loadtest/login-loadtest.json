@@ -4,7 +4,7 @@
     "phases":[
       {
         "duration":60,
-        "arrivalRate":70
+        "arrivalRate":50
       }
     ]
   },
