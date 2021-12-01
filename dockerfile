@@ -16,7 +16,6 @@ RUN apt-get install -y redis-server
 RUN npm install
 RUN npm install -g pm2
 RUN npx tsc
-RUN pm2-runtime process.json
 
 # 터미널 시작시 시작될 명령어
 CMD ["pm2-runtime", "process.json"]
