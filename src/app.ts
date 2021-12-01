@@ -1,5 +1,4 @@
 import * as express from 'express';
-import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import * as cors from 'cors';
 import 'dotenv/config';
@@ -45,7 +44,6 @@ import { errorHandler } from './middlewares/error-handler';
 //parser
 app.use(express.urlencoded({ extended: true })); //body parser
 app.use(express.json()); //body parser
-app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie parser
 
 //compression(데이터 압축)
 app.use(compression());
