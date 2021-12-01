@@ -22,5 +22,6 @@ EXPOSE 3000
 VOLUME [ "/root/.pm2/logs" ]
 
 # 터미널 시작시 시작될 명령어
-ENTRYPOINT [ "pm2-runtime" ]
-CMD ["process.json"]
+# ENTRYPOINT [ "pm2-runtime" ]
+# CMD ["process.json"]
+CMD ["node","./dist/server1.js"]
