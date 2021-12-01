@@ -17,7 +17,10 @@ RUN npm install
 RUN npm install -g pm2
 RUN npx tsc
 
-# 터미널 시작시 시작될 명령어
-CMD ["pm2-runtime", "process.json"]
-
 EXPOSE 3000
+
+VOLUME [ "/root/.pm2/logs" ]
+
+# 터미널 시작시 시작될 명령어
+ENTRYPOINT [ "pm2-runtime" ]
+CMD ["process.json"]
