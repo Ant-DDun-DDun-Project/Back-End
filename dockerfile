@@ -7,7 +7,6 @@ ADD . /Back-End
 # package.json 을 컨테이너 안으로 넣어주는 작업
 COPY package.json ./
 COPY tsconfig.json ./
-COPY /home/ubuntu/env/.env ./
 
 # 추가적으로 필요한 파일들을 다운로드 받는다.
 RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime

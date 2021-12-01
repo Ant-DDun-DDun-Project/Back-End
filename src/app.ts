@@ -18,7 +18,7 @@ app.use(morgan('dev', { stream }));
 //cors
 const corsOptions = {
   // origin: ['https://antsori.com', 'https://www.antsori.com'],
-  origin: true,// 전체 허용
+  origin: true, // 전체 허용
   credentials: true,
 };
 app.use(cors(corsOptions));
