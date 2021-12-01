@@ -60,8 +60,4 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use(routerError);
 app.use(errorHandler);
 
-app.get('/asdf', (req, res) => {
-  res.send('hi')
-})
-
 export default app;
