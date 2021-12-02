@@ -23,7 +23,7 @@
 
 ### 7. [최종 성과](#최종-성과)
 
-### 8. [trouble-shooting](#배운점-or-trouble-shooting)
+### 8. [트러블 슈팅](#-trouble-shooting)
 
 <hr>
 <br>
@@ -321,9 +321,26 @@ Docker | Docker
   
     VPC Peering 설정은 AWS 공식 문서에 정리가 잘 되어있다.
     > 참고문헌:https://docs.aws.amazon.com/ko_kr/vpc/latest/peering/working-with-vpc-peering.html
+    
 ### 2. CI/CD
+    
+  - **어떤 문제점을 겪었는가?**
+  
+    1. 보안 상 `.env`파일을 Github 저장소에 push하지 못하기에 젠킨스에서 테스트 코드를 검증할 시 **환경 변수를 참조 하지못하는 이슈**
+    2. Dockerfile 를 빌드할 경우, `.env`파일을 참조해오지 못해서 CI/CD 배포 후 **컨테이너에 어플리케이션을 구동하기 위한 `.env`가 없는 이슈**
 
-
+  - **왜 이런 문제가 발생했는가?**
+  
+    1. `.env`은 보안상 예민한 정보를 담고있어 Public 저장소에 올릴 수 없었다.
+    
+       그러므로 Github 저장소 파일을 기준으로 동작하는 CI/CD 과정에서 테스트코드 검증 과정을 실패하여 에러가 발생했다.
+    
+    2. CD 단계에서 DockerFile를 build할 때 `.env`가 없었으므로 그 결과 해당 image로 만든 컨테이너안에는 `.env`가 없었다.
+  
+  - **어떻게 해결했는가?**
+  
+    1. `Jenkins`내에서 환경 변수를 설정하여 테스트코드 실행 시 참조해올 수 있도록 설정하였다.
+    2. EC2 호스트 영역에 미리 `.env`를 생성하고 docker run 할 때, -volumes 옵션으로 `.env`파일을 마운팅하여 컨테이너에서 외부 파일을 참조할 수 있게 설정하였다.
 ### 3. Nginx
 
   - **어떤 문제점을 겪었는가?**
@@ -348,6 +365,12 @@ Docker | Docker
 
       ![image](https://user-images.githubusercontent.com/84619866/144453387-0ab81c66-0d82-419a-8db7-69fb0f91baaf.png)
 
+      물리적인 서버를 나눈 후 중개서버로 로드밸런싱을 하여 서버를 나누기 전/후 부하테스트를 진행한 사진입니다.
+    
+      기존에는 많은 요청을 감당하지 못해 에러가 확인되기도 하며 테스트 기간동안 3초 이상의 응답속도를 보입니다.
+    
+      반면에, 로드밸런싱 후에는 에러가 나지 않으며 서버 부하를 낮출 수 있도록 개선된 모습을 확인할 수 있었습니다.
+    
 ### 4. Promise.all
 
   - **어떤 문제점을 겪었는가?**
