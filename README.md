@@ -275,6 +275,20 @@ Docker | Docker
 
 ## 최종 성과
 
+<img src="https://user-images.githubusercontent.com/86486778/144451851-c3a4a905-f7ab-4003-8028-6ccf611ae58e.png" width="300px">
+<img src ="https://user-images.githubusercontent.com/86486778/144452071-7ad6e083-e561-4eeb-8647-89ede8ac650e.png" width="300px" height="200px">
+
+
+
+<img src="https://user-images.githubusercontent.com/86486778/144451657-7d34f9fa-27b1-4b5d-8a96-a541c363e9ad.png" width="300px">
+
+- redis hyperloglog를 이용한 일일 방문자 집계
+- 광고 게시 5일간 방문자 수 총 1197명, 투표참여 수 1214회
+- 121개의 게시글 작성 
+- 설문조사시 높은 만족도
+
+#### 시간적 여유가 부족한 개인투자자들이 의견을 나눌 수 있는 쉽고 간편한 투표 커뮤니티라는 기획이 적중하여 만들어낸 결과라고 생각
+
 <br>
 
 ## 배운점 or trouble shooting
