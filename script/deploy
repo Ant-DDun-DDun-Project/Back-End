@@ -24,7 +24,7 @@ ssh ubuntu@13.124.150.142 <<EOF
   --env REDIS_HOST=$REDIS_HOST \
   --env REDIS_PORT=$REDIS_PORT \
   -p 3000:3000 \
-  --name antsori
+  --name antsori\
   -it -d hch950627/chang:2.0
   exit 
 EOF
