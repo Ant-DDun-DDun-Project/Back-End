@@ -18,9 +18,11 @@
 
 ### 5. [주요 기능](#4-주요-기능)
 
-### 6. [최종 성과](#최종-성과)
+### 6. [아키텍쳐](#-프로젝트-아키텍처)
 
-### 7. [trouble-shooting]](#배운점-or-trouble-shooting)
+### 7. [최종 성과](#최종-성과)
+
+### 8. [trouble-shooting](#배운점-or-trouble-shooting)
 
 <hr>
 <br>
@@ -220,8 +222,8 @@ Docker | Docker
 
 <br>
 
-## 🧱 프로젝트 아키텍처
-![architecture](https://user-images.githubusercontent.com/86486778/144222020-cc6e3a49-3e93-4cda-a999-471f9d701456.png)
+## 🧱 백엔드 아키텍처
+![architecture](https://user-images.githubusercontent.com/86486778/144437335-63dc92ca-555d-4d9a-adc3-5ccc4dc3f50c.png)
 
 <br>
 
