@@ -1,7 +1,7 @@
 #!/bin/sh
-ssh ubuntu@13.124.150.142 <<EOF
+ssh ubuntu@3.34.182.124 <<EOF
   sudo docker pull hch950627/chang:2.0
-
+  
   sudo docker image prune -f
   sudo docker kill antsori
   sudo docker rm antsori
@@ -13,4 +13,3 @@ ssh ubuntu@13.124.150.142 <<EOF
 
   exit
 EOF
-
