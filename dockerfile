@@ -22,5 +22,6 @@ EXPOSE 3000
 VOLUME [ "/root/.pm2/logs" ]
 
 # 터미널 시작시 시작될 명령어
-CMD ["pm2-runtime","process.json"]
+# CMD ["pm2-runtime","process.json"]
+CMD [ "sh","-c","pm2-runtime process.json $PORT $SECRET_KEY $SALT $NODE_ENV $DB_HOST $DB_USER $DB_PW $DB_NAME $REDIS_HOST $REDIS_PORT" ]
 # CMD ["node","./dist/server1.js"]
