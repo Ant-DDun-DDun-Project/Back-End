@@ -19,19 +19,10 @@ ssh ubuntu@13.124.150.142 <<EOF
   sudo docker kill antsori
   sudo docker rm antsori
 
-
-  sudo sudo docker run  \
-  -e PORT=$PORT \
-  -e SECRET_KEY=$SECRET_KEY \
-  -e SALT=$SALT \
-  -e NODE_ENV=$NODE_ENV \
-  -e DB_HOST=$DB_HOST \
-  -e DB_PW=$DB_PW \
-  -e DB_NAME=$DB_NAME \
-  -e REDIS_HOST=$REDIS_HOST \
-  -e REDIS_PORT=$REDIS_PORT \
-  -p 3000:3000 \
-  --name antsori\
+  sudo docker run -p 3000:3000 \
+  --name antsori \
+  -v /home/ubuntu/env/.env:/Back-End/.env \
   -it -d hch950627/chang:2.0
+
   exit 
 EOF
