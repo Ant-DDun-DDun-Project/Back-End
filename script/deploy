@@ -1,5 +1,6 @@
 #!/bin/sh
 ssh ubuntu@13.124.150.142 <<EOF
+  sudo docker pull hch950627/chang:2.0
   echo "> PORT : $PORT"
   echo "> SECRET_KEY : $SECRET_KEY"
   echo "> SALT : $SALT"
@@ -10,7 +11,6 @@ ssh ubuntu@13.124.150.142 <<EOF
   echo "> DB_NAME : $DB_NAME"
   echo "> REDIS_HOST : $REDIS_HOST"
   echo "> REDIS_PORT : $REDIS_PORT"
-  sudo docker pull hch950627/chang:2.0
   sudo docker image prune -f
   sudo docker kill antsori
   sudo docker rm antsori
