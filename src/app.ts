@@ -48,6 +48,7 @@ app.use(express.json()); //body parser
 //compression(데이터 압축)
 app.use(compression());
 
+
 //routes
 app.use('/', limiter, router);
 
