@@ -1,0 +1,14 @@
+ssh ubuntu@3.34.182.124 <<EOF
+  sudo docker pull hch950627/chang:2.0
+  
+  sudo docker image prune -f
+  sudo docker kill antsori
+  sudo docker rm antsori
+
+  sudo docker run -p 3000:3000 \
+  --name antsori \
+  -v /home/ubuntu/env/.env:/Back-End/.env \
+  -it -d hch950627/chang:2.0
+
+  exit
+EOF
