@@ -312,9 +312,8 @@ Docker | Docker
     즉 서로 다른 AWS 계정은 서로 다른 VPC에 속하기 때문이다.
   
   - **어떻게 해결했는가?**
-  
-    ![image](https://user-images.githubusercontent.com/84619866/144465228-7aa9f54f-489d-4209-9c70-c11e5edb6a96.png)
-    
+
+    ![image](https://user-images.githubusercontent.com/84619866/144468346-5eb12e8b-66e7-4dd4-8216-aa66326e0586.png)
     `VPC Peering` 라는 기능을 AWS에서 제공을 해준다. 이 기능은 서로 다른 AWS 계정끼리 VPC를 공유할 수 있게 해준다.
     
     추가적으로 같은 `가용 영역`에 존재할 경우 `무료`요금이다. 신청자가 VPC Peering을 요청하면 수락자가 요청을 받고, 라우팅 테이블을 설정 후, 보안그룹(인바운드 규칙)을 설정해준다.  
