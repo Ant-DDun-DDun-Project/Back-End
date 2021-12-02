@@ -299,7 +299,7 @@ Docker | Docker
 
 ## ❗트러블 슈팅
 
-- **VPC**
+### VPC
 
   - **어떤 문제점을 겪었는가?**
     
@@ -321,11 +321,10 @@ Docker | Docker
   
     VPC Peering 설정은 AWS 공식 문서에 정리가 잘 되어있다.
     > 참고문헌:https://docs.aws.amazon.com/ko_kr/vpc/latest/peering/working-with-vpc-peering.html
-    > 
-- **CI/CD**
+### CI/CD
 
 
-- **Nginx**
+### Nginx
 
   - **어떤 문제점을 겪었는가?**
 
@@ -349,7 +348,7 @@ Docker | Docker
 
       ![image](https://user-images.githubusercontent.com/84619866/144453387-0ab81c66-0d82-419a-8db7-69fb0f91baaf.png)
 
-- **Promise.all**
+### Promise.all
 
   - **어떤 문제점을 겪었는가?**
 
@@ -374,7 +373,7 @@ Docker | Docker
   
     결과적으로 말하면 Promise.all 을 사용하였다. Promise.all 은 서로 영향을 끼치지 않는, 즉 **독립적으로 수행되는 비동기 함수를 병렬처리**해준다.
     
-    그림으로보면 총 걸린 시간은 가장 오래걸린 수행 시간 3초로 총 `소요시간 = 가장 오래걸린 함수 시간` 이다.
+    그림으로보면 총 걸린 시간은 가장 오래걸린 수행 시간 3초로 `총 소요시간 = 가장 오래걸린 함수 시간` 이다.
     
     - 변경 후 코드
       ```javascript
