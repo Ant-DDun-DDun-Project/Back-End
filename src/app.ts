@@ -48,6 +48,10 @@ app.use(express.json()); //body parser
 //compression(데이터 압축)
 app.use(compression());
 
+app.get('/asdf', (req, res) => {
+  res.send('되나?');
+});
+
 //routes
 app.use('/', limiter, router);
 
