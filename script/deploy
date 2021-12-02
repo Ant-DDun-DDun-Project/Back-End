@@ -1,6 +1,7 @@
 #!/bin/sh
 ssh ubuntu@13.124.150.142 <<EOF
   sudo docker pull hch950627/chang:2.0
+
   echo "> PORT : $PORT"
   echo "> SECRET_KEY : $SECRET_KEY"
   echo "> SALT : $SALT"
@@ -11,12 +12,15 @@ ssh ubuntu@13.124.150.142 <<EOF
   echo "> DB_NAME : $DB_NAME"
   echo "> REDIS_HOST : $REDIS_HOST"
   echo "> REDIS_PORT : $REDIS_PORT"
+
   sudo docker image prune -f
   sudo docker kill antsori
   sudo docker rm antsori
-  printenv PORT
+
   source /etc/profile.d/env.sh
-  sudo docker run  \
+
+  sudo docker run -it -d \
+  --name antsori\
   --env PORT=$PORT -e SECRET_KEY=$SECRET_KEY \
   --env SALT=$SALT -e NODE_ENV=$NODE_ENV \
   --env DB_HOST=$DB_HOST \
@@ -24,8 +28,7 @@ ssh ubuntu@13.124.150.142 <<EOF
   --env DB_NAME=$DB_NAME \
   --env REDIS_HOST=$REDIS_HOST \
   --env REDIS_PORT=$REDIS_PORT \
-  -p 3000:3000 \
-  --name antsori\
-  -it -d hch950627/chang:2.0
+  -p 3000:3000 
+  
   exit 
 EOF
