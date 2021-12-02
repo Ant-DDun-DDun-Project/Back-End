@@ -21,15 +21,15 @@ ssh ubuntu@13.124.150.142 <<EOF
 
 
   sudo sudo docker run  \
-  --env PORT=$PORT \
+  -e PORT=$PORT \
   -e SECRET_KEY=$SECRET_KEY \
-  --env SALT=$SALT \
+  -e SALT=$SALT \
   -e NODE_ENV=$NODE_ENV \
-  --env DB_HOST=$DB_HOST \
-  --env DB_PW=$DB_PW \
-  --env DB_NAME=$DB_NAME \
-  --env REDIS_HOST=$REDIS_HOST \
-  --env REDIS_PORT=$REDIS_PORT \
+  -e DB_HOST=$DB_HOST \
+  -e DB_PW=$DB_PW \
+  -e DB_NAME=$DB_NAME \
+  -e REDIS_HOST=$REDIS_HOST \
+  -e REDIS_PORT=$REDIS_PORT \
   -p 3000:3000 \
   --name antsori\
   -it -d hch950627/chang:2.0
