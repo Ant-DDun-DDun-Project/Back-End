@@ -1,6 +1,5 @@
 #!/bin/sh
 ssh ubuntu@13.124.150.142 <<EOF
-  source /etc/profile.d/env.sh
   echo "> PORT : $PORT"
   echo "> SECRET_KEY : $SECRET_KEY"
   echo "> SALT : $SALT"
@@ -15,6 +14,7 @@ ssh ubuntu@13.124.150.142 <<EOF
   sudo docker image prune -f
   sudo docker kill antsori
   sudo docker rm antsori
+  source /etc/profile.d/env.sh
   sudo docker run --name antsori \
   -e PORT=$PORT -e SECRET_KEY=$SECRET_KEY \
   -e SALT=$SALT -e NODE_ENV=$NODE_ENV \
