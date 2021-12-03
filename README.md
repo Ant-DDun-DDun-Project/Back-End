@@ -225,7 +225,8 @@ Docker | Docker
 
 ## 🧱 백엔드 아키텍처
 
-![architecture](https://user-images.githubusercontent.com/86486778/144437335-63dc92ca-555d-4d9a-adc3-5ccc4dc3f50c.png)
+![architecture](https://user-images.githubusercontent.com/86486778/144619935-592eb1c7-ce70-4d73-9daa-93415f29626e.png)
+
 
 <br>
 
