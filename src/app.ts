@@ -16,8 +16,8 @@ app.use(morgan('dev', { stream }));
 
 //cors
 const corsOptions = {
-  // origin: ['https://antsori.com', 'https://www.antsori.com'],
-  origin: true, // 전체 허용
+  origin: ['https://antsori.com', 'https://www.antsori.com'],
+  // origin: true, // 전체 허용
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -47,7 +47,6 @@ app.use(express.json()); //body parser
 
 //compression(데이터 압축)
 app.use(compression());
-
 
 //routes
 app.use('/', limiter, router);
