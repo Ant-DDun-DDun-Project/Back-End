@@ -49,7 +49,7 @@ app.use(express.json()); //body parser
 app.use(compression());
 
 //routes
-app.use('/', router);
+app.use('/', limiter, router);
 
 //swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
