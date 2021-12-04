@@ -3,6 +3,7 @@
 <a href="https://www.antsori.com"><img src="https://user-images.githubusercontent.com/86486778/144210068-e7ae76fd-db3f-466c-8886-c2198f63c4c2.png" style="width:500px;"></a>
 
 ## 🏠 [Home Page Link](https://www.antsori.com)
+## 소개 영상 [youtube](https://www.youtube.com/watch?v=wD4DdZ-Sp0s)
 
 <hr>
 <br>
