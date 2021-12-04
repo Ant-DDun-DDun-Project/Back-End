@@ -1,5 +1,5 @@
 #!/bin/sh
-ssh ubuntu@13.124.150.142 <<EOF
+ssh ubuntu@3.38.149.220 <<EOF
 sudo docker pull hch950627/chang:2.0
 
 sudo docker image prune -f
