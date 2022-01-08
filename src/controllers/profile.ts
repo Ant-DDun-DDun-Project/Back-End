@@ -6,36 +6,41 @@ import joi from './joi';
 import { UserModel } from '../models/users';
 import { EitherModel } from '../models/either';
 import { EitherList, MultiList, ProfileMulti } from '../interfaces/profile';
+import { MainPost } from '../interfaces/main';
 
 const profileQuery = new ProfileQuery();
 
-
 class profileController {
   //내가 쓴 글
-  public getMyPosts = async (req: Request, res: Response, next: NextFunction) => {
+  public getMyPosts = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { user_id } = req.params; //req.params로 user의 고유id를 받아온다
-      const [either, multi]: [EitherModel[], ProfileMulti[]] = await Promise.all([
-        //Promise.all로 내가 쓴 글을 병렬로 찾아와서 변수로 저장한다.
-        Either.findAll({
-          attributes: [
-            'eitherId',
-            'user',
-            'title',
-            'date',
-            'edited',
-            'editedDate',
-            'completed',
-            'likeCnt',
-          ],
-          raw: true,
-          where: { user: user_id },
-        }),
-        sequelize.query(profileQuery.getMyPosts(user_id), {
-          type: QueryTypes.SELECT,
-        }),
-      ]);
-      const post: (EitherModel | ProfileMulti)[] = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
+      const [either, multi]: [EitherModel[], ProfileMulti[]] =
+        await Promise.all([
+          //Promise.all로 내가 쓴 글을 병렬로 찾아와서 변수로 저장한다.
+          Either.findAll({
+            attributes: [
+              'eitherId',
+              'user',
+              'title',
+              'date',
+              'edited',
+              'editedDate',
+              'completed',
+              'likeCnt',
+            ],
+            raw: true,
+            where: { user: user_id },
+          }),
+          sequelize.query(profileQuery.getMyPosts(user_id), {
+            type: QueryTypes.SELECT,
+          }),
+        ]);
+      const post: MainPost[] = [...either, ...multi]; //찬반 포스팅과 객관식 포스팅이 한배열안에 담기게 함
       const posts: (EitherModel | ProfileMulti)[] = post.sort((b, a) => {
         return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; //최신순 정렬
       });
@@ -45,7 +50,11 @@ class profileController {
     }
   };
   //내가 참여한 글
-  public getMyPolls = async (req: Request, res: Response, next: NextFunction) => {
+  public getMyPolls = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { user_id } = req.params; //req.params로 해당 user의 고유 id를 받아온다
       const [either, multi]: [EitherList[], MultiList[]] = await Promise.all([
@@ -67,11 +76,18 @@ class profileController {
     }
   };
   //닉네임 변경
-  public editNickname = async (req: Request, res: Response, next: NextFunction) => {
+  public editNickname = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-      const { nickname }: { nickname: string } = await joi.editNickSchema.validateAsync(req.body); //req.body로 바꿀 닉네임을 받는다
+      const { nickname }: { nickname: string } =
+        await joi.editNickSchema.validateAsync(req.body); //req.body로 바꿀 닉네임을 받는다
       const user: number = res.locals.user; //현재 로그인한 user의 고유id
-      const NickExist: UserModel | null = await User.findOne({ where: { id: user } }); //DB에서 해당 고유 id를 가진 user를 찾는다
+      const NickExist: UserModel | null = await User.findOne({
+        where: { id: user },
+      }); //DB에서 해당 고유 id를 가진 user를 찾는다
       if (NickExist) {
         //user가 있으면
         await User.update({ nickname }, { where: { id: user } }); //닉네임을 변경한다
@@ -88,10 +104,16 @@ class profileController {
     }
   };
   //프로필페이지 뷰
-  public getProfile = async (req: Request, res: Response, next: NextFunction) => {
+  public getProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { user_id } = req.params; //req.params로 해당 user의 고유id를 받아온다
-      const user: UserModel | null = await User.findOne({ where: { id: user_id } }); //고유 id로 user를 찾는다
+      const user: UserModel | null = await User.findOne({
+        where: { id: user_id },
+      }); //고유 id로 user를 찾는다
       if (user) {
         //user가 있으면
         const nickname: string = user.nickname; //해당 user의 닉네임
