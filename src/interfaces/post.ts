@@ -7,7 +7,7 @@ export interface PostInfo {
 }
 
 // either, multi 에 대한 인터페이스
-export interface PostAttributes extends PostInfo{
+export interface PostAttributes extends PostInfo {
   date?: string;
   completed?: boolean;
   edited?: boolean;
